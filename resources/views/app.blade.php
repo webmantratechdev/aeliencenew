@@ -14,8 +14,12 @@
     <title>Laravel Vue</title>
     @vite('resources/css/app.css')
 </head>
+<<<<<<< HEAD
 
 <body>
+=======
+<body style="background: url(/images/Optimized-background_bg.jpg);background-repeat: no-repeat ;  background-position: top;   background-size: cover;">
+>>>>>>> 2d1baaa105d3c2ed6a1033aecd0d7a4bda78f71f
     <div id="app">
         <router-view></router-view>
     </div>
