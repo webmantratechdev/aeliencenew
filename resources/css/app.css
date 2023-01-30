@@ -36,7 +36,7 @@
 }
 
 body {
-    background: url(/images/Optimized-background_bg.jpg);
+    background: url('https://raw.githubusercontent.com/webmantratechdev/aeliencenew/main/public/images/Optimized-background_bg.jpg');
     background-repeat: no-repeat ;
     background-position: top;
     background-size: cover;
