@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Header></Header>
         <section class="themeDashboardSec">
             <div class="themeDashboardMenuHeader">
                 <div class="d-flex justify-content-between themeDashboardMenuHeaderinner">
@@ -18,52 +19,46 @@
                     <div class=""></div>
                     <ul class="navbar-nav">
                         <li class="nav-item active">
-                            <a href="#" class="nav-link">
+                            <router-link to="/overview" class="nav-link">
                                 <span class="icon"><i class="fa-regular fa-wallet"></i></span>
                                 <span class="txt">Overview</span>
-                            </a>
+                            </router-link>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <router-link to="/overview/spot" class="nav-link">
                                 <span class="icon"><i class="fa-regular fa-flower"></i></span>
                                 <span class="txt">Spot</span>
-                            </a>
+                            </router-link>
                         </li>
+                        <!-- <li class="nav-item">
+							<a href="#" class="nav-link">
+								<span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
+								<span class="txt">Futures</span>
+							</a>
+						</li> -->
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
-                                <span class="txt">Futures</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <router-link to="/overview/wallet-history" class="nav-link">
                                 <span class="icon"><i class="fa-light fa-calendar-clock"></i></span>
                                 <span class="txt">Wallet History</span>
-                            </a>
+                            </router-link>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <router-link to="/overview/profile-info" class="nav-link">
                                 <span class="icon"><i class="fa-regular fa-user"></i></span>
                                 <span class="txt">Profile Information</span>
-                            </a>
+                            </router-link>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <router-link to="/overview/idverification" class="nav-link">
                                 <span class="icon"><i class="fa-light fa-address-card"></i></span>
                                 <span class="txt">ID-Verification</span>
-                            </a>
+                            </router-link>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <router-link to="/overview/account-security" class="nav-link">
                                 <span class="icon"><i class="fa-light fa-file-invoice"></i></span>
                                 <span class="txt">Account Security</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <span class="icon"><i class="fa-light fa-folder-gear"></i></span>
-                                <span class="txt">Preferance</span>
-                            </a>
+                            </router-link>
                         </li>
                     </ul>
                 </div>
@@ -95,5 +90,41 @@
                 </div>
             </div>
         </section>
+        <Footer></Footer>
     </div>
 </template>
+
+<script>
+
+
+import Header from './Header.vue';
+import Footer from './Footer.vue';
+
+
+export default {
+    components: {
+        Header,
+        Footer,
+
+    },
+    data: () => ({
+
+    }),
+    methods: {
+        getProfile() {
+            let profileid = localStorage.getItem('profileid');
+            axios.post('/api/getProfile', { profileid: profileid }).then((response) => {
+                if (response.data.id) {
+
+                } else {
+                    this.$router.push('/login');
+                }
+            })
+        }
+    }, mounted() {
+        this.getProfile()
+    }
+
+
+}
+</script>

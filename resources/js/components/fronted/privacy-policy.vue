@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Header></Header>
         <section class="sample_page_sec terms_page_sec">
             <div class="sample_page_secinner">
 
@@ -135,9 +136,36 @@
                 </div>
 
             </div>
+        </section>
 
-    </div>
-    </section>
 
-    </div>
+        <Footer></Footer>
+	</div>
 </template>
+
+<script>
+
+
+import Header from './Header.vue';
+import Footer from './Footer.vue';
+
+
+export default {
+	components: {
+		Header,
+		Footer,
+
+	},
+	data: () => ({
+		email: null,
+	}),
+	methods: {
+		
+	
+	}, mounted() {
+	
+	}
+
+
+}
+</script>

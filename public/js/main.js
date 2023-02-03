@@ -1,8 +1,5 @@
 
 
-
-
-
 $(window).scroll(function(){
   var sticky = $('.header-area'),
       scroll = $(window).scrollTop();
@@ -77,5 +74,34 @@ $(".menuOverlay").click(function(){
 		
 			
 	
+
+	
+$(".tradeFormHeaderTab .navtabs li").click(function(){
+  $(this).toggleClass("active"); 
+  $(".tradeFormHeaderTab .navtabs li").not(this).removeClass('active');
+});
+
+$(".tradeFormHeaderTab .navtabs .show").click(function(){   
+    $(".marketForm").hide();
+  $(".limitForm").show();
+});
+$(".tradeFormHeaderTab .navtabs .hide").click(function(){   
+     $(".limitForm").hide();
+  $(".marketForm").show();
+});
+
+$(".buySellTab .buySelltabs li").click(function(){
+  $(this).toggleClass("active"); 
+  $(".buySellTab .buySelltabs li").not(this).removeClass('active');
+});
+
+$(".buySellTab .buySelltabs .buy").click(function(){   
+    $(".available").addClass("show");
+  $(".range-wrap").addClass("show");
+});
+$(".buySellTab .buySelltabs .sell").click(function(){   
+   $(".available").removeClass("show");
+  $(".range-wrap").removeClass("show");
+});	
 	
 	

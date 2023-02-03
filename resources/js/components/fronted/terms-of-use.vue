@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Header></Header>
         <section class="breadcrumbs_sec">
             <div class="breadcrumbs_secinner">
 
@@ -883,9 +884,35 @@
                 </div>
 
             </div>
+        </section>
 
-    </div>
-    </section>
-
-    </div>
+        <Footer></Footer>
+	</div>
 </template>
+
+<script>
+
+
+import Header from './Header.vue';
+import Footer from './Footer.vue';
+
+
+export default {
+	components: {
+		Header,
+		Footer,
+
+	},
+	data: () => ({
+		email: null,
+	}),
+	methods: {
+		
+	
+	}, mounted() {
+	
+	}
+
+
+}
+</script>
