@@ -110,9 +110,6 @@ class TatumController extends Controller
 
 
 
-
-
-
     public function getvertualAcountTransaction($accountid)
     {
 
@@ -128,7 +125,7 @@ class TatumController extends Controller
                 "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
             ],
             CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_URL => "https://api.tatum.io/v3/ledger/transaction/account?pageSize=10",
+            CURLOPT_URL => "https://api.tatum.io/v3/ledger/transaction/account?pageSize=50",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CUSTOMREQUEST => "POST",
         ]);
@@ -139,7 +136,6 @@ class TatumController extends Controller
         curl_close($curl);
 
         return json_decode($response);
-      
     }
 
 
@@ -151,41 +147,41 @@ class TatumController extends Controller
         $account = [];
 
         foreach ($accounts as $ad) {
-            foreach($this->getvertualAcountTransaction($ad->account_id) as $acssdf){
+            foreach ($this->getvertualAcountTransaction($ad->account_id) as $acssdf) {
 
-                $data = [
-                    'userid' => $userid, 
-                    'amount' => $acssdf->amount, 
-                    'operationType' => $acssdf->operationType, 
-                    'currency' => $acssdf->currency, 
-                    'network' => $ad->network,
-                    'transactionType' => $acssdf->transactionType, 
-                    'accountId' => $acssdf->accountId, 
-                    'anonymous' => $acssdf->anonymous, 
-                    'reference'  => $acssdf->reference, 
-                    'txId' => $acssdf->txId, 
-                    'address' => $acssdf->address, 
-                    'location' => $acssdf->location, 
-                    'created_at' => date('Y-m-d H:i:s'), 
-                    'updated_at'   => date('Y-m-d H:i:s')
-                ];
+                if (isset($acssdf->txId)) {
+                    $data = [
+                        'userid' => $userid,
+                        'amount' => $acssdf->amount,
+                        'operationType' => $acssdf->operationType,
+                        'currency' => $acssdf->currency,
+                        'network' => $ad->network,
+                        'transactionType' => $acssdf->transactionType,
+                        'accountId' => $acssdf->accountId,
+                        'anonymous' => $acssdf->anonymous,
+                        'reference'  => $acssdf->reference,
+                        'txId' => $acssdf->txId,
+                        'address' => $acssdf->address,
+                        'location' => $acssdf->location,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at'   => date('Y-m-d H:i:s')
+                    ];
 
-                $existxt = DB::table('wallet_history')->where('txId', $acssdf->txId)->get(['txId'])->first();
+                    $existxt = DB::table('wallet_history')->where('txId', $acssdf->txId)->get(['txId'])->first();
 
-                if(empty($existxt)){
-                    DB::table('wallet_history')->insert($data);
+                    if (empty($existxt)) {
+                        DB::table('wallet_history')->insert($data);
+                    }
                 }
-
             }
         }
 
-       $exasdf =  DB::table('wallet_history')->where(['userid'=> $userid])->paginate(10);
+        $exasdf =  DB::table('wallet_history')->where(['userid' => $userid])->orderBy('id', 'desc')->paginate(10);
 
-       return response()->json($exasdf);
-        
+        return response()->json($exasdf);
     }
 
-    public function getrecentdepositHistory ($coin, $userid)
+    public function getrecentdepositHistory($coin, $userid)
     {
 
         $accounts = DB::table('ledger_accounts')->where(['user_id' => $userid])->get(['network', 'wallet_id', 'account_id']);
@@ -193,38 +189,36 @@ class TatumController extends Controller
         $account = [];
 
         foreach ($accounts as $ad) {
-            foreach($this->getvertualAcountTransaction($ad->account_id) as $acssdf){
+            foreach ($this->getvertualAcountTransaction($ad->account_id) as $acssdf) {
 
                 $data = [
-                    'userid' => $userid, 
-                    'amount' => $acssdf->amount, 
-                    'operationType' => $acssdf->operationType, 
-                    'currency' => $acssdf->currency, 
+                    'userid' => $userid,
+                    'amount' => $acssdf->amount,
+                    'operationType' => $acssdf->operationType,
+                    'currency' => $acssdf->currency,
                     'network' => $ad->network,
-                    'transactionType' => $acssdf->transactionType, 
-                    'accountId' => $acssdf->accountId, 
-                    'anonymous' => $acssdf->anonymous, 
-                    'reference'  => $acssdf->reference, 
-                    'txId' => $acssdf->txId, 
-                    'address' => $acssdf->address, 
-                    'location' => $acssdf->location, 
-                    'created_at' => date('Y-m-d H:i:s'), 
+                    'transactionType' => $acssdf->transactionType,
+                    'accountId' => $acssdf->accountId,
+                    'anonymous' => $acssdf->anonymous,
+                    'reference'  => $acssdf->reference,
+                    'txId' => $acssdf->txId,
+                    'address' => $acssdf->address,
+                    'location' => $acssdf->location,
+                    'created_at' => date('Y-m-d H:i:s'),
                     'updated_at'   => date('Y-m-d H:i:s')
                 ];
 
                 $existxt = DB::table('wallet_history')->where('txId', $acssdf->txId)->get(['txId'])->first();
 
-                if(empty($existxt)){
+                if (empty($existxt)) {
                     DB::table('wallet_history')->insert($data);
                 }
-
             }
         }
 
-       $exasdf =  DB::table('wallet_history')->where(['userid'=> $userid, 'currency' => $coin, 'operationType' => 'DEPOSIT'])->paginate(10);
+        $exasdf =  DB::table('wallet_history')->where(['userid' => $userid, 'currency' => $coin, 'operationType' => 'DEPOSIT'])->paginate(10);
 
-       return response()->json($exasdf);
-        
+        return response()->json($exasdf);
     }
 
 
@@ -286,16 +280,17 @@ class TatumController extends Controller
     }
 
 
-    public function getaccountidbycontin($userid,  $symbold){
+    public function getaccountidbycontin($userid,  $symbold)
+    {
 
         $ledger_accounts = DB::table('ledger_accounts')->where(['user_id' => $userid, 'currency' => $symbold])->get(['account_id'])->first();
 
-    
+
         $retursn = $this->getvertualAcountBalance($ledger_accounts->account_id);
 
         $data = [
             'stackDate' => date('Y-m-d H:i:s'),
-            'valueDate' => date('Y-m-d H:i:s', time() + 86400 ),
+            'valueDate' => date('Y-m-d H:i:s', time() + 86400),
             'distributionDate' => date('Y-m-d H:i:s', time() + 86400),
             'account' => $retursn,
         ];
