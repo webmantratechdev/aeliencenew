@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+
 import Home from './components/fronted/Home.vue';
 import About from './components/fronted/About.vue';
 import Login from './components/fronted/Login.vue';
 import forgotpassword from './components/fronted/forgot-password.vue';
 import Signup from './components/fronted/Signup.vue';
 import Markets from './components/fronted/markets.vue';
+import Marketsdetails from './components/fronted/market-details.vue';
 import Trade from './components/fronted/trade.vue';
 import roadmap from './components/fronted/roadmap.vue';
 import helpcenter from './components/fronted/help-center.vue';
@@ -13,6 +15,7 @@ import knowledgebase from './components/fronted/knowledgebase.vue';
 import downloads from './components/fronted/downloads.vue';
 import termsofuse from './components/fronted/terms-of-use.vue';
 import privacypolicy from './components/fronted/privacy-policy.vue';
+
 
 // kyc
 import ProfileInfo from './components/fronted/profile-info.vue';
@@ -31,6 +34,7 @@ import preferance from './components/fronted/preferance.vue';
 import notification from './components/fronted/notification.vue';
 import reffrecode from './components/fronted/reffrecode.vue';
 import digitalcurrencydeposit from './components/fronted/digital-currency-deposit.vue';
+import staking from './components/fronted/stack.vue';
 
 
 // admin
@@ -42,6 +46,10 @@ import kycmanager from './components/admin/page/kycmanager.vue';
 import kycmanagerpendig from './components/admin/page/kycmanagerpendig.vue';
 import kycmanagermising from './components/admin/page/kycmanagermising.vue';
 import kycmanagerapprove from './components/admin/page/kycmanagerapprove.vue';
+import customtoken from './components/admin/page/customtoken.vue';
+import blockchains from './components/admin/page/blockchains.vue';
+import stakingcurrencies from './components/admin/page/stakingcurrencies.vue';
+import stakinglogs from './components/admin/page/stakinglogs.vue';
 
 
 const routes = [
@@ -52,13 +60,15 @@ const routes = [
   { path: '/refer/:reffrecode', component: reffrecode},
   { path: '/about', component: About },
   { path: '/markets', component: Markets },
-  { path: '/trade', component: Trade },
+  { path: '/market-details/:coin', component: Marketsdetails },
+  { path: '/trade/:coinpair', component: Trade },
   { path: '/roadmap', component: roadmap },
   { path: '/help-center', component: helpcenter },
   { path: '/knowledgebase', component: knowledgebase },
   { path: '/downloads', component: downloads },
   { path: '/termsofuse', component: termsofuse },
   { path: '/privacy-policy', component: privacypolicy },
+
 
   // kyc
   { path: '/profile-info', component: ProfileInfo },
@@ -76,10 +86,12 @@ const routes = [
   { path: '/overview/notification', component: notification },
   { path: '/overview/preferance', component: preferance },
   { path: '/overview/digital-currency-deposit/:currency', component: digitalcurrencydeposit },
+  { path: '/overview/stacking', component: staking },
 
   // admin
   {
     path: '/console', component: Dashboard,
+    redirect:'/console/home',
     children: [
       { path: '/console/home', component: home, },
       { path: '/console/users', component: Users, },
@@ -88,6 +100,10 @@ const routes = [
       { path: '/console/kycmanagerpendig', component: kycmanagerpendig, },
       { path: '/console/kycmanagermising', component: kycmanagermising, },
       { path: '/console/kycmanagerapprove', component: kycmanagerapprove, },
+      { path: '/console/customtoken', component: customtoken, },
+      { path: '/console/blockchains', component: blockchains, },
+      { path: '/console/stakingcurrencies', component: stakingcurrencies, },
+      { path: '/console/stakinglogs', component: stakinglogs, },
     ]
   },
 ]

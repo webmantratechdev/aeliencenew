@@ -1,9 +1,12 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer v-model="drawer" dark app color="black lighten-4">
 
+      <v-sheet color="black lighten-4" class="pa-4">
+        <v-img src="/images/logo.png" style="max-width: 130px;"></v-img>
+      </v-sheet>
 
-      <v-list>
+      <v-list dense>
 
         <div v-for="menu in items">
 
@@ -11,7 +14,7 @@
 
           <v-list-group v-else :value="menu.text">
             <template v-slot:activator="{ props }">
-              <v-list-item v-bind="props" prepend-icon="mdi-account-circle" :title="menu.text"></v-list-item>
+              <v-list-item v-bind="props" :prepend-icon="menu.icon" :title="menu.text"></v-list-item>
             </template>
             <v-list-item v-for="chilted in menu.child" :title="chilted.text" :to="chilted.url"></v-list-item>
           </v-list-group>
@@ -24,12 +27,17 @@
     <v-app-bar app elevation="0">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-responsive max-width="260">
+        <v-text-field density="compact" hide-details placeholder="Search" variant="solo"></v-text-field>
+      </v-responsive>
+
       <v-spacer></v-spacer>
       <v-menu>
         <template v-slot:activator="{ props }">
-          <v-btn color="primary" v-bind="props">
-            My Profile
+
+          <v-btn v-bind="props" text>
+            <v-avatar color="grey-darken-1" size="30"></v-avatar> My Profile
+            <v-icon>mdi-chevron-down mdi</v-icon>
           </v-btn>
         </template>
         <v-list>
@@ -40,7 +48,7 @@
             <v-list-item-title>Change Password</v-list-item-title>
           </v-list-item>
           <v-list-item @click="logoutadmin">
-            <v-list-item-title>LogOut</v-list-item-title>
+            <v-list-item-title>Logout</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -53,6 +61,8 @@
 </template>
 
 <script>
+import { url } from 'inspector';
+
 export default {
   data: () => ({
     drawer: null,
@@ -62,10 +72,10 @@ export default {
       { title: 'LogOut' },
     ],
     items: [
-      { text: 'Dashboard', icon: 'mdi-clock', url: '/console/home' },
-      { text: 'Users', icon: 'mdi-account', url: '/console/users' },
+      { text: 'Dashboard', icon: 'mdi-home-outline', url: '/console/home' },
+      { text: 'Users', icon: 'mdi-account-group-outline', url: '/console/users' },
       {
-        text: 'KYC Manager', icon: 'mdi-flag', url: '/console/kycmanager',
+        text: 'KYC Manager', icon: 'mdi-card-account-details-outline', url: '/console/kycmanager',
         child: [
           { text: 'All Application', icon: 'mdi-clock', url: '/console/kycmanager' },
           { text: 'Pending', icon: 'mdi-clock', url: '/console/kycmanagerpendig' },
@@ -74,23 +84,40 @@ export default {
         ]
       },
       {
-        text: 'Deposits', icon: 'mdi-flag', url: '/console/deposit',
+        text: 'Deposits', icon: 'mdi-wallet-outline', url: '/console/deposit',
         child: [
           { text: 'Tranding Wallet', icon: 'mdi-clock', url: '/console/trading-wallet' },
 
         ]
       },
-      { text: 'Active Trades', icon: 'mdi-flag' },
-      { text: 'Completed Trades', icon: 'mdi-flag' },
-      { text: 'API Settings', icon: 'mdi-flag' },
-      { text: 'Manage Spot', icon: 'mdi-flag' },
+      {
+        text: 'Trades', icon: 'mdi-finance',
+        child: [
+          { text: 'Active Trades', icon: 'mdi-clock', },
+          { text: 'Completed Trades', icon: 'mdi-clock', },
+        ]
+      },
+      {
+        text: 'Ecosystem', icon: 'mdi-finance',
+        child: [
+          { text: 'Blockchains', icon: 'mdi-clock', url: '/console/blockchains' },
+          { text: 'Completed Trades', icon: 'mdi-clock', },
+        ]
+      },
+      { text: 'API Settings', icon: 'mdi-api' },
+      { text: 'Manage Spot', icon: 'mdi-chart-bell-curve-cumulative' },
       { text: 'Withdrawals', icon: 'mdi-swap-horizontal' },
-      { text: 'Manage Invites', icon: 'mdi-flag' },
-      { text: 'Custom Token', icon: 'mdi-flag' },
-      { text: 'Orders', icon: 'mdi-flag' },
-      { text: 'Settings', icon: 'mdi-flag' },
-      { text: 'Staking', icon: 'mdi-flag' },
-      { text: 'Support Ticket', icon: 'mdi-flag' },
+      { text: 'Manage Invites', icon: 'mdi-share-variant-outline' },
+      { text: 'Custom Token', icon: 'mdi-litecoin', url: '/console/customtoken' },
+      { text: 'Orders', icon: 'mdi-package-variant' },
+      { text: 'Settings', icon: 'mdi-cog-outline' },
+      {
+        text: 'Staking', icon: 'mdi-flag', url: '', child: [
+          { text: 'Coin', icon: 'mdi-clock',  url:'/console/stakingcurrencies'},
+          { text: 'Logs', icon: 'mdi-clock',  url:'/console/stakinglogs'},
+        ]
+      },
+      { text: 'Support Ticket', icon: 'mdi-help-circle-outline' },
     ],
   }),
   methods: {

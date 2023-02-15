@@ -110,40 +110,58 @@
 									<div class="pb-3">
 										<div class="row rowBox">
 											<div class="col-lg-6 col-md-6 col-sm-6 col-12 columnBox">
-												<div class="form-group">
+												<v-autocomplete class="elevation-0 outlined" variant="outlined"
+													:items="coninOp" v-model="conin"
+													@blur="changeRoute"></v-autocomplete>
+												<!-- <div class="form-group">
 													<label class="labelName">Choose Currency</label>
 													<select class="form-select">
 														<option>Dllar</option>
 														<option>Rupee</option>
 														<option>Euro</option>
 													</select>
-												</div>
+												</div> -->
 											</div>
 											<div class="col-lg-6 col-md-6 col-sm-6 col-12 columnBox">
-												<div class="form-group">
+												<v-autocomplete class="elevation-0 outlined" variant="outlined"
+													:items="networksOp" v-model="networks"
+													@blur="changenework"></v-autocomplete>
+												<!-- <div class="form-group">
 													<label class="labelName">Network</label>
 													<select class="form-select">
 														<option>BINNANCE SMART CHAIN (BEP20)</option>
 														<option>BINNANCE SMART CHAIN (BEP20)</option>
 														<option>BINNANCE SMART CHAIN (BEP20)</option>
 													</select>
-												</div>
+												</div> -->
 											</div>
 										</div>
 
-										<div class="pb-3">
-											<p>Deposit Address Oxedled8967</p>
+
+										<v-overlay :model-value="overlay" class="align-center justify-center">
+											<v-progress-circular color="primary" indeterminate
+												size="64"></v-progress-circular>
+										</v-overlay>
+
+
+										<div class="pb-3" v-if="depositAddress">
+											<p>Deposit Address <span style="font-weight:bold;">{{ depositAddress }}
+												</span> <span class="badge badge-outline-info"
+													style="font-size: 12px;  margin-left: 8px;  border-radius: 10px;  border: 1px dotted #cb9a00;  color: #fec00f; cursor:pointer;"
+													@click="clicktocopy">Copy</span></p>
 										</div>
 
-										<div class="">
-											<p>Minimum deposit amount : <strong>0,000000001 USDT</strong></p>
-											<p>Expected arrival : 15 Block confirmation</p>
-											<p>Expected unlock : 15 Block confirmation</p>
-											<p>*This address can only receive funds USDT</p>
+										<div class="" v-if="depositAddress">
+											<p>Minimum deposit amount : <strong>0.001 {{ conin }}</strong></p>
+											<p>Expected arrival : 12 Block confirmation</p>
+											<!-- <p>Expected unlock : 15 Block confirmation</p> -->
+											<p>*This address can only receive funds {{ conin }}</p>
 											<p>*Please confirm again that the main network you selected is
-												<strong>BINNANCE SMART CHAIN (BEP20)</strong>
+												<strong>{{ networks }}</strong>
 											</p>
 										</div>
+
+
 
 
 									</div>
@@ -166,7 +184,6 @@
 											<table id="example" class="table soptTable" style="width:100%">
 												<thead>
 													<tr>
-														<th>Title</th>
 														<th>Currency</th>
 														<th>Amount</th>
 														<th>Network</th>
@@ -175,16 +192,15 @@
 														<th>Status</th>
 													</tr>
 												</thead>
-												<tbody>
+												<tbody v-if="depositHistory.data">
 
-													<tr class="order_item">
-														<td data-title="Title">Tamal Bagchi</td>
-														<td data-title="Currency">Dollar</td>
-														<td data-title="Amount">₹2400</td>
-														<td data-title="Network">********</td>
-														<td data-title="Address">********</td>
-														<td data-title="TXID">********</td>
-														<td data-title="Status">********</td>
+													<tr class="order_item" v-for="deposit in depositHistory.data">
+														<td data-title="Currency">{{ deposit.currency }}</td>
+														<td data-title="Amount">{{ deposit.amount }}</td>
+														<td data-title="Network">{{ deposit.network }}</td>
+														<td data-title="Address">{{ deposit.address }}</td>
+														<td data-title="TXID">{{ deposit.txId }}</td>
+														<td data-title="Status">{{ deposit.operationType }}</td>
 													</tr>
 												</tbody>
 											</table>
@@ -199,6 +215,11 @@
 			</div>
 		</section>
 		<Footer></Footer>
+
+		<v-snackbar v-model="snackbar">
+			{{ snackbartext }}
+		</v-snackbar>
+
 	</div>
 </template>
 
@@ -208,7 +229,6 @@
 import Header from './Header.vue';
 import Footer from './Footer.vue';
 
-
 export default {
 	components: {
 		Header,
@@ -216,31 +236,107 @@ export default {
 
 	},
 	data: () => ({
+
+		snackbar: false,
+		snackbartext: null,
+
+		overlay: false,
+
+		conin: '',
+		coninOp: [],
+		networksOp: [],
+		networks: 'Choose Transfer Network',
+
 		coinList: [],
+
+		depositAddress: null,
+
+		depositHistory:[],
+
 	}),
 	methods: {
 
-		tradedata() {
-			axios.get('https://api.coincap.io/v2/assets?Authorization=Bearer')
+		changeRoute() {
+
+			var netsd = ['Choose Transfer Network',];
+			this.coinList.filter((value, key) => {
+
+				if (this.conin == value.symbol) {
+					netsd.push(value.chain)
+				}
+
+			})
+
+			this.networksOp = netsd;
+		},
+
+		getAllToken() {
+
+			this.conin = this.$route.params.currency;
+
+			axios.get('/api/getAllToken').then((response) => {
+
+				this.coinList = response.data;
+
+				var coninsd = [];
+				var netsd = ['Choose Transfer Network',];
+				response.data.filter((value, key) => {
+					coninsd.push(value.symbol)
+					if (this.conin == value.symbol) {
+						netsd.push(value.chain)
+					}
+				})
+				this.coninOp = coninsd;
+				this.networksOp = netsd;
+
+			})
+		},
+
+		changenework() {
+
+			var conin = this.conin;
+			var networks = this.networks;
+
+			if (networks != 'Choose Transfer Network') {
+				this.getdepositeaddress(conin, networks);
+			}
+
+		},
+
+		getdepositeaddress(coin, network) {
+			this.overlay = true;
+			var userid = localStorage.getItem('profileid')
+
+			axios.get('/api/getdepositeaddress/' + coin + '/' + network + '/' + userid)
 				.then((response) => {
-					this.coinList = response.data.data;
-					console.log(response.data.data);
+					if (response.data) {
+						this.depositAddress = response.data;
+						this.overlay = false;
+					}
 				})
 		},
 
-		getProfile() {
-			let profileid = localStorage.getItem('profileid');
-			axios.post('/api/getProfile', { profileid: profileid }).then((response) => {
-				if (response.data.id) {
+		clicktocopy() {
+			navigator.clipboard.writeText(this.depositAddress);
+			this.snackbar = true;
+			this.snackbartext = 'Copy';
+		},
 
-				} else {
-					this.$router.push('/login');
-				}
-			})
+
+		getrecentdepositHistory() {
+
+
+			var conin = this.$route.params.currency;
+			var userid = localStorage.getItem('profileid')
+			axios.get('/api/getrecentdepositHistory/' + conin + '/' + userid)
+				.then((response) => {
+					this.depositHistory = response.data;
+				})
 		}
+
 	}, mounted() {
-		this.tradedata();
-		this.getProfile()
+		this.getAllToken();
+		this.getrecentdepositHistory();
 	}
 
 

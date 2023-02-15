@@ -132,7 +132,7 @@
 													<th>Opration</th>
 												</tr>
 											</thead>
-											<tbody>
+											<tbody v-if="coinList[0]">
 												<tr class="order_item" v-for="coin in coinList">
 													<td data-title="Currency">
 														<div class="d-inline-flex align-items-center SpotIcontxt">
@@ -145,7 +145,7 @@
 																<h5 style="margin-bottom:2px;font-size: 16px;">{{
 																	coin.symbol
 																}}</h5>
-																<p style="margin-bottom:0px;">{{ coin.name }}</p>
+																<p style="margin-bottom:0px;">{{ coin.symbol }}</p>
 															</div>
 														</div>
 													</td>
@@ -155,7 +155,9 @@
 													<td data-title="BTC Equity Value">********</td>
 													<td data-title="BTC Equity Value">
 														<div class="SpotBtnArea">
-															<router-link :to="'/overview/digital-currency-deposit/'+coin.symbol" type="button"
+															<router-link
+																:to="'/overview/digital-currency-deposit/' + coin.symbol"
+																type="button"
 																class="alButton alButtonDefault"><span>Deposit</span></router-link>
 															<button type="button"
 																class="alButton alButtonDefault"><span>Withdraw</span></button>
@@ -205,35 +207,25 @@ export default {
 	}),
 	methods: {
 
-		tradedata() {
-			axios.get('https://api.coincap.io/v2/assets?Authorization=Bearer')
+		getAllCoin() {
+			axios.get('/api/getAllToken')
 				.then((response) => {
-					this.coinList = response.data.data;
-					console.log(response.data.data);
+					this.coinList = response.data;
+
+					console.log(response.data);
 				})
 		},
 
-		getProfile() {
-			let profileid = localStorage.getItem('profileid');
-			axios.post('/api/getProfile', { profileid: profileid }).then((response) => {
-				if (response.data.id) {
 
-				} else {
-					this.$router.push('/login');
-				}
-			})
-		}
-	}, mounted() {
-		this.tradedata();
-		this.getProfile()
+	}, created() {
+		this.getAllCoin();
 	}
-
-
 }
 </script>
 
 <style>
-.SpotBtnArea button, .SpotBtnArea a {
+.SpotBtnArea button,
+.SpotBtnArea a {
 	padding: 5px 10px;
 	border: none;
 	font-size: 12px;

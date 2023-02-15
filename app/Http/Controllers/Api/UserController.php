@@ -87,7 +87,7 @@ class UserController extends Controller
         ];
 
         $this->sendoptsms($data['phone'], $data['otp']);
-        // $this->sentotpmail($data['email'], $data['otp']);
+        $this->sentotpmail($data['email'], $data['otp']);
 
         return response()->json($data);
     }
@@ -98,7 +98,22 @@ class UserController extends Controller
         $to = $email;
         $subject = "Aelince Verification OTP: " . $otp;
 
-        $message = "Please use the verification code below on the Aelince website: " . $otp;
+        $message = "
+        
+        Confirm Your Registration<br>
+        Welcome to Aelince!<br>
+        Here is your account activation code:<br><br>
+        
+        <b> ".$otp." </b>
+        <br><br>
+        Security Tips:<br>
+        * Never give your password to anyone.<br>
+        * Never call any phone number for someone claiming to be Aelince Support.<br>
+        * Never send any money to anyone claiming to be a member of Binance team.<br>
+        * Enable Google Two Factor Authentication.<br>
+        * Bookmark www.aelince.com to verify the domain you're visiting.<br><br>
+        
+        If you don't recognize this activity, please contact our customer support immediately at: https://www.aelince.com/en/contact.";
 
         // Always set content-type when sending HTML email
         $headers = "MIME-Version: 1.0" . "\r\n";
@@ -339,4 +354,5 @@ class UserController extends Controller
         $cities = DB::table('cities')->where('state_id', $stateid)->get();
         return response()->json($cities);
     }
+
 }

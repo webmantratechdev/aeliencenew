@@ -28,7 +28,7 @@
                             </li>
                             <li><router-link to="/markets">Buy Token</router-link></li>
                             <li><router-link to="/markets">Markets</router-link></li>
-                            <li><router-link to="/login">Stacking</router-link></li>
+                            <li><router-link to="/overview/stacking">Stacking</router-link></li>
                             <li><router-link to="/knowledgebase">Knowledgebase</router-link></li>
                             <li><router-link to="/downloads">Downloads</router-link></li>
                             <li class="w-100">

@@ -6,36 +6,47 @@
                 <div class="themeTradeItem">
                     <div class="themeTradeHeader">
                         <div class="d-flex align-items-center themeTradeMarket">
-                            <img src="https://aelince.com/images/icon23.png" class="img-fluid" alt="">
-                            <p>BTC/USDT</p>
+                            <img :src="'/images/cryptoCurrency/' + coinDetails.symbol + '.png'" class="img-fluid" alt="">
+                            <p>{{ coinDetails.symbol }}/USDT</p>
                         </div>
                         <div class="quotationConfig">
                             <div class="itemFlex nowrap">
-                                <span class="ttl bold d-block" style="color:green;">22947.77</span>
-                                <span class="txt d-block"><small>22947.77</small></span>
+                                <span class="ttl bold d-block" style="color:green;">{{
+                                    parseFloat(coinDetails.priceUsd).toFixed(8)
+                                }}</span>
+                                <span class="txt d-block"><small>$
+                                        {{ parseFloat(coinDetails.vwap24Hr).toFixed(8) }}</small></span>
                             </div>
                             <div class="d-flex align-items-center nowrap">
                                 <div class="itemFlex">
                                     <span class="d-block ttl"><small>24th Change</small></span>
-                                    <span class="d-block txt bold" style="color:red;">23,498.23</span>
+                                    <span class="d-block txt bold"
+                                        style="color:red;">{{ parseFloat(coinDetails.changePercent24Hr).toFixed(2) }}</span>
                                 </div>
                                 <div class="itemFlex">
                                     <span class="d-block ttl"><small>24th High</small></span>
-                                    <span class="d-block txt bold">23,498.23</span>
+                                    <span
+                                        class="d-block txt bold">{{ parseFloat(coinDetails.vwap24Hr).toFixed(8) }}</span>
                                 </div>
                                 <div class="itemFlex">
                                     <span class="d-block ttl"><small>24th Low</small></span>
-                                    <span class="d-block txt bold">23,498.23</span>
+                                    <span
+                                        class="d-block txt bold">{{ parseFloat(coinDetails.vwap24Hr).toFixed(8) }}</span>
                                 </div>
                                 <div class="itemFlex">
-                                    <span class="d-block ttl"><small>24th Vol(BTC)</small></span>
-                                    <span class="d-block txt bold">6,498.23</span>
+                                    <span class="d-block ttl"><small>24th Vol({{ coinDetails.symbol }})</small></span>
+                                    <span
+                                        class="d-block txt bold">{{ parseFloat(coinDetails.volumeUsd24Hr).toFixed(2) }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="">
-                        <div class="klineChart"></div>
+                        <div class="">
+                            <div class="tradingview-widget-container">
+                                <div id="tradingview_cba47"></div>
+                            </div>
+                        </div>
                         <div class="countdownBox">
 
                         </div>
@@ -122,299 +133,43 @@
 
                                     <div class="entrustBodyOrderSell">
                                         <div class="entrustBodyOrderSellList">
-                                            <div class="entrustBodyOrderItem">
+
+                                            <div class="entrustBodyOrderItem" v-for="ask in orderbook.asks">
                                                 <div class="d-flex justify-content-between flexBetween">
                                                     <div class="entrustBodyTitleItem sellColor">
-                                                        22943.79
+                                                        {{ parseFloat(ask[0]).toFixed(2) }}
                                                     </div>
                                                     <div class="entrustBodyTitleItem right">
-                                                        0.0982
+                                                        {{ parseFloat(ask[1]).toFixed(4) }}
                                                     </div>
                                                     <div class="entrustBodyTitleItem right">
-                                                        1047.78
+                                                        {{ ask[1] / ask[1] }}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="entrustBodyOrderItem">
-                                                <div class="d-flex justify-content-between flexBetween">
-                                                    <div class="entrustBodyTitleItem sellColor">
-                                                        22943.79
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        0.0982
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        1047.78
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="entrustBodyOrderItem">
-                                                <div class="d-flex justify-content-between flexBetween">
-                                                    <div class="entrustBodyTitleItem sellColor">
-                                                        22943.79
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        0.0982
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        1047.78
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="entrustBodyOrderItem">
-                                                <div class="d-flex justify-content-between flexBetween">
-                                                    <div class="entrustBodyTitleItem sellColor">
-                                                        22943.79
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        0.0982
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        1047.78
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="entrustBodyOrderItem">
-                                                <div class="d-flex justify-content-between flexBetween">
-                                                    <div class="entrustBodyTitleItem sellColor">
-                                                        22943.79
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        0.0982
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        1047.78
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="entrustBodyOrderItem">
-                                                <div class="d-flex justify-content-between flexBetween">
-                                                    <div class="entrustBodyTitleItem sellColor">
-                                                        22943.79
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        0.0982
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        1047.78
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="entrustBodyOrderItem">
-                                                <div class="d-flex justify-content-between flexBetween">
-                                                    <div class="entrustBodyTitleItem sellColor">
-                                                        22943.79
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        0.0982
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        1047.78
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="entrustBodyOrderItem">
-                                                <div class="d-flex justify-content-between flexBetween">
-                                                    <div class="entrustBodyTitleItem sellColor">
-                                                        22943.79
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        0.0982
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        1047.78
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="entrustBodyOrderItem">
-                                                <div class="d-flex justify-content-between flexBetween">
-                                                    <div class="entrustBodyTitleItem sellColor">
-                                                        22943.79
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        0.0982
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        1047.78
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="entrustBodyOrderItem">
-                                                <div class="d-flex justify-content-between flexBetween">
-                                                    <div class="entrustBodyTitleItem sellColor">
-                                                        22943.79
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        0.0982
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        1047.78
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="entrustBodyOrderItem">
-                                                <div class="d-flex justify-content-between flexBetween">
-                                                    <div class="entrustBodyTitleItem sellColor">
-                                                        22943.79
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        0.0982
-                                                    </div>
-                                                    <div class="entrustBodyTitleItem right">
-                                                        1047.78
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                         </div>
                                         <div class="entrustBodyOrderAvarage bold">
-                                            <span class="buyColor">22969.22</span>
-                                            <em class="pointer ">$22973.81</em>
+                                            <span class="buyColor" v-if="orderbook.bids">{{ parseFloat(orderbook.bids[0][0]).toFixed(2) }}</span>
+                                            <em class="pointer "  v-if="orderbook.bids">${{ parseFloat(orderbook.bids[0][1]).toFixed(2) }}</em>
                                         </div>
                                         <div class="entrustBodyOrderBuy">
                                             <div class="entrustBodyOrderBuyList">
-                                                <div class="entrustBodyOrderItem">
+
+                                                <div class="entrustBodyOrderItem"  v-for="bids in orderbook.bids">
                                                     <div class="d-flex justify-content-between flexBetween">
                                                         <div class="entrustBodyTitleItem buyColor">
-                                                            22943.79
+                                                            {{ parseFloat(bids[0]).toFixed(2) }}
                                                         </div>
                                                         <div class="entrustBodyTitleItem right">
-                                                            0.0982
+                                                            {{ parseFloat(bids[1]).toFixed(2) }}
                                                         </div>
                                                         <div class="entrustBodyTitleItem right">
-                                                            1047.78
+                                                            {{ bids[1] / bids[1]}}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="entrustBodyOrderItem">
-                                                    <div class="d-flex justify-content-between flexBetween">
-                                                        <div class="entrustBodyTitleItem buyColor">
-                                                            22943.79
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            0.0982
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            1047.78
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="entrustBodyOrderItem">
-                                                    <div class="d-flex justify-content-between flexBetween">
-                                                        <div class="entrustBodyTitleItem buyColor">
-                                                            22943.79
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            0.0982
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            1047.78
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="entrustBodyOrderItem">
-                                                    <div class="d-flex justify-content-between flexBetween">
-                                                        <div class="entrustBodyTitleItem buyColor">
-                                                            22943.79
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            0.0982
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            1047.78
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="entrustBodyOrderItem">
-                                                    <div class="d-flex justify-content-between flexBetween">
-                                                        <div class="entrustBodyTitleItem buyColor">
-                                                            22943.79
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            0.0982
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            1047.78
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="entrustBodyOrderItem">
-                                                    <div class="d-flex justify-content-between flexBetween">
-                                                        <div class="entrustBodyTitleItem buyColor">
-                                                            22943.79
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            0.0982
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            1047.78
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="entrustBodyOrderItem">
-                                                    <div class="d-flex justify-content-between flexBetween">
-                                                        <div class="entrustBodyTitleItem buyColor">
-                                                            22943.79
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            0.0982
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            1047.78
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="entrustBodyOrderItem">
-                                                    <div class="d-flex justify-content-between flexBetween">
-                                                        <div class="entrustBodyTitleItem buyColor">
-                                                            22943.79
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            0.0982
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            1047.78
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="entrustBodyOrderItem">
-                                                    <div class="d-flex justify-content-between flexBetween">
-                                                        <div class="entrustBodyTitleItem buyColor">
-                                                            22943.79
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            0.0982
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            1047.78
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="entrustBodyOrderItem">
-                                                    <div class="d-flex justify-content-between flexBetween">
-                                                        <div class="entrustBodyTitleItem buyColor">
-                                                            22943.79
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            0.0982
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            1047.78
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="entrustBodyOrderItem">
-                                                    <div class="d-flex justify-content-between flexBetween">
-                                                        <div class="entrustBodyTitleItem buyColor">
-                                                            22943.79
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            0.0982
-                                                        </div>
-                                                        <div class="entrustBodyTitleItem right">
-                                                            1047.78
-                                                        </div>
-                                                    </div>
-                                                </div>
+
                                             </div>
 
 
@@ -440,284 +195,10 @@
                         <div class="orderTable2Body">
                             <div class="entrustBodyOrderSell">
                                 <div class="entrustBodyOrderSellList">
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem sellColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem sellColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem sellColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem sellColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem sellColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem sellColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem sellColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem sellColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem sellColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem sellColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem sellColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-
 
                                     <div class="entrustBodyOrderItem">
                                         <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem buyColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem buyColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem buyColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem buyColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem buyColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem buyColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem buyColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem buyColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem buyColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem buyColor">
-                                                22943.79
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                0.0982
-                                            </div>
-                                            <div class="entrustBodyTitleItem right">
-                                                1047.78
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="entrustBodyOrderItem">
-                                        <div class="d-flex justify-content-between flexBetween">
-                                            <div class="entrustBodyTitleItem buyColor">
+                                            <div class="entrustBodyTitleItem sellColor">
                                                 22943.79
                                             </div>
                                             <div class="entrustBodyTitleItem right">
@@ -904,14 +385,80 @@ export default {
     },
     data: () => ({
         exchange: [],
+        coinDetails: [],
+
+        orderbook:[],
     }),
     methods: {
+        getallConin() {
+            axios.get('https://api.coincap.io/v2/assets?Authorization=Bearer').then((response) => {
+
+                let cointoken = this.$route.params.coinpair;
+
+                const myArray = cointoken.split("_")
+
+                const object1 = [];
+                response.data.data.filter((value, Key) => {
+                    if (value.symbol == myArray[0]) {
+                        object1.push(value);
+                    }
+                })
+
+                this.coinDetails = object1[0];
+            })
+        },
+
         trading() {
 
+            let cointoken = this.$route.params.coinpair;
+
+            const myArray = cointoken.split("_")
+
+            new TradingView.widget(
+                {
+                    "width": '100%',
+                    "height": 564,
+                    "symbol": myArray[0] + myArray[1],
+                    "interval": "D",
+                    "timezone": "Etc/UTC",
+                    "theme": "light",
+                    "style": "1",
+                    "locale": "en",
+                    "toolbar_bg": "#f1f3f6",
+                    "enable_publishing": false,
+                    "allow_symbol_change": true,
+                    "container_id": "tradingview_cba47"
+                }
+            );
+        },
+
+        getOrderbook() {
+            let cointoken = this.$route.params.coinpair;
+
+            const myArray = cointoken.split("_")
+            axios.get('/api/getorderbook/'+myArray[0] + myArray[1]).then((response) => {
+                this.orderbook = response.data;
+            });
         }
     },
     mounted() {
+
+        setInterval(this.getOrderbook, 2000);
+
         this.trading();
+        this.getallConin();
+
+        this.getOrderbook();
+
+        // let cointoken = this.$route.params.coinpair;
+
+        // const myArray = cointoken.split("_")
+
+        // const tradeWs = new WebSocket('wss://ws.coincap.io/trades/binance')
+
+        // tradeWs.onmessage =  (msg) => {
+        // 	console.log(msg);
+        // }
     }
 }
 </script>

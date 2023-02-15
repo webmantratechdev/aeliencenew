@@ -28,8 +28,6 @@ $(window).on('load', function () {
         $(".navigation_area").addClass("menu-visible");
         $(".menu_overlay").addClass("menu-visible");
         $(".menu_close_btn").addClass("menu-visible");
-        //$('body').toggleClass("body_overflow");
-        //$('body').css('overflow', 'hidden');	
 
     });
 
@@ -39,9 +37,6 @@ $(window).on('load', function () {
         $(".navigation_area").removeClass("menu-visible");
         $(".menu_overlay").removeClass("menu-visible");
         $(".menu_close_btn").removeClass("menu-visible");
-        //$(".meanmenu-reveal2").removeClass("meanclose");
-        //$('body').css('overflow', 'auto');
-        //$(".meanmenu-reveal2").removeClass("menu_close_btn");
     });
 
 
@@ -78,6 +73,36 @@ $(window).on('load', function () {
         $(".themeDashboarSidebar").removeClass("open");
         $(".menuCloseBtn").removeClass("open");
         $('body').css('overflow', 'auto');
+    });
+
+
+
+    $(".tradeFormHeaderTab .navtabs li").on('click', function () {
+        $(this).toggleClass("active");
+        $(".tradeFormHeaderTab .navtabs li").not(this).removeClass('active');
+    });
+
+    $(".tradeFormHeaderTab .navtabs .show").on('click',function () {
+        $(".marketForm").hide();
+        $(".limitForm").show();
+    });
+    $(".tradeFormHeaderTab .navtabs .hide").on('click', function () {
+        $(".limitForm").hide();
+        $(".marketForm").show();
+    });
+
+    $(".buySellTab .buySelltabs li").on('click', function () {
+        $(this).toggleClass("active");
+        $(".buySellTab .buySelltabs li").not(this).removeClass('active');
+    });
+
+    $(".buySellTab .buySelltabs .buy").on('click',function () {
+        $(".available").addClass("show");
+        $(".range-wrap").addClass("show");
+    });
+    $(".buySellTab .buySelltabs .sell").on('click',function () {
+        $(".available").removeClass("show");
+        $(".range-wrap").removeClass("show");
     });
 
 })

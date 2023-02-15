@@ -19,14 +19,14 @@
 			<div class="col-lg-6 col-md-6 col-sm-12 col-12 column_box">
 			<div class="form-group">
 			<label>Name</label>
-			<input type="text" class="form-control" required="">
+			<input type="text" class="form-control" required>
 			</div>
 			</div>
 			
 			<div class="col-lg-6 col-md-6 col-sm-12 col-12 column_box">
 			<div class="form-group">
 			<label>Email</label>
-			<input type="email" class="form-control" required="">
+			<input type="email" class="form-control" required>
 			</div>
 			</div>
 			

@@ -207,11 +207,11 @@
 								<!-- <div class="td d-inline-block" data-title="24h Vol"> 20.007M </div> -->
 								<div class="td d-inline-block d-flex">
 									<div class="">
-										<button type="button" class="alButton alButtonDefault" @click="commingsoon"
+										<router-link :to="'/market-details/'+coin.symbol" type="button" class="alButton alButtonDefault" 
 											style="margin-right: 5px;"><span>Details
-											</span></button>
-										<button type="button" class="alButton alButtonDefault"
-											@click="commingsoon"><span>Trades</span></button>
+											</span></router-link>
+										<router-link type="button" :to="'/trade/'+coin.symbol+'_USDT'" class="alButton alButtonDefault"
+											><span>Trades</span></router-link>
 									</div>
 									<div class="" style="display:none;">
 										<button type="button" class="alButton alButtonDefault">Coming soon!</button>

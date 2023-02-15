@@ -38,7 +38,7 @@
 
 
 body {
-    background: url('https://raw.githubusercontent.com/webmantratechdev/aeliencenew/main/public/images/Optimized-background_bg.jpg');
+    background: url('../css/images/Optimized-background_bg.jpg');
     background-repeat: no-repeat;
     background-position: top;
     background-size: cover;
@@ -2609,11 +2609,9 @@ body {
     color: #000922;
 }
 
-.themeMarkeTableList .alButton+..alButton {
+.themeMarkeTableList .alButton+.alButton {
     margin-left: 5px;
 }
-
-
 
 
 .themeMarkeTableList .tableBody .tr {
@@ -4104,24 +4102,558 @@ body {
 
 
 
+.breadcrumbs_sec2{
+	padding:15px 0px;
+}
+.breadcrumbs_sec2 .breadcrumbs{
+	margin:0 -12px;
+}
+.breadcrumbs_sec2 .breadcrumbs li{
+    color: #000;	
+	font-size:14px;
+    padding: 0 12px;	
+}
+.breadcrumbs_sec2 .breadcrumbs li:before{
+	color:#000;
+}
+.breadcrumbs_sec2 .breadcrumbs li a {
+    color: #000;   
+}
+.marketDtlsSec{
+	padding:40px 0;
+	min-width:800px;
+}
+.marketDtlsSec .line{
+    margin: 24px 0;
+    max-width: 640px;
+	width:100%;
+    height: 1px;
+    background-color: #efefef;	
+}
+.marketDtlsSec .division{
+    width: 100%;
+    height: 1px;
+    background-color: #efefef;	
+}
+.currencyInfoContainer{}
+.currencyInfoLeft{
+	margin-bottom:20px;
+}
+.currencyInfoLeft .currencyImage{}
+.currencyInfoLeft .currencyImage img{
+    width: 40px;
+    vertical-align: middle;	
+}
+.currencyInfoLeft .title{
+    color: #000922;
+    font-size: 36px;
+    line-height: 1;
+    margin: 0 10px;
+    font-weight: 600;    
+}
+.currencyInfoLeft .desc{
+	color: #7f8490;
+    font-size: 24px;
+    line-height: 1.5;
+  font-weight: 600;	
+}
+.currencyInfoLeft .currencyLink{
+    margin-top: 20px;
+    margin-bottom: 24px;	
+}
+.currencyInfoLeft .currencyLink .currencyLinkItem{
+    margin-right: 20px;	
+}
+.currencyInfoLeft .currencyLink .currencyLinkItem:last-child{
+    margin-right: 0px;	
+}
+.currencyInfoLeft .currencyLink .currencyLinkItem .elButton{
+    width: auto;
+    padding: 5px 12px;
+    border: none;
+    font-size: 14px;
+    background-color: #f9f9f9;	
+    color: #000922;	
+	border-radius: 4px;
+	font-family: latoMedium;	
+}
+.currencyInfoLeft .currencyLink .currencyLinkItem .elButton .txt i{
+	margin-right:5px;
+}
+.currencyInfoContainer .currencyInfoLeft .currencyLink .currencyLinkItem .elButton .icon i{
+	margin-left:2px;
+}
+.currencyInfoLeft .currencyMore .currencyMoreHead .currencyMoreImgs{
+    font-size: 14px;
+    border-radius: 4px;
+    padding: 4px 12px 4px 2px;
+    margin-top: 8px;
+    margin-right: 12px;
+    background-color: #f9f9f9	
+}
+.currencyInfoLeft .currencyMore .currencyMoreHead .currencyMoreImgs img{
+    width: 22px;
+    vertical-align: middle;	
+    margin-right: 3px;	
+}
+.currencyInfoLeft .currencyMore .currencyMoreHead .currencyMoreSelect {
+    margin-top: 8px;
+	font-size: 14px;
+    height: 28px;
+    border-radius: 4px;
+    padding: 5px 12px;
+    position: relative;	
+    cursor: pointer;	
+	background-color: #f9f9f9;
+    display: inline-block;	
+}
+.currencyInfoLeft .currencyMore .currencyMoreHead .currencyMoreSelect .titleFont i{
+	margin-left:2px;
+}
+.currencyInfoLeft .currencyMore .currencyMoreHead .currencyMoreSelect .imgs{
+	width:20px;
+}
+.currencyInfoLeft .currencyMore .currencyMoreHead .currencyMoreSelect .moreShow{
+    width: 200px;
+    max-height: 318px;
+    height: auto;
+    overflow-y: auto;
+    border-radius: 6px;
+    box-shadow: 1px 1px 7px 2px rgb(0 0 0 / 8%);
+    padding: 15px 15px;
+    position: absolute;
+    top: 28px;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;	
+    background: #fff;	
+}
+.currencyInfoLeft .currencyMore .currencyMoreHead .currencyMoreSelect:hover .moreShow{
+    opacity: 1;
+    visibility: visible;	
+}
+.currencyInfoLeft .currencyMore .currencyMoreHead .currencyMoreSelect .showTest{
+    width: 80%;
+    margin: 0 8px;
+}
+.currencyInfoLeft .currencyMore .currencyMoreHead .currencyMoreSelect .textFont{
+	 font-size: 12px;
+}
+.currencyInfoLeft .currencyMore .currencyMoreHead .currencyMoreSelect .adress{
+    color: #000922;
+    font-size: 12px;
+    font-weight: 600;	
+}
+.currencyInfoRight{
+	margin-bottom:20x;
+}
+.currencyInfoRight .infoPrice{}
+.currencyInfoRight .infoPrice{}
+.currencyInfoRight .price {
+    font-size: 28px;
+	color: #000922;
+	font-weight: 600;
+    vertical-align: sub;
+    margin-right: 14px;	
+}
+.currencyInfoRight .red{
+    padding: 4px 8px;
+    color: #fff;
+    font-size: 16px;
+    background: #ea3943;
+    border-radius: 4px ;    
+}
+.currencyInfoRight .priceNew{
+	margin-top:16px;
+}
+.currencyInfoRight .priceNew .textFont{
+	font-size: 12px;
+}
+.currencyInfoRight .priceNew .titleFont{
+	font-size: 12px;
+}
+.currencyInfoRight .priceNew .lineRed{
+    width: 66px;
+    height: 5px;
+    background: #f65d62;
+    border-radius: 3px;
+    opacity: 1;	
+	margin: 0 0 0 16px;	
+}
+.currencyInfoRight .priceNew .lineGreen{
+    width: 72px;
+    height: 5px;
+    background: #39af7b;
+    border-radius: 3px;	
+    margin: 0 16px 0 -3px;	
+}
+
+.currencyInfoRight .priceInfo{}
+.currencyInfoRight .priceInfo .priceInfoBox{}
+.currencyInfoRight .priceInfo .priceInfoBox .textFont{
+    color: #7f8490;
+    font-size: 12px;	
+}
+.currencyInfoRight .priceInfo .priceInfoBox{}
+
+.currencyContentArea{
+	padding:48px 0 0;
+}
+
+.currencyEcharts{}
+.currencyEcharts .rankingList{}
+.rankingList .title{
+    color: #000922;
+    font-size: 25px;
+    line-height: 1;   
+    font-weight: 600;
+	margin-bottom:40px;	
+}
+
+.currencyRanking .rankingList{}
+.currencyRanking .rankingList .listItem{
+	padding: 10px 6px;
+    border-radius: 4px;
+	margin-bottom: 12px;
+    cursor: pointer;	
+}
+.currencyRanking .rankingList .listItem:hover{
+    background-color: #f9f9f9;	
+}
+
+.currencyRankingSideBar .rankingList{}
+
+.transferInfo{}
+.transferInfo .form-group{
+	margin-bottom:15px;
+}
+.transferInfo .labelName{
+	margin-bottom:5px;
+}
+.transferInfo .formGroupinner {
+	position:relative;
+}
+.transferInfo .formGroupinner .form-control{
+    background-color: #f9f9f9;
+    height: 64px;
+    border: none;
+    color: #000922;	
+	box-shadow:none !important;
+}
+.transferInfo .formGroupinner .postion{
+    padding: 4px 12px;
+    border-radius: 35px;
+    position: absolute;
+    top: 16px;
+	right:15px;
+    background-color: #fff;	
+}
+.transferInfo .formGroupinner .postion img{}
+.transferInfo .formGroupinner .postion .fontText {}
+.transferInfo .formGroupinner .postion1{
+	padding: 4px 12px;    
+    position: absolute;
+    top: 16px;
+	right:15px;    
+}
+.stakingSec{
+	padding:30px 0;   
+}
+.stakingFilterArea{
+	margin-bottom:60px;
+}
+.stakingFilterAreainner{}
+.stakingFilterAreainner .stakingFilterItem{
+	margin-right:20px;
+}
+.stakingFilterAreainner .stakingFilterItem:last-child{
+	margin-right:0px;
+}
+.stakingSearchAreainner{
+	border-bottom:1px solid #ddd;
+    width: 400px;	
+}
+.stakingSearchAreainner .stakingSearchInput{
+	border:0;
+	box-shadow:none !important;
+}
+.stakingSearchAreainner .stakingSearchBtn{
+	border:0;
+	box-shadow:none !important;
+	background:transparent;
+}
+.stakingFilterAreainner .stakingCheckBox{
+    padding: 5px 10px;
+    background: #fbfbfb;
+    border-radius: 4px;	
+}
+.stakingFilterAreainner .stakingCheckBox input{
+	box-shadow:none !important;
+}
+.stakingTableHeader{
+	margin-bottom:20px;
+}
+.stakingTableHeaderinner .leftSide .title {}
+.stakingTableHeaderinner .leftSide .videoGuideBtn {
+    padding: 3px 8px;
+    background: #fbf3de;
+    color: #333;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 500;
+    border: 1px solid #ebd497;
+    font-size: 14px;
+    font-weight: 500;	
+}
+.stakingTableHeaderinner .leftSide .videoGuideBtn .icon{}
+.stakingTableHeaderinner .leftSide .videoGuideBtn .txt i{}
+.stakingTableHeaderinner .rightSide .timelLineLink {
+	color:#333;    
+}
+.stakingTable{}
+.stakingTable table thead tr th{
+	font-weight:normal;
+    padding: 10px 15px;
+    background: #fbfbfb;	
+    border: 1px solid #eee;  
+}
+.stakingTable table thead tr th:nth-child(1){
+	width:15%;
+}
+.stakingTable table thead tr th:nth-child(2){
+	width:20%;
+}
+.stakingTable table thead tr th:nth-child(3){
+	width:25%;
+}
+.stakingTable table thead tr th:nth-child(4){}
+.stakingTable table tbody tr td{
+    padding: 30px 15px;	   
+}
+.stakingTable .greenColor{}
+.stakingTable .elButton{
+    min-width: 95px;
+    text-align: center;
+    padding: 5px 10px 5px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: #eaecef;
+    color: #000922;
+    border-radius: 4px;
+    font-weight: 500;
+}
+.stakingTable .elButton.border{
+	border: 1px solid #fec00f !important;	
+	min-width:55px;
+}
+.stakingTable .elButton:hover{
+	border: 1px solid #fec00f;	
+}
+
+.stakingTable .elButton2{
+    min-width: 95px;
+    text-align: center;
+    padding: 5px 10px 5px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: #eaecef;
+    color: #d7a106;
+    border-radius: 4px;
+    font-weight: 500;
+}
+.stakingTable .elButton2:hover{
+	border: 1px solid #fec00f;
+	background-color: #fec00f;
+    color: #000;
+}
+.stakingTable table tbody tr td .soldOut{
+    top: 0;
+    right: 0;
+    display: inline-block;
+    font-size: 12px;
+    background: #fbfbfb;
+    padding: 0px 5px;
+    color: #8d8989;
+    font-weight: 500;
+    border: 1px solid #eee;
+    border-top: 0;
+}
+
+.modal-dialog.stackModalDiolog{
+	max-width:900px;
+	width:100%;
+	text-align:left;
+}
+.stackModalContent{
+	overflow:hidden;
+}
+.stackModalContent .stackModalRowBox{
+	display:flex;
+}
+.stackModalContent .stackModalColumnBox {
+	width:50%;	
+}
+.stackModalContent .stackModalColumnBox:last-child {
+	background-color:#fbfbfb;
+}
+.stackModalHeader{
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;	
+}
+.stackModalBody{
+	 padding: 20px 20px;
+}
+.stackModalXpr{
+	margin-bottom:15px;
+}
+.stackModalXprinner .txt{
+    font-size: 20px;
+    line-height: 20px;	
+}
+.stackModalType{
+	margin-bottom:20px;
+}
+.stackModalType .labelName{
+	display:inline-block;
+	margin-bottom:5px;
+	font-weight:500;
+}
+.stackModalType .flexibleBtn{
+    text-align: center;
+    padding: 10px 10px 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: #eaecef;
+    color: #000922;
+    border-radius: 4px;
+    font-weight: 500;
+	width:100%;
+}
+.stackModalType .flexibleBtn.border{
+	border: 1px solid #fec00f !important;		
+}
+.stackModalAccount{
+margin-bottom:20px;	
+}
+.stackModalAccount .labelName{	
+	margin-bottom:5px;
+	font-weight:500;	
+}
+.stackModalAccount .labelName .txt{	
+	font-size: 12px;
+    color: #858383;	
+	font-weight:400;
+}
+.stackModalAccount .formGroupinner{
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.stackModalAccount .formGroupinner .form-control{
+	border:0;
+	box-shadow:none !important
+}
+.stackModalAccount .formGroupinner .txt{
+    padding: 0 10px;
+    border-right: 1px solid #ddd;	
+}
+.stackModalAccount .formGroupinner .max{
+    padding: 0 10px;	
+}
+.stackModalAccountInfo .labelName{	
+	display:block;
+	margin-bottom:5px;
+	font-weight:500;
+}
+.rightStackModalinner{
+	padding:20px 20px;
+}
+
+.stackModalSummeryList{
+	margin:0px;
+	padding:0px;
+	margin-bottom:20px;
+}
+.stackModalSummeryList li{
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;	
+}
+.stackModalSummeryList li:last-child{
+	border-bottom:0;
+}
+.stackModalSummeryList li .ttl{
+	font-weight:500;
+}
+.stackModalSummeryList li .txt{}
+.stackModalSummeryInfo .stackModalSummeryInfoBlk{
+	margin-bottom:15px;
+}
+.stackModalSummeryInfo .stackModalSummeryInfoBlk:last-child{
+	margin-bottom:0px;
+}
+.stackModalSummeryBtnArea{}
+.stackModalSummeryBtnArea .stackModalSummeryBtn{
+	text-align: center;
+    padding: 10px 10px 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: #eaecef;
+    color: #000922;
+    border-radius: 4px;
+    font-weight: 500;
+	width:100%;
+}
+.stakingBannerSec{
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center center;
+	background-size:cover;
+	padding:60px 0;	
+}
+.stakingBannerSec:before{
+	content:'';
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background-color:rgba(0,0,0,0.5);
+}
+.stakingBannerSecinner{
+	position: relative;
+}
+.stakingBannerContent{
+	color:#fff;
+}
+.stakingBannerContent h1.title{
+	font-size:35px;
+}
+.stakingBannerContent p.para{
+    font-size: 20px;
+    font-weight: 500;
+    color: #a3a2a0;
+}
 
 
 
 
+@media screen and (max-width:1370px) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-@media screen and (max-width:1370px) {}
+    .stakingSec{
+        font-size:14px;
+    }
+}
 
 @media screen and (max-width:1200px) {
     .navbarLogo_area img {

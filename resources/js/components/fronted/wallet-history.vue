@@ -36,7 +36,7 @@
 								<span class="txt">Futures</span>
 							</a>
 						</li> -->
-                        <li class="nav-item active" >
+                        <li class="nav-item active">
                             <router-link to="/overview/wallet-history" class="nav-link">
                                 <span class="icon"><i class="fa-light fa-calendar-clock"></i></span>
                                 <span class="txt">Wallet History</span>
@@ -100,7 +100,7 @@
                                                         <table id="example1" class="table soptTable" style="width:100%">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Time</th>
+                                                                
                                                                     <th>Currency</th>
                                                                     <th>Amount</th>
                                                                     <th>Network</th>
@@ -109,23 +109,19 @@
                                                                     <th>Status</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
-<!-- 
-                                                                <tr class="order_item">
-                                                                    <td data-title="Time">
-                                                                        10-12-2022 10:30:20
+                                                            <tbody v-if="walletHistory.data">
+
+                                                                <tr class="order_item"
+                                                                    v-for="deposit in walletHistory.data">
+                                                                    <td data-title="Currency">{{ deposit.currency }}
                                                                     </td>
-                                                                    <td data-title="Currency">Dollar</td>
-                                                                    <td data-title="Amount">₹2400</td>
-                                                                    <td data-title="Network">********</td>
-                                                                    <td data-title="Address">********</td>
-                                                                    <td data-title="TXID">********</td>
-                                                                    <td data-title="Status">********</td>
-                                                                </tr> -->
-
-
-
-
+                                                                    <td data-title="Amount">{{ deposit.amount }}</td>
+                                                                    <td data-title="Network">{{ deposit.network }}</td>
+                                                                    <td data-title="Address">{{ deposit.address }}</td>
+                                                                    <td data-title="TXID">{{ deposit.txId }}</td>
+                                                                    <td data-title="Status">{{ deposit.operationType }}
+                                                                    </td>
+                                                                </tr>
                                                             </tbody>
 
                                                         </table>
@@ -141,7 +137,7 @@
                                                         <table id="example2" class="table soptTable" style="width:100%">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Time</th>
+                                                                  
                                                                     <th>Currency</th>
                                                                     <th>Amount</th>
                                                                     <th>Network</th>
@@ -150,23 +146,19 @@
                                                                     <th>Status</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
-<!-- 
-                                                                <tr class="order_item">
-                                                                    <td data-title="Time">
-                                                                        10-12-2022 10:30:20
+                                                            <tbody v-if="walletHistory.data">
+
+                                                                <tr class="order_item"
+                                                                    v-for="deposit in walletHistory.data">
+                                                                    <td data-title="Currency">{{ deposit.currency }}
                                                                     </td>
-                                                                    <td data-title="Currency">Dollar</td>
-                                                                    <td data-title="Amount">₹2400</td>
-                                                                    <td data-title="Network">********</td>
-                                                                    <td data-title="Address">********</td>
-                                                                    <td data-title="TXID">********</td>
-                                                                    <td data-title="Status">********</td>
-                                                                </tr> -->
-
-
-
-
+                                                                    <td data-title="Amount">{{ deposit.amount }}</td>
+                                                                    <td data-title="Network">{{ deposit.network }}</td>
+                                                                    <td data-title="Address">{{ deposit.address }}</td>
+                                                                    <td data-title="TXID">{{ deposit.txId }}</td>
+                                                                    <td data-title="Status">{{ deposit.operationType }}
+                                                                    </td>
+                                                                </tr>
                                                             </tbody>
 
                                                         </table>
@@ -181,7 +173,7 @@
                                                         <table id="example3" class="table soptTable" style="width:100%">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Time</th>
+                                                                 
                                                                     <th>Currency</th>
                                                                     <th>Amount</th>
                                                                     <th>Network</th>
@@ -190,23 +182,19 @@
                                                                     <th>Status</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            <tbody v-if="walletHistory.data">
 
-                                                                <!-- <tr class="order_item">
-                                                                    <td data-title="Time">
-                                                                        10-12-2022 10:30:20
+                                                                <tr class="order_item"
+                                                                    v-for="deposit in walletHistory.data">
+                                                                    <td data-title="Currency">{{ deposit.currency }}
                                                                     </td>
-                                                                    <td data-title="Currency">Dollar</td>
-                                                                    <td data-title="Amount">₹2400</td>
-                                                                    <td data-title="Network">********</td>
-                                                                    <td data-title="Address">********</td>
-                                                                    <td data-title="TXID">********</td>
-                                                                    <td data-title="Status">********</td>
+                                                                    <td data-title="Amount">{{ deposit.amount }}</td>
+                                                                    <td data-title="Network">{{ deposit.network }}</td>
+                                                                    <td data-title="Address">{{ deposit.address }}</td>
+                                                                    <td data-title="TXID">{{ deposit.txId }}</td>
+                                                                    <td data-title="Status">{{ deposit.operationType }}
+                                                                    </td>
                                                                 </tr>
- -->
-
-
-
                                                             </tbody>
 
                                                         </table>
@@ -219,7 +207,7 @@
                                                         <table id="example4" class="table soptTable" style="width:100%">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Time</th>
+                                                                    <!-- <th>Time</th> -->
                                                                     <th>Currency</th>
                                                                     <th>Amount</th>
                                                                     <th>Network</th>
@@ -228,19 +216,19 @@
                                                                     <th>Status</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
-                                                                <!-- <tr class="order_item">
-                                                                    <td data-title="Time">
-                                                                        10-12-2022 10:30:20
-                                                                    </td>
-                                                                    <td data-title="Currency">Dollar</td>
-                                                                    <td data-title="Amount">₹2400</td>
-                                                                    <td data-title="Network">********</td>
-                                                                    <td data-title="Address">********</td>
-                                                                    <td data-title="TXID">********</td>
-                                                                    <td data-title="Status">********</td>
-                                                                </tr> -->
+                                                            <tbody v-if="walletHistory.data">
 
+                                                                <tr class="order_item"
+                                                                    v-for="deposit in walletHistory.data">
+                                                                    <td data-title="Currency">{{ deposit.currency }}
+                                                                    </td>
+                                                                    <td data-title="Amount">{{ deposit.amount }}</td>
+                                                                    <td data-title="Network">{{ deposit.network }}</td>
+                                                                    <td data-title="Address">{{ deposit.address }}</td>
+                                                                    <td data-title="TXID">{{ deposit.txId }}</td>
+                                                                    <td data-title="Status">{{ deposit.operationType }}
+                                                                    </td>
+                                                                </tr>
                                                             </tbody>
 
                                                         </table>
@@ -282,9 +270,20 @@ export default {
 
     },
     data: () => ({
-
+        walletHistory: [],
     }),
     methods: {
+
+        getWalletHistory() {
+            var userid = localStorage.getItem('profileid')
+            axios.get('/api/getWalletHistory/' + userid)
+                .then((response) => {
+
+                    console.log(response.data);
+                    this.walletHistory = response.data;
+                })
+        },
+
         getProfile() {
             let profileid = localStorage.getItem('profileid');
             axios.post('/api/getProfile', { profileid: profileid }).then((response) => {
@@ -297,6 +296,8 @@ export default {
         }
     }, mounted() {
         this.getProfile()
+
+        this.getWalletHistory();
     }
 
 

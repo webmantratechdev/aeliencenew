@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -43,3 +42,33 @@ Route::get('/getallCitybystate/{stateid}', 'App\Http\Controllers\Api\UserControl
 
 
 Route::post('/updateprofilebyadmin', 'App\Http\Controllers\Api\UserController@updateprofilebyadmin');
+
+// binance
+Route::get('/getAllCoin', 'App\Http\Controllers\Api\BinanceController@getAllCoin');
+Route::get('/getorderbook/{pair}', 'App\Http\Controllers\Api\BinanceController@getorderbook');
+
+
+// tatum ->generateTronWallet->createVirtualAccount->createDepositaddress
+Route::get('/getdepositeaddress/{coin}/{network}/{userid}', 'App\Http\Controllers\Api\TatumController@getdepositeaddress');
+Route::get('/getWalletHistory/{userid}', 'App\Http\Controllers\Api\TatumController@getWalletHistory');
+Route::get('/getrecentdepositHistory/{coin}/{userid}', 'App\Http\Controllers\Api\TatumController@getrecentdepositHistory');
+Route::get('/getaccountidbycontin/{userid}/{symbold}', 'App\Http\Controllers\Api\TatumController@getaccountidbycontin');
+
+// network controller
+
+Route::get('/getAllnetwork', 'App\Http\Controllers\Api\NetworkController@getAllnetwork');
+
+// token controller
+Route::get('/getAllToken', 'App\Http\Controllers\Api\TokenController@getAllToken');
+Route::get('/get_custom_tokens', 'App\Http\Controllers\Api\TokenController@get_custom_tokens');
+
+
+// stacking controller
+Route::get('/get_staking_currencies', 'App\Http\Controllers\Api\StackingController@get_staking_currencies');
+Route::post('/add_staking_currencies', 'App\Http\Controllers\Api\StackingController@add_staking_currencies');
+Route::get('/get_single_staking_currencies/{stackid}', 'App\Http\Controllers\Api\StackingController@get_single_staking_currencies');
+Route::post('/update_staking_currencies', 'App\Http\Controllers\Api\StackingController@update_staking_currencies');
+Route::get('/update_stacking_status/{stackid}', 'App\Http\Controllers\Api\StackingController@update_stacking_status');
+Route::post('/createstackinglog', 'App\Http\Controllers\Api\StackingController@createstackinglog');
+
+
