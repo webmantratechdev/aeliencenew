@@ -79,7 +79,6 @@ class StackingController extends Controller
     public function update_staking_currencies(Request $request)
     {
 
-
         $array = [
             "title" => $request->get('title'),
             "symbol" => $request->get('symbol'),
@@ -126,10 +125,12 @@ class StackingController extends Controller
     }
 
 
+
     public function createstackinglog(Request $request)
     {
 
         $stackCoin = DB::table('staking_currencies')->where('id', $request->get('coin_id'))->get()->first();
+
 
         $price = $this->getCoinRate($request->get('symbol'));
 
@@ -151,13 +152,13 @@ class StackingController extends Controller
 
             $ledger_accounts = DB::table('ledger_accounts')->where(['user_id' => $request->get('userid'), 'currency' => $request->symbol])->get(['account_id'])->first();
 
+            
             $datasdf = $this->transfertowallet($ledger_accounts->account_id, '63e7840d72c112999fa40b06', $request->get('amount'));
 
             print_r($datasdf);
-
             exit;
         }
-
+    
     }
 
 

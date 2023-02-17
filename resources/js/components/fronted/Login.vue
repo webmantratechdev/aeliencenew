@@ -7,7 +7,7 @@
                     <div class="col-lg-4 col-md-5 col-sm-12 col-12 p-0 column_box leftSideColumn">
                         <div class="leftSideColumninner">
                             <div class="site_area">
-                                <a href="index.php" class="site_Logo"><img src="/images/logo.png" class="img-fluid"
+                                <a href="/" class="site_Logo"><img src="/images/logo.png" class="img-fluid"
                                         alt="" /></a>
                             </div>
                             <div class="walletThumnail_area">

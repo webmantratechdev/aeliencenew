@@ -53,20 +53,20 @@ class UserController extends Controller
         if ($exist) {
             DB::table('users')->where('email', $data['email'])->update(['password' => Hash::make($data['otp'])]);
 
-            // $to = $data['email'];
-            // $subject = "Aelince Verification OTP: ".$data['otp'];
+            $to = $data['email'];
+            $subject = "Aelince Verification OTP: ".$data['otp'];
 
-            // $message = "Please use the verification code below on the Aelince website: ".$data['otp'];
+            $message = "Please use the verification code below on the Aelince website: ".$data['otp'];
 
-            // // Always set content-type when sending HTML email
-            // $headers = "MIME-Version: 1.0" . "\r\n";
-            // $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+            // Always set content-type when sending HTML email
+            $headers = "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
-            // // More headers
-            // $headers .= 'From: <support@aelince.com>' . "\r\n";
-            // $headers .= 'Cc: no-reply@aelince.com' . "\r\n";
+            // More headers
+            $headers .= 'From: <support@aelince.com>' . "\r\n";
+            $headers .= 'Cc: no-reply@aelince.com' . "\r\n";
 
-            // mail($to,$subject,$message,$headers);
+            mail($to,$subject,$message,$headers);
 
             return response()->json(['status' => 1, 'otp' => $data['otp']]);
         } else {
@@ -79,17 +79,36 @@ class UserController extends Controller
 
         $opt = mt_rand(111111, 999999);
 
-        $data = [
-            'name' => "Virat Gandhi",
-            'email' => trim($request->get('email')),
-            'phone' => trim($request->get('phone')),
-            'otp' => $opt
-        ];
+        $exist = DB::table('users')->where('email', trim($request->get('email')))->orWhere('phone', trim($request->get('phone')))->get()->first();
 
-        $this->sendoptsms($data['phone'], $data['otp']);
-        $this->sentotpmail($data['email'], $data['otp']);
+        if($exist){
 
-        return response()->json($data);
+            $data = [
+                'name' => "Virat Gandhi",
+                'email' => trim($request->get('email')),
+                'phone' => trim($request->get('phone')),
+                'otp' => $opt,
+                'status' => 301,
+            ];
+            return response()->json($data);
+
+        }else{
+
+            $data = [
+                'name' => "Virat Gandhi",
+                'email' => trim($request->get('email')),
+                'phone' => trim($request->get('phone')),
+                'otp' => $opt,
+                'status' => 200,
+            ];
+    
+            $this->sendoptsms($data['phone'], $data['otp']);
+            $this->sentotpmail($data['email'], $data['otp']);
+    
+            return response()->json($data);
+        }
+
+        
     }
 
 
@@ -157,7 +176,7 @@ class UserController extends Controller
             'name' => '',
             'username' => '',
             'email' => $request->get('email'),
-            'phone' => '',
+            'phone' => trim($request->get('phone')),
             'address' => '',
             'city' => '',
             'country' => '',
@@ -229,7 +248,6 @@ class UserController extends Controller
             'last_name' => '',
             'name' => $request->get('fullname'),
             'username' => $request->get('fullname'),
-            'phone' => $request->get('phone'),
             'address' => $request->get('addresss'),
             'city' => $request->get('city'),
             'country' => $country->name,

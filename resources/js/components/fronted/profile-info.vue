@@ -29,7 +29,7 @@
 									<div class="col-lg-6 col-md-6 col-sm-12 col-12 column_box">
 										<div class="form-group">
 											<label>Phone No.<span style="color:#fec00f">*</span></label>
-											<input type="number" name="phone" class="form-control" v-model="phone">
+											<input type="number" name="phone" class="form-control" v-model="phone" readonly>
 										</div>
 									</div>
 
@@ -85,8 +85,9 @@
 							</div>
 						</div>
 						<div class="backNextBtn_area">
-							<button @click="updatebasicinfo" class="next_btn"><span class="txt">Continue</span> <i
-									class="fa fa-angle-right"></i></button>
+						
+							<v-btn  @click="updatebasicinfo" class="next_btn" style="color:black;" :loading="createload">Continue <i class="fa fa-angle-right"></i></v-btn>
+
 						</div>
 					</div>
 
@@ -94,6 +95,11 @@
 				</div>
 			</div>
 		</section>
+
+		<v-snackbar v-model="snackbar" color="red accent-2">
+            {{ snackbartext }}
+        </v-snackbar>
+
 	</div>
 </template>
 
@@ -113,10 +119,26 @@ export default {
 		city: null,
 		pincode: null,
 
+
+		snackbar: false,
+        snackbartext: null,
+
+		createload: false,
+
 	}),
 	methods: {
 
 		updatebasicinfo() {
+			this.createload = true;
+
+			if (this.fullname == null || this.phone == null || this.addresss == null || this.statesd == '') {
+                this.snackbar = true;
+                this.snackbartext = 'Fields are required';
+                this.createload = false;
+
+				return false;
+            } 
+
 			var dataString = {
 				profileid: localStorage.getItem('profileid'),
 				fullname: this.fullname,
@@ -131,7 +153,7 @@ export default {
 			axios.post('/api/updatebasicinfo', dataString).then((response) => {
 
 				this.$router.push('/govtid');
-
+				this.createload = false;
 			})
 		},
 
@@ -140,7 +162,7 @@ export default {
 			axios.post('/api/getProfile', { profileid: profileid }).then((response) => {
 
 				if (response.data.id) {
-
+					this.phone = response.data.phone;
 				} else {
 					this.$router.push('/login');
 				}

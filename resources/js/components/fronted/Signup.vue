@@ -22,7 +22,7 @@
                         </div>
                         <div class="form-group">
                             <label class="label_name">Phone</label>
-                            <input type="number" class="form-control" maxlength="10" v-model="phone"  @input="updateValue">
+                            <input type="number" class="form-control" maxlength="10" v-model="phone" @input="updateValue">
                         </div>
                         <div class="form-group">
                             <label class="label_name">Password</label>
@@ -48,9 +48,9 @@
                             </div>
                         </div>
                         <div class="form-group loginRegistrationFormFldBtn_area">
-                            <button type="submit" name="register" dark class="loginRegistrationFormFldBtn"
-                                style="color:black;" @click="submitcreateform">Create
-                                Account</button>
+                            <v-btn @click="submitcreateform" class="loginRegistrationFormFldBtn"
+                                style="color:black;padding: 3px; height: 48px;" :loading="createload">Create Account</v-btn>
+
                         </div>
                     </div>
 
@@ -63,8 +63,12 @@
                             <label class="mb-2">Enter OTP</label>
                             <input type="text" class="form-control" v-model="validotp" placeholder="">
                         </div>
+                        <div class="mb-3"><v-btn @click="resendotp" variant="outlined" :loading="resendloader"
+                                style="text-transform: none;">Resend OTP</v-btn></div>
+
                         <div class="form-group loginRegistrationFormFldBtn_area">
-                            <button @click="verifyotps" dark class="loginRegistrationFormFldBtn">Verify Otp</button>
+                            <v-btn @click="verifyotps" class="loginRegistrationFormFldBtn"
+                                style="color:black;padding: 3px; height: 48px;" :loading="verifyotpsload">Verify Otp</v-btn>
                         </div>
                     </div>
 
@@ -76,10 +80,10 @@
 
         <Footer></Footer>
 
-        <v-snackbar v-model="snackbar">
+        <v-snackbar v-model="snackbar" color="red accent-2">
             {{ snackbartext }}
         </v-snackbar>
-    </v-app>
+</v-app>
 </template>
 
 <script>
@@ -110,9 +114,37 @@ export default {
         snackbar: false,
         snackbartext: null,
 
+
+        createload: false,
+        verifyotpsload: false,
+
+        resendloader: false,
+
     }),
     methods: {
+        resendotp() {
+            this.resendloader = true;
+            let dataString = {
+                email: this.email,
+                phone: this.phone,
+                password: this.password,
+                referral_code: this.referral_code,
+            }
+            axios.post('/api/sendveryotp', dataString).then((response) => {
+                if (response.data.status == 200) {
+                    this.sixdigitotp = response.data.otp;
+                    this.snackbar = true;
+                    this.snackbartext = 'OTP sent..';
+                } else {
+                    this.snackbar = true;
+                    this.snackbartext = 'Email address or Phone Number already exist';
+                }
+                this.resendloader = false;
+
+            })
+        },
         verifyotps() {
+            this.verifyotpsload = true;
             if (this.validotp == this.sixdigitotp) {
                 let dataString = {
                     email: this.email,
@@ -124,18 +156,21 @@ export default {
                     if (response.data.id) {
                         this.$router.push('/profile-info');
                         localStorage.setItem('profileid', response.data.id)
+                        this.verifyotpsload = false;
                     }
                 })
             } else {
                 this.snackbar = true;
-                this.snackbartext = 'enter valid otp';
+                this.snackbartext = 'Invalid OTP entered';
+                this.verifyotpsload = false;
             }
         },
         submitcreateform() {
+            this.createload = true;
             if (this.phone == null || this.email == null || this.password == null) {
                 this.snackbar = true;
                 this.snackbartext = 'Fields are required';
-              
+                this.createload = false;
             } else {
 
                 var phoneno = /^\d{10}$/;
@@ -148,13 +183,21 @@ export default {
                         referral_code: this.referral_code,
                     }
                     axios.post('/api/sendveryotp', dataString).then((response) => {
-                        this.sixdigitotp = response.data.otp;
-                        console.log(response.data.otp);
+                        if (response.data.status == 200) {
+                            this.sixdigitotp = response.data.otp;
+                        } else {
+                            this.snackbar = true;
+                            this.snackbartext = 'Email address or Phone Number already exist';
+                        }
+                        this.createload = false;
+
                     })
                 } else {
                     this.snackbar = true;
                     this.snackbartext = 'Phone Number must be in 10 digit';
+                    this.createload = false;
                 }
+
             }
         },
         showreffer() {
@@ -193,5 +236,4 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
-}
-</style>
+}</style>
