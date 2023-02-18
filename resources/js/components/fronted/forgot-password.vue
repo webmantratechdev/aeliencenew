@@ -37,8 +37,8 @@
                                     </div>
 
                                     <div class="form-group loginRegistrationFormFldBtn_area" v-if="status == 0">
-                                        <button class="loginRegistrationFormFldBtn" @click="forgotpassword"
-                                            style="color: #000; text-decoration: none !important; display: block; width: 100%; text-align: center;">Submit</button>
+                                        <v-btn class="loginRegistrationFormFldBtn" @click="forgotpassword" :loading="btnloadre"
+                                            style="color: #000; text-decoration: none !important; display: block; width: 100%; text-align: center; padding: 8px; height: 48px;">Submit</v-btn>
                                     </div>
 
                                     <div class="RuleWithText" style="text-align: center;  margin-bottom: 10px;"  v-if="status == 0">OR</div>
@@ -75,10 +75,11 @@ export default {
         snackbartext: null,
 
         status: 0,
-
+        btnloadre: false,
     }),
     methods: {
         forgotpassword() {
+            this.btnloadre = true;
             let dataString = {
                 email: this.email
             }
@@ -90,6 +91,7 @@ export default {
                 }else{
                     this.snackbar = true;
                     this.snackbartext = 'Password has been sent on '+this.email; 
+                    this.btnloadre = false;
                 }
                 this.status = response.data.status;
             })

@@ -13,7 +13,7 @@ class NetworkController extends Controller
     //
      public function getAllnetwork() {
 
-        $newtworkd = DB::table('networks')->get();
+        $newtworkd = DB::table('networks')->orderBy('id', 'DESC')->get();
 
         return response()->json($newtworkd);
 

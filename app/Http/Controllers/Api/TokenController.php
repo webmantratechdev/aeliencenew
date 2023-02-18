@@ -14,7 +14,7 @@ class TokenController extends Controller
 
     public function getAllToken() {
         
-        $token = DB::table('mainnet_tokens')->get();
+        $token = DB::table('mainnet_tokens')->orderBy('id', 'DESC')->get();
 
         return response()->json($token);
 

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,8 @@ Route::get('/getAllUsers', 'App\Http\Controllers\Api\UserController@getAllUsers'
 Route::post('/updateuserstatus', 'App\Http\Controllers\Api\UserController@updateuserstatus');
 Route::post('/deleteuser', 'App\Http\Controllers\Api\UserController@deleteuser');
 Route::post('/userchangepassowrd', 'App\Http\Controllers\Api\UserController@userchangepassowrd');
+Route::post('/userauthgoogle', 'App\Http\Controllers\Api\UserController@userauthgoogle');
+Route::post('/usergoogleotpverify', 'App\Http\Controllers\Api\UserController@usergoogleotpverify');
 
 
 Route::get('/getAllcountry', 'App\Http\Controllers\Api\UserController@getAllcountry');
@@ -73,3 +76,17 @@ Route::post('/createstackinglog', 'App\Http\Controllers\Api\StackingController@c
 Route::get('/getStackingLog', 'App\Http\Controllers\Api\StackingController@getStackingLog');
 
 
+
+// mail
+// Route::get('/sendmail', function() {
+    
+//     $data = array('name'=>"Virat Gandhi", 'email' => 'dheeraj.webmantra@gmail.com');
+
+//     Mail::send('emails.otp', $data, function($message) use ($data){
+
+//         $message->to($data['email'], 'Aelince')->subject('Aelince Verification OTP');
+//         $message->from('support@aelince.com','Aelince');
+
+//     });
+
+// });

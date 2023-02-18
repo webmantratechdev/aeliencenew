@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Mail;
-
 use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -51,24 +51,16 @@ class UserController extends Controller
         $exist = DB::table('users')->where('email', $data['email'])->get()->first();
 
         if ($exist) {
+
             DB::table('users')->where('email', $data['email'])->update(['password' => Hash::make($data['otp'])]);
 
-            $to = $data['email'];
-            $subject = "Aelince Verification OTP: " . $data['otp'];
-
-            $message = "Please use the verification code below on the Aelince website: " . $data['otp'];
-
-            // Always set content-type when sending HTML email
-            $headers = "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
-            // More headers
-            $headers .= 'From: <support@aelince.com>' . "\r\n";
-            $headers .= 'Cc: no-reply@aelince.com' . "\r\n";
-
-            mail($to, $subject, $message, $headers);
-
+            Mail::send('emails.resetpassword', $data, function($message) use ($data) {
+                $message->to($data['email'], 'Aelince')->subject('Aelince rassword reset');
+                $message->from('support@aelince.com','Aelince');
+            });
+        
             return response()->json(['status' => 1, 'otp' => $data['otp']]);
+
         } else {
             return response()->json(['status' => 0]);
         }
@@ -102,45 +94,17 @@ class UserController extends Controller
             ];
 
             $this->sendoptsms($data['phone'], $data['otp']);
-            $this->sentotpmail($data['email'], $data['otp']);
+            
+            Mail::send('emails.otp', $data, function($message) use ($data) {
+                $message->to($data['email'], 'Aelince')->subject('Aelince Verification OTP : '.$data['otp']);
+                $message->from('support@aelince.com','Aelince');
+            });
 
             return response()->json($data);
         }
     }
 
 
-    public function sentotpmail($email, $otp)
-    {
-        $to = $email;
-        $subject = "Aelince Verification OTP: " . $otp;
-
-        $message = "
-        
-        Confirm Your Registration<br>
-        Welcome to Aelince!<br>
-        Here is your account activation code:<br><br>
-        
-        <b> " . $otp . " </b>
-        <br><br>
-        Security Tips:<br>
-        * Never give your password to anyone.<br>
-        * Never call any phone number for someone claiming to be Aelince Support.<br>
-        * Never send any money to anyone claiming to be a member of Binance team.<br>
-        * Enable Google Two Factor Authentication.<br>
-        * Bookmark www.aelince.com to verify the domain you're visiting.<br><br>
-        
-        If you don't recognize this activity, please contact our customer support immediately at: https://www.aelince.com/en/contact.";
-
-        // Always set content-type when sending HTML email
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
-        // More headers
-        $headers .= 'From: <support@aelince.com>' . "\r\n";
-        $headers .= 'Cc: no-reply@aelince.com' . "\r\n";
-
-        mail($to, $subject, $message, $headers);
-    }
 
     public function sendoptsms($number, $otp)
     {
@@ -297,13 +261,27 @@ class UserController extends Controller
 
     public function updateselfie(Request $request)
     {
+
+        $fetch = DB::table('users')->where('id', $request->get('profileid'))->get()->first();
+
+        $maildata = [
+            'email' => $fetch->email,
+            'name' => $fetch->name,
+        ];
+        Mail::send('emails.registercomplete', $maildata, function($message) use ($maildata){
+             $message->to($maildata['email'], $maildata['name'])->subject('Congrats! Your Profile Received.');
+             $message->from('support@aelince.com','Aelince');
+         });
+
         $data = [
             'profile' => $request->get('selfie'),
         ];
         $fetchdata = DB::table('users')->where('id', $request->get('profileid'))->update($data);
 
         if ($fetchdata) {
+
             return response()->json(['status' => 1]);
+
         } else {
             return response()->json(['status' => 0]);
         }
@@ -347,17 +325,17 @@ class UserController extends Controller
             }
 
 
-            $to = $fetchUser->email;
-            $subject = "Kyc verification " . $status;
-            $message = "Kyc verification ".$status;
-          
-            $headers = "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $headers .= 'From: <support@aelince.com>' . "\r\n";
-            $headers .= 'Cc: no-reply@aelince.com' . "\r\n";
+            $data = [
+                'email' => $fetchUser->email,
+                'status' => $status,
+            ];
 
-            mail($to, $subject, $message, $headers);
+            Mail::send('emails.kycstatus', $data, function($message) use ($data){
 
+                $message->to($data['email'], 'Aelince')->subject('Aelince Your KYC Status');
+                $message->from('support@aelince.com','Aelince');
+        
+            });
 
             return  $update;
         } else {
@@ -393,5 +371,48 @@ class UserController extends Controller
     {
         $cities = DB::table('cities')->where('state_id', $stateid)->get();
         return response()->json($cities);
+    }
+
+
+    public function userauthgoogle(Request $request) {
+
+        $update = DB::table('users')->where('id', $request->get('profileid'))->get()->first();
+       
+
+        $google2fa = app('pragmarx.google2fa');
+
+        $registration_data = [];
+
+        $registration_data["google2fa_secret"] = ($update->google2fa_secret)?$update->google2fa_secret:$google2fa->generateSecretKey();
+
+        $registration_data['email'] = $update->email;
+
+        $QR_Image = $google2fa->getQRCodeInline(
+            config('app.name'),
+            $registration_data['email'],
+            $registration_data['google2fa_secret']
+        );
+
+
+        return response()->json(['QR_Image' => $QR_Image, 'secret' => $registration_data['google2fa_secret']]);
+
+    }
+
+    public function usergoogleotpverify(Request $request) {
+
+
+        $google2fa = app('pragmarx.google2fa');
+
+        if($google2fa->verifyGoogle2FA($request->get('secret'), $request->get('google2faotp'))){
+
+            DB::table('users')->where('id', $request->get('profileid'))->update(['google2fa_secret' => $request->get('secret')]);
+
+            return response()->json(['status' => 1]);
+        }else
+        {
+
+            return response()->json(['status' => 0]);
+        }
+
     }
 }

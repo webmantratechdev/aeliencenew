@@ -56,9 +56,7 @@
 								<router-link class="back_btn" to="/govtid"><i
 										class="fa fa-angle-left" aria-hidden="true"></i> <span class="txt">Back</span>
 								</router-link>
-								<button type="submit" name="continue_selfie" class="next_btn" @click="updateselfie"><span
-										class="txt">Continue</span> <i class="fa fa-angle-right"
-										aria-hidden="true"></i></button>
+								<v-btn class="next_btn" @click="updateselfie" :loading="btnload"><span class="txt">Continue</span> <i class="fa fa-angle-right" aria-hidden="true"></i></v-btn>
 							</div>
 						</div>
 			
@@ -75,6 +73,8 @@
 		    selfie:null,
 
 			backalert: null,
+
+			btnload: false,
 		}),
 		methods:{
 			frontonFileChange(e) {
@@ -88,14 +88,14 @@
 			},
 			
 			updateselfie() {
+				this.btnload = true;
 				var dataString = {
 					profileid: localStorage.getItem('profileid'),
 					selfie: this.selfie,
 
 				}
-
 				axios.post('/api/updateselfie', dataString).then((response) => {
-					
+					this.btnload = false;
 					this.$router.push('/kyc-pending');
 
                 })
