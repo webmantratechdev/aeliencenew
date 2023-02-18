@@ -31,6 +31,7 @@
 
                 <tr v-for="user in users.data">
                     <th scope="row"><v-img :src="'/images/'+user.icon" style="width: 50px;"></v-img></th>
+                    <th scope="row">{{ user.title }}</th>
                     <th scope="row">{{ user.symbol }}</th>
                     <th scope="row">{{ user.network }}</th>
                     <th scope="row">{{ user.amount }}</th>

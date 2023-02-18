@@ -23,9 +23,7 @@ class TokenController extends Controller
 
     public function get_custom_tokens() {
         $custom_tokens = DB::table('custom_tokens')->paginate(10);
-
         return response()->json($custom_tokens);
-
     }
 
 

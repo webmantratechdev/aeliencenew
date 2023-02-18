@@ -45,8 +45,13 @@
 
 											<div class="img_upload_area">
 												<div class="box">
-													<div class="js--image-preview"
-														:style="'background-image: url(/upload/' + front + ');'">
+													<div class="js--image-preview" :style="'background-image: url(/upload/' + front + ');'">
+														<div class="d-flex align-center justify-center fill-height" v-if="fronalert != null">
+															<v-progress-circular
+															color="grey-lighten-4"
+															indeterminate
+															></v-progress-circular>
+														</div>
 													</div>
 													<div class="upload-options">
 														<label>
@@ -65,8 +70,13 @@
 											<label>Govt. ID (Back Side)</label>
 											<div class="img_upload_area">
 												<div class="box">
-													<div class="js--image-preview"
-														:style="'background-image: url(/upload/' + back + ');'">
+													<div class="js--image-preview" :style="'background-image: url(/upload/' + back + ');'">
+														<div class="d-flex align-center justify-center fill-height" v-if="backalert != null">
+															<v-progress-circular
+															color="grey-lighten-4"
+															indeterminate
+															></v-progress-circular>
+														</div>
 													</div>
 													<div class="upload-options">
 														<label>
@@ -132,20 +142,28 @@ export default {
 
 		snackbar: false,
 		snackbartext: null,
+
+
+		fronalert: null,
+		backalert: null,
 	}),
 	methods: {
 		frontonFileChange(e) {
+			this.fronalert = true;
 			let formData = new FormData();
 			formData.append('file', e.target.files[0])
 			axios.post('/api/uploadDocument', formData).then((response) => {
 				this.front = response.data;
+				this.fronalert = null;
 			})
 		},
 		backonFileChange(e) {
+			this.backalert = true;
 			let formData = new FormData();
 			formData.append('file', e.target.files[0])
 			axios.post('/api/uploadDocument', formData).then((response) => {
 				this.back = response.data;
+				this.backalert = null;
 			})
 		},
 		updateaadahd() {

@@ -21,12 +21,16 @@ class StackingController extends Controller
         return response()->json($staking_currencies);
     }
 
+
+
     public function get_single_staking_currencies($stackid)
     {
         $staking_currencies = DB::table('staking_currencies')->where('id', $stackid)->get()->first();
 
         return response()->json($staking_currencies);
     }
+
+
 
     public function update_stacking_status($stackid)
     {
@@ -193,5 +197,12 @@ class StackingController extends Controller
         } else {
             echo $response;
         }
+    }
+
+
+    public function getStackingLog() {
+        $staking_logs = DB::table('staking_logs')->paginate(10);
+
+        return response()->json($staking_logs);  
     }
 }

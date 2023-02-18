@@ -70,5 +70,6 @@ Route::get('/get_single_staking_currencies/{stackid}', 'App\Http\Controllers\Api
 Route::post('/update_staking_currencies', 'App\Http\Controllers\Api\StackingController@update_staking_currencies');
 Route::get('/update_stacking_status/{stackid}', 'App\Http\Controllers\Api\StackingController@update_stacking_status');
 Route::post('/createstackinglog', 'App\Http\Controllers\Api\StackingController@createstackinglog');
+Route::get('/getStackingLog', 'App\Http\Controllers\Api\StackingController@getStackingLog');
 
 

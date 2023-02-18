@@ -424,19 +424,6 @@ export default {
 
         stackconfirmpurchage() {
 
-
-            axios.post("/api/createstackinglog", {
-                userid: localStorage.getItem('profileid'),
-                symbol: this.singlestack.symbol,
-                coin_id: this.singlestack.id,
-                amount: 0,
-            }).then((response) => {
-                    console.log(response.data);
-                })
-
-
-            return false;
-
             if (this.singlestack.min_stake > this.lockamount) {
                 this.snackbar = true;
                 this.snackbartext = `Your Account Balance 0 ` + this.singlestack.symbol + ` Not Enough! Please Deposit Money`;

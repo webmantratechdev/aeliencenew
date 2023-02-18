@@ -54,9 +54,9 @@ class UserController extends Controller
             DB::table('users')->where('email', $data['email'])->update(['password' => Hash::make($data['otp'])]);
 
             $to = $data['email'];
-            $subject = "Aelince Verification OTP: ".$data['otp'];
+            $subject = "Aelince Verification OTP: " . $data['otp'];
 
-            $message = "Please use the verification code below on the Aelince website: ".$data['otp'];
+            $message = "Please use the verification code below on the Aelince website: " . $data['otp'];
 
             // Always set content-type when sending HTML email
             $headers = "MIME-Version: 1.0" . "\r\n";
@@ -66,7 +66,7 @@ class UserController extends Controller
             $headers .= 'From: <support@aelince.com>' . "\r\n";
             $headers .= 'Cc: no-reply@aelince.com' . "\r\n";
 
-            mail($to,$subject,$message,$headers);
+            mail($to, $subject, $message, $headers);
 
             return response()->json(['status' => 1, 'otp' => $data['otp']]);
         } else {
@@ -81,7 +81,7 @@ class UserController extends Controller
 
         $exist = DB::table('users')->where('email', trim($request->get('email')))->orWhere('phone', trim($request->get('phone')))->get()->first();
 
-        if($exist){
+        if ($exist) {
 
             $data = [
                 'name' => "Virat Gandhi",
@@ -91,8 +91,7 @@ class UserController extends Controller
                 'status' => 301,
             ];
             return response()->json($data);
-
-        }else{
+        } else {
 
             $data = [
                 'name' => "Virat Gandhi",
@@ -101,14 +100,12 @@ class UserController extends Controller
                 'otp' => $opt,
                 'status' => 200,
             ];
-    
+
             $this->sendoptsms($data['phone'], $data['otp']);
             $this->sentotpmail($data['email'], $data['otp']);
-    
+
             return response()->json($data);
         }
-
-        
     }
 
 
@@ -123,7 +120,7 @@ class UserController extends Controller
         Welcome to Aelince!<br>
         Here is your account activation code:<br><br>
         
-        <b> ".$otp." </b>
+        <b> " . $otp . " </b>
         <br><br>
         Security Tips:<br>
         * Never give your password to anyone.<br>
@@ -337,6 +334,31 @@ class UserController extends Controller
 
         $update = DB::table('users')->where('id', $request->get('userid'))->update(['status' => $request->get('status')]);
         if ($update) {
+
+            $fetchUser = DB::table('users')->where('id', $request->get('userid'))->get(['email'])->first();
+
+            $status = '';
+            if ($request->get('status') == 'A') {
+                $status = 'Approve';
+            } elseif ($request->get('status') == 'M') {
+                $status = 'Missing';
+            } else {
+                $status = 'Pending';
+            }
+
+
+            $to = $fetchUser->email;
+            $subject = "Kyc verification " . $status;
+            $message = "Kyc verification ".$status;
+          
+            $headers = "MIME-Version: 1.0" . "\r\n";
+            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+            $headers .= 'From: <support@aelince.com>' . "\r\n";
+            $headers .= 'Cc: no-reply@aelince.com' . "\r\n";
+
+            mail($to, $subject, $message, $headers);
+
+
             return  $update;
         } else {
             return 0;
@@ -372,5 +394,4 @@ class UserController extends Controller
         $cities = DB::table('cities')->where('state_id', $stateid)->get();
         return response()->json($cities);
     }
-
 }

@@ -196,7 +196,7 @@ export default {
 		clicktocopy() {
 			navigator.clipboard.writeText('https://aelince.com/refer/'+this.refferid);
 			this.snackbar = true;
-			this.snackbartext = 'Copy';
+			this.snackbartext = 'Clipboard Copied';
 		}
 	},
 	created() {

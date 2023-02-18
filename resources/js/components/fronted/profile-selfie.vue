@@ -28,8 +28,13 @@
 												<label class="text-center">Upload Selfie Image</label>
 												<div class="img_upload_area selfieImg_upload_area">
 													<div class="box">
-														<div class="js--image-preview"
-														:style="'background-image: url(/upload/'+selfie+');'">
+														<div class="js--image-preview" :style="'background-image: url(/upload/'+selfie+');'" >
+															<div class="d-flex align-center justify-center fill-height" v-if="backalert != null">
+															<v-progress-circular
+															color="grey-lighten-4"
+															indeterminate
+															></v-progress-circular>
+														</div>
 														</div>
 														<div class="upload-options">
 															<label>
@@ -68,13 +73,17 @@
 	export default{
 		data: () => ({
 		    selfie:null,
+
+			backalert: null,
 		}),
 		methods:{
 			frontonFileChange(e) {
+				this.backalert = true;
 				let formData = new FormData();
 				formData.append('file', e.target.files[0])
 				axios.post('/api/uploadDocument', formData).then((response) => {
 					this.selfie = response.data;
+					this.backalert = null;
                 })
 			},
 			
