@@ -17,9 +17,10 @@
                     <th scope="col">symbol</th>
                     <th scope="col">cost</th>
                     <th scope="col">staked</th>
-                    <th scope="col">last_stake_date</th>
+                    <th scope="col">Start date</th>
+                    <th scope="col">End date</th>
                     <th scope="col">Status</th>
-                    <th scope="col">start_date</th>
+                    <th scope="col">User</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -29,12 +30,13 @@
                     <th scope="row">{{ user.symbol }}</th>
                     <th scope="row">{{ user.cost }}</th>
                     <th scope="row">{{ user.staked }}</th>
-                    <th scope="row">{{ user.last_stake_date }}</th>
+                    <th scope="row">{{ user.start_date }}</th>
+                    <th scope="row">{{ user.end_date }}</th>
                     <th scope="row">
                             <span v-if="user.status == 1" selected>Success</span>
                             <span  v-else selected>Faild</span>
                     </th>
-                    <th scope="row">{{ user.created_at }}</th>
+                    <th scope="row"><v-btn :to="'/console/users/'+user.user_id">View</v-btn></th>
                     <th scope="row">
                         <button class="btn-sm btn btn-danger mr-2" @click="deletItme(user.id)"><i class="fa fa-trash-o"
                                 aria-hidden="true"></i></button>

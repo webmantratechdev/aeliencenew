@@ -10,15 +10,25 @@ use Illuminate\Support\Facades\DB;
 class TatumController extends Controller
 {
     //
-    public function generateTronWallet()
+    public function generateBlockchainWallet($nework)
     {
+
+
+        $array = [
+            'ETH' => 'ethereum',
+            'TRON' => 'tron',
+            'BSC' => 'bsc',
+            'BTC' => 'bitcoin',
+        ];
+
+
         $curl = curl_init();
 
         curl_setopt_array($curl, [
             CURLOPT_HTTPHEADER => [
                 "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
             ],
-            CURLOPT_URL => "https://api.tatum.io/v3/tron/wallet",
+            CURLOPT_URL => "https://api.tatum.io/v3/" . $array[$nework] . "/wallet",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CUSTOMREQUEST => "GET",
         ]);
@@ -32,6 +42,40 @@ class TatumController extends Controller
         return json_decode($response);
     }
 
+
+
+    /**********************************************---------------------------------------------*********/
+
+    public function generateBlockchainAddress($xpub, $network)
+    {
+
+        $array = [
+            'ETH' => 'ethereum',
+            'TRON' => 'tron',
+            'BSC' => 'bsc',
+            'BTC' => 'bitcoin',
+        ];
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_HTTPHEADER => [
+                "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+            ],
+            CURLOPT_URL => "https://api.tatum.io/v3/" . $array[$network] . "/address/" . $xpub . "/1",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ]);
+
+        $response = curl_exec($curl);
+        $error = curl_error($curl);
+
+        curl_close($curl);
+        return json_decode($response);
+    }
+
+
+    /**********************************************---------------------------------------------*********/
 
     public function createVirtualAccount($coin, $xpub)
     {
@@ -62,61 +106,25 @@ class TatumController extends Controller
     }
 
 
-    public function createDepositaddress($accountid)
-    {
-        $id = $accountid;
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_HTTPHEADER => [
-                "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
-            ],
-            CURLOPT_URL => "https://api.tatum.io/v3/offchain/account/" . $id . "/address",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => "POST",
-        ]);
-
-        $response = curl_exec($curl);
-        $error = curl_error($curl);
-
-        curl_close($curl);
-        return json_decode($response);
-    }
+    /**********************************************---------------------------------------------*********/
 
 
-    public function getvertualAcountBalance($accountid)
+    public function getBlockchainPrivateKey($mnemonic, $symbol)
     {
 
-
-        $id = $accountid;
-        $curl = curl_init();
-
-        curl_setopt_array($curl, [
-            CURLOPT_HTTPHEADER => [
-                "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
-            ],
-            CURLOPT_URL => "https://api.tatum.io/v3/ledger/account/" . $id . "/balance",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => "GET",
-        ]);
-
-        $response = curl_exec($curl);
-        $error = curl_error($curl);
-
-        curl_close($curl);
-
-        return  json_decode($response);
-    }
-
-
-
-    public function getvertualAcountTransaction($accountid)
-    {
+        $array = [
+            'ETH' => 'ethereum',
+            'TRON' => 'tron',
+            'BSC' => 'bsc',
+            'BTC' => 'bitcoin',
+            'AEL' => 'tron',
+        ];
 
         $curl = curl_init();
 
         $payload = array(
-            "id" => $accountid,
+            "index" => 1,
+            "mnemonic" => $mnemonic
         );
 
         curl_setopt_array($curl, [
@@ -125,7 +133,7 @@ class TatumController extends Controller
                 "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
             ],
             CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_URL => "https://api.tatum.io/v3/ledger/transaction/account?pageSize=50",
+            CURLOPT_URL => "https://api.tatum.io/v3/" . $array[$symbol] . "/wallet/priv",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CUSTOMREQUEST => "POST",
         ]);
@@ -139,87 +147,8 @@ class TatumController extends Controller
     }
 
 
-    public function getWalletHistory($userid)
-    {
 
-        $accounts = DB::table('ledger_accounts')->where(['user_id' => $userid])->get(['network', 'wallet_id', 'account_id']);
-
-        $account = [];
-
-        foreach ($accounts as $ad) {
-            foreach ($this->getvertualAcountTransaction($ad->account_id) as $acssdf) {
-
-                if (isset($acssdf->txId)) {
-                    $data = [
-                        'userid' => $userid,
-                        'amount' => $acssdf->amount,
-                        'operationType' => $acssdf->operationType,
-                        'currency' => $acssdf->currency,
-                        'network' => $ad->network,
-                        'transactionType' => $acssdf->transactionType,
-                        'accountId' => $acssdf->accountId,
-                        'anonymous' => $acssdf->anonymous,
-                        'reference'  => $acssdf->reference,
-                        'txId' => $acssdf->txId,
-                        'address' => $acssdf->address,
-                        'location' => $acssdf->location,
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'updated_at'   => date('Y-m-d H:i:s')
-                    ];
-
-                    $existxt = DB::table('wallet_history')->where('txId', $acssdf->txId)->get(['txId'])->first();
-
-                    if (empty($existxt)) {
-                        DB::table('wallet_history')->insert($data);
-                    }
-                }
-            }
-        }
-
-        $exasdf =  DB::table('wallet_history')->where(['userid' => $userid])->orderBy('id', 'desc')->paginate(10);
-
-        return response()->json($exasdf);
-    }
-
-    public function getrecentdepositHistory($coin, $userid)
-    {
-
-        $accounts = DB::table('ledger_accounts')->where(['user_id' => $userid])->get(['network', 'wallet_id', 'account_id']);
-
-        $account = [];
-
-        foreach ($accounts as $ad) {
-            foreach ($this->getvertualAcountTransaction($ad->account_id) as $acssdf) {
-
-                $data = [
-                    'userid' => $userid,
-                    'amount' => $acssdf->amount,
-                    'operationType' => $acssdf->operationType,
-                    'currency' => $acssdf->currency,
-                    'network' => $ad->network,
-                    'transactionType' => $acssdf->transactionType,
-                    'accountId' => $acssdf->accountId,
-                    'anonymous' => $acssdf->anonymous,
-                    'reference'  => $acssdf->reference,
-                    'txId' => $acssdf->txId,
-                    'address' => $acssdf->address,
-                    'location' => $acssdf->location,
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at'   => date('Y-m-d H:i:s')
-                ];
-
-                $existxt = DB::table('wallet_history')->where('txId', $acssdf->txId)->get(['txId'])->first();
-
-                if (empty($existxt)) {
-                    DB::table('wallet_history')->insert($data);
-                }
-            }
-        }
-
-        $exasdf =  DB::table('wallet_history')->where(['userid' => $userid, 'currency' => $coin, 'operationType' => 'DEPOSIT'])->paginate(10);
-
-        return response()->json($exasdf);
-    }
+    /**********************************************---------------------------------------------*********/
 
 
     public function getdepositeaddress($coin, $network, $userid)
@@ -232,15 +161,17 @@ class TatumController extends Controller
             return $getWalletaddress->address;
         } else {
 
-            $wallet = $this->generateTronWallet();
+            $wallets = $this->generateBlockchainWallet($network);
 
-            $account = $this->createVirtualAccount($coin, $wallet->xpub);
+
+            $account = $this->createVirtualAccount($coin, $wallets->xpub);
 
             if (!isset($account->id)) {
                 exit;
             }
 
-            $deposignadres = $this->createDepositaddress($account->id);
+            $deposignadres = $this->generateBlockchainAddress($wallets->xpub, $network);
+
 
             $wallet = [
                 'user_id' => $userid,
@@ -268,11 +199,47 @@ class TatumController extends Controller
                     'active' => $account->active,
                     'accountingCurrency' => $account->accountingCurrency,
                     'frozen'  => $account->frozen,
+                    'memonic' => $wallets->mnemonic,
+                    'xpub' => $wallets->xpub,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ];
 
                 DB::table('ledger_accounts')->insert($data);
+
+                if ($coin == 'AEL') {
+
+                    $customtoke = DB::table('custom_tokens')->where('symbol', $coin)->get()->first();
+
+                    $privatekey = $this->getBlockchainPrivateKey($customtoke->memonic, $coin);
+
+                    $curl = curl_init();
+
+                    $payload = array(
+                        "to" => $deposignadres->address,
+                        "amount" => "0.000001",
+                        "fromPrivateKey" => $privatekey->key,
+                    );
+
+                    curl_setopt_array($curl, [
+                        CURLOPT_HTTPHEADER => [
+                            "Content-Type: application/json",
+                            "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                        ],
+                        CURLOPT_POSTFIELDS => json_encode($payload),
+                        CURLOPT_URL => "https://api.tatum.io/v3/tron/transaction",
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_CUSTOMREQUEST => "POST",
+                    ]);
+
+                    $response = curl_exec($curl);
+                    $error = curl_error($curl);
+
+                    curl_close($curl);
+
+                    $respon = json_decode($response);
+                }
+
 
                 return $deposignadres->address;
             }
@@ -280,21 +247,271 @@ class TatumController extends Controller
     }
 
 
+
+    /**********************************************---------------------------------------------*********/
+
+    public function getblockchaintransation($address, $network)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_HTTPHEADER => [
+                "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+            ],
+            CURLOPT_URL => "https://api.tatum.io/v3/" . $network . "/transaction/account/" . $address,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ]);
+
+        $response = curl_exec($curl);
+        $error = curl_error($curl);
+
+        curl_close($curl);
+
+        $res =  json_decode($response);
+
+        // trc20 trans
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_HTTPHEADER => [
+                "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+            ],
+            CURLOPT_URL => "https://api.tatum.io/v3/tron/transaction/account/" . $address . "/trc20",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ]);
+
+        $response = curl_exec($curl);
+        $error = curl_error($curl);
+
+        curl_close($curl);
+
+        $trc20re = json_decode($response);
+
+        $obj_merged = (object)[];
+
+
+
+        $array1 = $array2 = [];
+
+        if (isset($res->transactions)) {
+            $array1 = (array) $res->transactions;
+        }
+
+        if (isset($trc20re->transactions)) {
+            $array2 = (array) $trc20re->transactions;
+        }
+
+        $obj_merged->transactions = (object) array_merge($array1, $array2);
+
+        return $obj_merged;
+    }
+
+    public function getWalletHistory($userid, $operationType)
+    {
+
+        $array = [
+            'ETH' => 'ethereum',
+            'TRON' => 'tron',
+            'BSC' => 'bsc',
+            'BTC' => 'bitcoin',
+            'AEL' => 'tron'
+        ];
+
+        $getwallet = DB::table('wallets')->where(['user_id' => $userid])->get(['user_id', 'address', 'network', 'symbol']);
+
+        foreach ($getwallet as $ws) {
+
+            $return = $this->getblockchaintransation($ws->address, $array[$ws->network]);
+
+            if (isset($return->transactions)) {
+
+                if (is_object($return->transactions)) {
+
+                    foreach ($return->transactions as $tr) {
+
+                        if (isset($tr->ret[0]->contractRet) == 'SUCCESS') {
+
+
+
+                            $operationTypes = 'WITHDRAWAL';
+                            if (isset($tr->rawData->contract[0]->parameter->value->toAddressBase58) == $ws->address) {
+                                $operationTypes = 'DEPOSIT';
+                            }
+
+                            if (isset($tr->rawData->contract[0]->parameter->value->amount)) {
+
+                                $data = [
+                                    'userid' => $userid,
+                                    'amount' => isset($tr->rawData->contract[0]) ? $tr->rawData->contract[0]->parameter->value->amount / 1000000 : '',
+                                    'operationType' => $operationTypes,
+                                    'currency' => $ws->symbol,
+                                    'network' => $ws->network,
+                                    'txId' => $tr->txID,
+                                    'owner_address' => $tr->rawData->contract[0]->parameter->value->ownerAddressBase58,
+                                    'to_address' => $tr->rawData->contract[0]->parameter->value->toAddressBase58,
+                                    'depositincurrencu' => ($ws->network == 'TRON')?'TRX':$ws->network,
+                                    'created_at' => date('Y-m-d H:i:s'),
+                                    'updated_at'   => date('Y-m-d H:i:s')
+                                ];
+
+
+                                $existxt = DB::table('wallet_history')->where('txId', $tr->txID)->get(['txId'])->first();
+
+                                if (empty($existxt)) {
+                                    DB::table('wallet_history')->insert($data);
+                                }
+                            }
+                        } else {
+
+                            $operationTypes = 'WITHDRAWAL';
+                            if (isset($tr->type) == 'Transfer') {
+                                $operationTypes = 'DEPOSIT';
+                            }
+
+                            $data = [
+                                'userid' => $userid,
+                                'amount' => isset($tr->value) ? $tr->value / 100000000 : '',
+                                'operationType' => $operationTypes,
+                                'currency' => $ws->symbol,
+                                'network' => $ws->network,
+                                'txId' => $tr->txID,
+                                'owner_address' => $tr->from,
+                                'to_address' => $tr->to,
+                                'depositincurrencu' => 'AEL',
+                                'created_at' => date('Y-m-d H:i:s'),
+                                'updated_at'   => date('Y-m-d H:i:s')
+                            ];
+
+                            $existxt = DB::table('wallet_history')->where('txId', $tr->txID)->get(['txId'])->first();
+
+                            if (empty($existxt)) {
+                                DB::table('wallet_history')->insert($data);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $exasdf =  DB::table('wallet_history')->where(['userid' => $userid, 'operationType' => $operationType])
+        ->where('amount', '>=' , '1')
+        ->where('amount', '!=', '1.0E-6')
+        ->orderBy('id', 'DESC')->paginate(10);
+
+        return response()->json($exasdf);
+    }
+
+
+    /**********************************************---------------------------------------------*********/
+
+    public function getrecentdepositHistory($coin, $userid)
+    {
+
+        $exasdf =  DB::table('wallet_history')->where(['userid' => $userid, 'currency' => $coin, 'operationType' => 'DEPOSIT'])
+        ->where('amount', '>=', '1')
+        ->where('amount', '!=', '1.0E-6')
+        ->paginate(10);
+
+        return response()->json($exasdf);
+    }
+
+
+    /**********************************************---------------------------------------------*********/
+
+    public function getBlockchainBalance($address, $network, $symbol)
+    {
+
+
+        $array = [
+            'ETH' => 'ethereum',
+            'TRON' => 'tron',
+            'BSC' => 'bsc',
+            'BTC' => 'bitcoin',
+        ];
+
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_HTTPHEADER => [
+                "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+            ],
+            CURLOPT_URL => "https://api.tatum.io/v3/" . $array[$network] . "/account/" . $address,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ]);
+
+        $response = curl_exec($curl);
+        $error = curl_error($curl);
+
+        curl_close($curl);
+
+        $tronblalce = json_decode($response);
+
+        if (isset($tronblalce->trc20[0])) {
+
+            $wallet = DB::table('custom_tokens')->where(['chain' => $network, 'symbol' => $symbol])->get(['address'])->first();
+
+            $trc20address = (array)$tronblalce->trc20[0];
+
+            $array = [];
+            $array['balance'] = $trc20address[$wallet->address];
+
+            $object = (object) $array;
+
+            return $object;
+        } else {
+            if ($network == 'TRON') {
+
+                $curl = curl_init();
+
+                curl_setopt_array($curl, [
+                    CURLOPT_HTTPHEADER => [
+                        "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                    ],
+                    CURLOPT_URL => "https://api.tatum.io/v3/tron/transaction/account/" . $address . "/trc20",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_CUSTOMREQUEST => "GET",
+                ]);
+
+                $response = curl_exec($curl);
+                $error = curl_error($curl);
+
+                curl_close($curl);
+
+                $transaction  = json_decode($response);
+
+
+                if (isset($transaction->transactions[0]->value)) {
+
+                    $array = [];
+                    $array['balance'] = $transaction->transactions[0]->value;
+
+                    $object = (object) $array;
+
+                    return $object;
+                }
+            }
+        }
+    }
     public function getaccountidbycontin($userid,  $symbold)
     {
 
-        $ledger_accounts = DB::table('ledger_accounts')->where(['user_id' => $userid, 'currency' => $symbold])->get(['account_id'])->first();
+        $wallet = DB::table('wallets')->where(['user_id' => $userid, 'symbol' => $symbold])->get()->first();
 
-
-        $retursn = $this->getvertualAcountBalance($ledger_accounts->account_id);
+        $retursn = $this->getBlockchainBalance($wallet->address, $wallet->network, $symbold);
 
         $data = [
             'stackDate' => date('Y-m-d H:i:s'),
             'valueDate' => date('Y-m-d H:i:s', time() + 86400),
             'distributionDate' => date('Y-m-d H:i:s', time() + 86400),
-            'account' => $retursn,
+            'balance' => isset($retursn->balance) ? $retursn->balance / 100000000 : "0.0000",
         ];
 
         return response()->json($data);
     }
 }
+
+/**********************************************---------------------------------------------*********/

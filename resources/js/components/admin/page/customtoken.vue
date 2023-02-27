@@ -20,6 +20,8 @@
                     <th scope="col">Token</th>
                     <th scope="col">Network</th>
                     <th scope="col">Account</th>
+                    <th scope="col">Wallet Address</th>
+                    <th scope="col">Balance</th>
                     <th scope="col">supply</th>
                     <th scope="col">Date</th>
                     <th scope="col">Action</th>
@@ -31,6 +33,8 @@
                     <th scope="row">{{ user.name }}</th>
                     <th scope="row">{{ user.chain }}</th>
                     <th scope="row">{{ user.account_id }}</th>
+                    <th scope="row">{{ user.master_wallet_address }}</th>
+                    <th scope="row">{{ user.master_wallet_balance }}</th>
                     <th scope="row">{{ user.supply }}</th>
                     <th scope="row">{{ user.created_at }}</th>
 

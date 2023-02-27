@@ -4648,6 +4648,110 @@ margin-bottom:20px;
 
 
 
+.agNewTicketSec{
+	padding:60px 0;
+    font-weight: 500;	
+}
+.agNewTicketSecinner{
+	box-shadow: 0 6px 19px rgb(39,49,58,0.1);
+    border: 1px solid #ebeff3;
+    border-radius: 6px;		
+}
+.agNewTicketFormArea{	
+	padding:50px 30px;
+}
+.agNewTicketFormAreainner{}
+.agNewTicketFormArea .agHelpdeskTicketDropdownArea{
+	margin-bottom:25px;	
+}
+.agNewTicketFormArea .agHelpdeskTicketDropdownArea h3.title{
+	font-weight: 600;	
+	margin-bottom:15px;	
+}
+.agNewTicketFormArea .agHelpdeskTicketDropdownArea .form-select{	
+	font-weight: 500;	
+	box-shadow:none !important;	
+	
+}
+.agNewTicketFormArea .agHelpdeskTicketDropdownArea .form-select:focus{
+    border-color: #fec00f;	
+}
+.agNewTicketFormArea .form-group{
+	margin-bottom:15px;
+}
+.agNewTicketFormArea .form-group .labelName{
+	color:#000;
+	margin-bottom:10px;
+}
+.agNewTicketFormArea .form-group .labelName .agAsterisk{
+    color: #c82124;
+}
+.agNewTicketFormArea .form-group .form-control{	
+	font-weight: 500;
+	box-shadow:none !important;	
+}
+.agNewTicketFormArea .form-group .form-control:focus{
+    border-color: #fec00f;	
+}
+.agNewTicketFormArea .form-group .form-select{	
+	font-weight: 500;
+	box-shadow:none !important;	
+}
+.agNewTicketFormArea .form-group  .form-select:focus{
+    border-color: #fec00f;	
+}
+.agNewTicketFormArea .form-group textarea.form-control{	
+	height:100px;
+}
+.agNewTicketFormArea .form-group .form-check .form-check-input{
+	box-shadow:none !important;	
+}
+.agNewTicketFormArea .form-group .form-check-input:focus{
+	   border: 1px solid rgba(0,0,0,.25);
+	   box-shadow:none !important;	
+}
+.agNewTicketFormArea .form-group .form-check-input:checked {
+    background-color: #fec00f;
+    border-color: #fec00f;
+}
+
+.agNewTicketFormBtnArea{}
+.agNewTicketFormBtnArea .cancelBtn{
+    min-width: 95px;
+    text-align: center;
+    padding: 10px 10px 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: #eaecef;
+    color: #000922;
+    border-radius: 4px;
+    font-weight: 500;	
+}
+.agNewTicketFormBtnArea .submitBtn{
+    min-width: 95px;
+    text-align: center;
+    padding: 10px 10px 10px;
+    font-size: 14px;
+    border: 1px solid #fec00f;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: #fec00f;
+    color: #000;
+    border-radius: 4px;
+    font-weight: 500;	
+}
+
+
+
+
+
+
+
+
 @media screen and (max-width:1370px) {
 
     .stakingSec{
@@ -5505,6 +5609,15 @@ margin-bottom:20px;
 }
 
 @media(max-width:575px) {
+
+    .agNewTicketSec {
+        padding: 30px 0;  
+    }	
+    .agNewTicketFormArea {
+        padding: 30px 20px;
+    }	
+
+
 
     .themeDashboardMenuHeader {
         padding: 10px 15px;

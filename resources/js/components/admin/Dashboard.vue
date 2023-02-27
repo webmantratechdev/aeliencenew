@@ -110,14 +110,29 @@ export default {
       { text: 'Manage Invites', icon: 'mdi-share-variant-outline' },
       { text: 'Custom Token', icon: 'mdi-litecoin', url: '/console/customtoken' },
       { text: 'Orders', icon: 'mdi-package-variant' },
-      { text: 'Settings', icon: 'mdi-cog-outline' },
       {
-        text: 'Staking', icon: 'mdi-flag', url: '', child: [
-          { text: 'Coin', icon: 'mdi-clock',  url:'/console/stakingcurrencies'},
-          { text: 'Logs', icon: 'mdi-clock',  url:'/console/stakinglogs'},
+        text: 'Settings', icon: 'mdi-cog-outline',
+        child: [
+          { text: 'General Setting', icon: 'mdi-clock', url: '/console/general-setting' },
+          { text: 'Plateform Setting', icon: 'mdi-clock', url: '/console/plateform-setting' },
+          { text: 'Api Setting', icon: 'mdi-clock', url: '/console/api-setting' },
+          { text: 'Seo Manager', icon: 'mdi-clock', url: '/console/seo-manager' },
         ]
       },
-      { text: 'Support Ticket', icon: 'mdi-help-circle-outline' },
+      {
+        text: 'Staking', icon: 'mdi-flag', url: '', child: [
+          { text: 'Coin', icon: 'mdi-clock', url: '/console/stakingcurrencies' },
+          { text: 'Logs', icon: 'mdi-clock', url: '/console/stakinglogs' },
+        ]
+      },
+      {
+        text: 'Support Ticket', icon: 'mdi-help-circle-outline', child: [
+          { text: 'All Ticket', icon: 'mdi-clock', url: '/console/ticketall' },
+          { text: 'Pending Ticket', icon: 'mdi-clock', url: '/console/ticketpending' },
+          { text: 'Closed Ticket', icon: 'mdi-clock', url: '/console/ticketclose' },
+          { text: 'Answered Ticket', icon: 'mdi-clock', url: '/console/ticketanswer' },
+        ]
+      },
     ],
   }),
   methods: {

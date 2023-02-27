@@ -59,9 +59,9 @@
                         <div class="d-flex align-items-center leftSide">
                             <h4 class="title mb-0 me-2">DeFi Staking</h4>
                             <!-- <a href="#" class="videoGuideBtn">
-                                <span class="icon"><i class="fa-light fa-circle-play"></i></span>
-                                <span class="txt">Video Guide <i class="fa fa-angle-right"></i></span>
-                            </a> -->
+                                    <span class="icon"><i class="fa-light fa-circle-play"></i></span>
+                                    <span class="txt">Video Guide <i class="fa fa-angle-right"></i></span>
+                                </a> -->
                         </div>
                         <div class="rightSide">
                             <a href="#" class="text-decoration-underline timelLineLink">Defi Staking timeline</a>
@@ -91,7 +91,7 @@
                                     </div>
                                 </td>
                                 <td class=""><span class="fontText greenColor">{{ stocks.apr }}%</span></td>
-                                <td class=""><button type="button" class="elButton border">Flexible Lock</button></td>
+                                <td class="">{{ stocks.period }}</td>
                                 <td class=""><span class="fontText text-uppercase">{{ stocks.min_stake }} {{
                                     stocks.symbol
                                 }}</span></td>
@@ -101,67 +101,66 @@
                                         <button type="button" class="elButton2" v-if="stocks.status == 0"
                                             disabled>Check</button>
                                         <button type="button" class="elButton2" v-else data-bs-toggle="modal"
-                                            @click="getsinglestacking(stocks.id)" data-bs-target="#stackModal">Stake
-                                            Now</button>
+                                            @click="getsinglestacking(stocks.id)" data-bs-target="#stackModal">Stake Now</button>
                                     </div>
                                 </td>
                             </tr>
 
                             <!-- <tr>
-                                <td class="">
-                                    <div class="d-flex align-items-center">
-                                        <span class="icon me-3"><img src="/images/tokenIcon.png" class="img-fluid"
-                                                alt="" style="width:24px;height:24px;"></span>
-                                        <span class="ttl text-uppercase">LTC</span>
-                                    </div>
-                                </td>
-                                <td class=""><span class="fontText greenColor">1.4%</span></td>
-                                <td class="">
-                                    <div class="">
-                                        <button type="button" class="elButton">Flexible Lock</button>
-                                        <button type="button" class="elButton border">120</button>
-                                    </div>
-                                </td>
-                                <td class=""><span class="fontText text-uppercase">0.001LTC</span></td>
-                                <td class="position-relative">
-                                    <div class="d-flex1 align-items-center text-end">
-                                        <span class="position-absolute soldOut">Sold Out</span>
-                                        <button type="button" class="elButton2" data-bs-toggle="modal"
-                                            data-bs-target="#stackModal">Stake Now</button>
-                                    </div>
-                                </td>
-                            </tr>
+                                    <td class="">
+                                        <div class="d-flex align-items-center">
+                                            <span class="icon me-3"><img src="/images/tokenIcon.png" class="img-fluid"
+                                                    alt="" style="width:24px;height:24px;"></span>
+                                            <span class="ttl text-uppercase">LTC</span>
+                                        </div>
+                                    </td>
+                                    <td class=""><span class="fontText greenColor">1.4%</span></td>
+                                    <td class="">
+                                        <div class="">
+                                            <button type="button" class="elButton">Flexible Lock</button>
+                                            <button type="button" class="elButton border">120</button>
+                                        </div>
+                                    </td>
+                                    <td class=""><span class="fontText text-uppercase">0.001LTC</span></td>
+                                    <td class="position-relative">
+                                        <div class="d-flex1 align-items-center text-end">
+                                            <span class="position-absolute soldOut">Sold Out</span>
+                                            <button type="button" class="elButton2" data-bs-toggle="modal"
+                                                data-bs-target="#stackModal">Stake Now</button>
+                                        </div>
+                                    </td>
+                                </tr>
 
-                            <tr>
-                                <td class="">
-                                    <div class="d-flex align-items-center">
-                                        <span class="icon me-3"><img src="/images/tokenIcon.png" class="img-fluid"
-                                                alt="" style="width:24px;height:24px;"></span>
-                                        <span class="ttl text-uppercase">LTC</span>
-                                    </div>
-                                </td>
-                                <td class=""><span class="fontText greenColor">1.4%</span></td>
-                                <td class="">
-                                    <div class="">
-                                        <button type="button" class="elButton">Flexible Lock</button>
-                                        <button type="button" class="elButton border">120</button>
-                                    </div>
-                                </td>
-                                <td class=""><span class="fontText text-uppercase">0.001LTC</span></td>
-                                <td class="position-relative">
-                                    <div class="d-flex1 align-items-center text-end">
-                                        <span class="position-absolute soldOut">Sold Out</span>
-                                        <button type="button" class="elButton2">Stake Now</button>
-                                    </div>
-                                </td>
-                            </tr> -->
+                                <tr>
+                                    <td class="">
+                                        <div class="d-flex align-items-center">
+                                            <span class="icon me-3"><img src="/images/tokenIcon.png" class="img-fluid"
+                                                    alt="" style="width:24px;height:24px;"></span>
+                                            <span class="ttl text-uppercase">LTC</span>
+                                        </div>
+                                    </td>
+                                    <td class=""><span class="fontText greenColor">1.4%</span></td>
+                                    <td class="">
+                                        <div class="">
+                                            <button type="button" class="elButton">Flexible Lock</button>
+                                            <button type="button" class="elButton border">120</button>
+                                        </div>
+                                    </td>
+                                    <td class=""><span class="fontText text-uppercase">0.001LTC</span></td>
+                                    <td class="position-relative">
+                                        <div class="d-flex1 align-items-center text-end">
+                                            <span class="position-absolute soldOut">Sold Out</span>
+                                            <button type="button" class="elButton2">Stake Now</button>
+                                        </div>
+                                    </td>
+                                </tr> -->
 
                         </tbody>
                     </table>
 
 
-                    <v-pagination v-model="pagination.current" :total-visible="7" :length="pagination.total"
-                        @next="next()" @prev="prev" @update:modelValue="handlePageChange"></v-pagination>
+                    <v-pagination v-model="pagination.current" :total-visible="7" :length="pagination.total" @next="next()"
+                        @prev="prev" @update:modelValue="handlePageChange"></v-pagination>
 
                 </div>
             </div>
@@ -169,7 +168,7 @@
         </section>
 
 
-        <div class="modal stackModal" id="stackModal">
+        <div class="modal stackModal" id="stackModal" v-if="purchadareturn == null">
             <div class="modal-dialog stackModalDiolog">
                 <div class="modal-content stackModalContent">
                     <div class="stackModalRowBox">
@@ -200,8 +199,8 @@
                                     </div>
                                     <div class="stackModalXpr">
                                         <div class="d-flex align-items-center stackModalXprinner">
-                                            <span class="icon me-3"><img src="/images/xrpIcon.png" class="img-fluid"
-                                                    style="width:24px;"></span>
+                                            <span class="icon me-3"><img :src="'/upload/' + singlestack.icon"
+                                                    class="img-fluid" style="width:24px;"></span>
                                             <span class="txt">{{ singlestack.symbol }}</span>
                                         </div>
                                     </div>
@@ -216,7 +215,8 @@
                                             <div class="d-flex justify-content-between align-items-center labelName">
                                                 <span class="">Lock Account</span>
                                                 <span class="txt">Available amount
-                                                    <span v-if="account.account != null">{{ account.account.accountBalance }}</span>
+                                                    <span v-if="account.balance != null">{{ account.balance
+                                                    }}</span>
                                                     <span v-else>0.00000</span>
 
                                                     {{ singlestack.symbol }}</span>
@@ -329,8 +329,7 @@
                                         </div>
 
                                         <div class="stackModalSummeryBtnArea">
-                                            <button type="button" class="stackModalSummeryBtn"
-                                                @click="stackconfirmpurchage">Confirm</button>
+                                            <v-btn type="button" class="stackModalSummeryBtn" :loading="purchaselod" @click="stackconfirmpurchage">Confirm</v-btn>
 
                                         </div>
 
@@ -385,20 +384,26 @@ export default {
         snackbartext: null,
 
         lockamount: null,
+        
+        purchaselod: false,
+
+
+        purchadareturn: null,
     }),
     methods: {
         handlePageChange() {
-            this.get_staking_currencies();
+            this.get_staking_currencies_front();
         },
         next() {
-            this.get_staking_currencies();
+            this.get_staking_currencies_front();
         },
         prev() {
-            this.get_staking_currencies();
+            this.get_staking_currencies_front();
         },
 
-        get_staking_currencies() {
-            axios.get('/api/get_staking_currencies?page=' + this.pagination.current).then((response) => {
+        get_staking_currencies_front() {
+            var userid = localStorage.getItem('profileid');
+            axios.get('/api/get_staking_currencies_front?page=' + this.pagination.current+'&userid='+userid).then((response) => {
                 this.users = response.data;
                 this.pagination.current = response.data.current_page;
                 this.pagination.total = response.data.last_page;
@@ -416,40 +421,42 @@ export default {
             var userid = localStorage.getItem('profileid');
             axios.get('/api/getaccountidbycontin/' + userid + '/' + this.singlestack.symbol).then((response) => {
                 if (response.data) {
+                    console.log(response.data);
                     this.account = response.data;
                 }
             })
         },
 
-
         stackconfirmpurchage() {
 
-            if (this.singlestack.min_stake > this.lockamount) {
+            this.purchaselod = true;
+
+            if(this.lockamount == null) {
                 this.snackbar = true;
-                this.snackbartext = `Your Account Balance 0 ` + this.singlestack.symbol + ` Not Enough! Please Deposit Money`;
+                this.snackbartext = `Enter stack amount`;
+                this.purchaselod = false;
                 return false;
             }
-
-            if (this.singlestack.max_stake < this.lockamount) {
-                this.snackbar = true;
-                this.snackbartext = `You can't do more ` + this.singlestack.max_stake;
-                return false;
-            }
-
-          
-            var availableamount = this.account.account.accountBalance;
             
+            var availableamount = this.account.balance;
 
             if (availableamount > 0) {
 
-                axios.post("/api/createstackinglog", {
-                    symbol: this.singlestack.symbol,
+                var dataString = {
+                    userid: localStorage.getItem('profileid'),
                     coin_id: this.singlestack.id,
-                    amount: this.availableamount,
+                    deductAmt: this.lockamount,
+                    availableAmt: availableamount,
+                }
+
+                axios.post("/api/createstackinglog", dataString).then((response) => {
+                    console.log(response.data);
+                   if(response.data.txId){
+                        this.purchadareturn = response.data.txId;
+                        this.get_staking_currencies_front();
+                   }
+                   this.purchaselod = false;
                 })
-                    .then((response) => {
-                        console.log(response.data);
-                    })
 
             } else {
                 this.snackbar = true;
@@ -461,7 +468,7 @@ export default {
 
     },
     mounted() {
-        this.get_staking_currencies()
+        this.get_staking_currencies_front()
     }
 }
 </script>

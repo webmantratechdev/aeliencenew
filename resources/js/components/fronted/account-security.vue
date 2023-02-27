@@ -30,12 +30,12 @@
 								<span class="txt">Spot</span>
 							</router-link>
 						</li>
-						<!-- <li class="nav-item">
-									<a href="#" class="nav-link">
-										<span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
-										<span class="txt">Futures</span>
-									</a>
-								</li> -->
+						<li class="nav-item">
+							<router-link to="/overview/stackinglog" class="nav-link">
+								<span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
+								<span class="txt">Stacking History</span>
+							</router-link>
+						</li>
 						<li class="nav-item">
 							<router-link to="/overview/wallet-history" class="nav-link">
 								<span class="icon"><i class="fa-light fa-calendar-clock"></i></span>

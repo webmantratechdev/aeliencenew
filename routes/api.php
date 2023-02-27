@@ -53,7 +53,7 @@ Route::get('/getorderbook/{pair}', 'App\Http\Controllers\Api\BinanceController@g
 
 // tatum ->generateTronWallet->createVirtualAccount->createDepositaddress
 Route::get('/getdepositeaddress/{coin}/{network}/{userid}', 'App\Http\Controllers\Api\TatumController@getdepositeaddress');
-Route::get('/getWalletHistory/{userid}', 'App\Http\Controllers\Api\TatumController@getWalletHistory');
+Route::get('/getWalletHistory/{userid}/{operationType}', 'App\Http\Controllers\Api\TatumController@getWalletHistory');
 Route::get('/getrecentdepositHistory/{coin}/{userid}', 'App\Http\Controllers\Api\TatumController@getrecentdepositHistory');
 Route::get('/getaccountidbycontin/{userid}/{symbold}', 'App\Http\Controllers\Api\TatumController@getaccountidbycontin');
 
@@ -64,6 +64,7 @@ Route::get('/getAllnetwork', 'App\Http\Controllers\Api\NetworkController@getAlln
 // token controller
 Route::get('/getAllToken', 'App\Http\Controllers\Api\TokenController@getAllToken');
 Route::get('/get_custom_tokens', 'App\Http\Controllers\Api\TokenController@get_custom_tokens');
+Route::get('/getAllTokenspot', 'App\Http\Controllers\Api\TokenController@getAllTokenspot');
 
 
 // stacking controller
@@ -75,18 +76,14 @@ Route::get('/update_stacking_status/{stackid}', 'App\Http\Controllers\Api\Stacki
 Route::post('/createstackinglog', 'App\Http\Controllers\Api\StackingController@createstackinglog');
 Route::get('/getStackingLog', 'App\Http\Controllers\Api\StackingController@getStackingLog');
 
+Route::get('/get_staking_currencies_front', 'App\Http\Controllers\Api\StackingController@get_staking_currencies_front');
+Route::get('/get_staking_log_front', 'App\Http\Controllers\Api\StackingController@get_staking_log_front');
 
+// support
 
-// mail
-// Route::get('/sendmail', function() {
-    
-//     $data = array('name'=>"Virat Gandhi", 'email' => 'dheeraj.webmantra@gmail.com');
+Route::get('/getAllTicket', 'App\Http\Controllers\Api\SupportController@getAllsupport');
+Route::post('/deleteticket', 'App\Http\Controllers\Api\SupportController@deleteticket');
+Route::get('/getsingleticket/{ticketid}', 'App\Http\Controllers\Api\SupportController@getsingleticket');
+Route::post('/replyticket', 'App\Http\Controllers\Api\SupportController@replyticket');
+Route::post('/addticket', 'App\Http\Controllers\Api\SupportController@addticket');
 
-//     Mail::send('emails.otp', $data, function($message) use ($data){
-
-//         $message->to($data['email'], 'Aelince')->subject('Aelince Verification OTP');
-//         $message->from('support@aelince.com','Aelince');
-
-//     });
-
-// });

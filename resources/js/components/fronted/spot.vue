@@ -30,12 +30,12 @@
 								<span class="txt">Spot</span>
 							</router-link>
 						</li>
-						<!-- <li class="nav-item">
-							<a href="#" class="nav-link">
+						<li class="nav-item">
+							<router-link to="/overview/stackinglog" class="nav-link">
 								<span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
-								<span class="txt">Futures</span>
-							</a>
-						</li> -->
+								<span class="txt">Stacking History</span>
+							</router-link>
+						</li>
 						<li class="nav-item">
 							<router-link to="/overview/wallet-history" class="nav-link">
 								<span class="icon"><i class="fa-light fa-calendar-clock"></i></span>
@@ -83,7 +83,15 @@
 								<div class="dashPanelBody">
 									<div class="">
 										<h5>Spot assets </h5>
-										<p>******** <sub>BTS*s *******</sub></p>
+										<p v-if="coinList[0]">
+											<span v-if="coinList[0].available > 0">
+												${{  parseInt(coinList[0].available) * 2 }} <sub> ({{
+													coinList[0].available
+												}} AEL)</sub>
+											</span>
+											<span v-else>********<sub> AEL*s *******</sub></span>
+
+										</p>
 
 									</div>
 								</div>
@@ -126,7 +134,7 @@
 												<tr>
 													<th>Currency</th>
 													<th>All</th>
-													<th>Available</th>
+													<th>available</th>
 													<th>In Order</th>
 													<th>BTC Equity Value</th>
 													<th>Opration</th>
@@ -149,10 +157,23 @@
 															</div>
 														</div>
 													</td>
-													<td data-title="All">********</td>
-													<td data-title="Available">********</td>
-													<td data-title="In Order">********</td>
-													<td data-title="BTC Equity Value">********</td>
+													<td data-title="All">
+														<span v-if="coin.all > 0">{{ coin.all }}</span>
+														<span v-else>*******</span>
+													</td>
+													<td data-title="available">
+														<span v-if="coin.available > 0">{{ coin.available }}</span>
+														<span v-else>*******</span>
+													</td>
+													<td data-title="In Order">
+														<span v-if="coin.inorder > 0">{{ coin.inorder }}</span>
+														<span v-else>*******</span>
+													</td>
+													<td data-title="BTC Equity Value">
+														<span v-if="coin.btn_equity_value > 0">{{ coin.btn_equity_value
+														}}</span>
+														<span v-else>*******</span>
+													</td>
 													<td data-title="BTC Equity Value">
 														<div class="SpotBtnArea">
 															<router-link
@@ -171,6 +192,14 @@
 
 
 											</tbody>
+											<tbody v-else>
+													<tr>
+														<td colspan="6">
+															<v-progress-linear indeterminate
+																color="yellow-darken-2"></v-progress-linear>
+														</td>
+													</tr>
+												</tbody>
 
 										</table>
 
@@ -208,11 +237,11 @@ export default {
 	methods: {
 
 		getAllCoin() {
-			axios.get('/api/getAllToken')
+			var userid = localStorage.getItem('profileid');
+			axios.get('/api/getAllTokenspot?userid=' + userid)
 				.then((response) => {
-					this.coinList = response.data;
-
 					console.log(response.data);
+					this.coinList = response.data;
 				})
 		},
 

@@ -30,12 +30,12 @@
 								<span class="txt">Spot</span>
 							</router-link>
 						</li>
-						<!-- <li class="nav-item">
-							<a href="#" class="nav-link">
+						<li class="nav-item">
+							<router-link to="/overview/stackinglog" class="nav-link">
 								<span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
-								<span class="txt">Futures</span>
-							</a>
-						</li> -->
+								<span class="txt">Stacking History</span>
+							</router-link>
+						</li>
 						<li class="nav-item">
 							<router-link to="/overview/wallet-history" class="nav-link">
 								<span class="icon"><i class="fa-light fa-calendar-clock"></i></span>
@@ -68,27 +68,28 @@
 							<div class="dashPanel">
 								<div class="dashPanelHeader">
 									<h2 class="title mb-2">Overview <br>
-										<span
-											style="font-size: 14px; padding: 6px 0px;  border-radius: 9px;">
-											Your referral link: <router-link :to="'https://aelince.com/refer/'+refferid">https://aelince.com/refer/{{ refferid }}</router-link></span> 
-											<span class="badge badge-outline-info" style="font-size: 12px;  margin-left: 8px;  border-radius: 10px;  border: 1px dotted #cb9a00;  color: #fec00f; cursor:pointer;" @click="clicktocopy">Copy</span>
+										<span style="font-size: 14px; padding: 6px 0px;  border-radius: 9px;">
+											Your referral link: https://aelince.com/refer/{{ refferid }}</span>
+										<span class="badge badge-outline-info"
+											style="font-size: 12px;  margin-left: 8px;  border-radius: 10px;  border: 1px dotted #cb9a00;  color: #fec00f; cursor:pointer;"
+											@click="clicktocopy">Copy</span>
 									</h2>
 
 									<div class="alert alert-warning" v-if="status == 'P' || status == 'M'">
-											<i class="fa fa-exclamation-triangle"></i> Your Profile is being
-											verified by Aelince Verification Team. You will be notified with the
-											verification
-											status with in 24 hours.
-										</div>
-										<div class="alert alert-success" v-else>
-											<i class="fa fa-check-square-o" aria-hidden="true"></i> <b>Your KYC
-												documents
-												are verified.</b> You will soon be able to Stack and Trade on Aelince
-											Exchange. We will keep you posted on your registered email and number.
-										</div>
+										<i class="fa fa-exclamation-triangle"></i> Your Profile is being
+										verified by Aelince Verification Team. You will be notified with the
+										verification
+										status with in 24 hours.
+									</div>
+									<div class="alert alert-success" v-else>
+										<i class="fa fa-check-square-o" aria-hidden="true"></i> <b>Your KYC
+											documents
+											are verified.</b> You will soon be able to Stack and Trade on Aelince
+										Exchange. We will keep you posted on your registered email and number.
+									</div>
 								</div>
 
-								
+
 
 								<div class="dashPanelBody">
 									<ul class="overviewList">
@@ -108,7 +109,15 @@
 								<div class="dashPanelBody">
 									<div class="">
 										<h5>Total assets valuation</h5>
-										<p>******** <sub>BTS*s *******</sub></p>
+										<p v-if="coinList[0]">
+											<span v-if="coinList[0].available > 0">
+												${{ parseInt(coinList[0].available) * 2 }} <sub> ({{
+													coinList[0].available
+												}} AEL)</sub>
+											</span>
+											<span v-else>********<sub> AEL*s *******</sub></span>
+
+										</p>
 
 									</div>
 								</div>
@@ -120,12 +129,19 @@
 										<h5>Total assets valuation</h5>
 										<div class="d-flex justify-content-between align-items-center mobilDblock">
 											<div class="leftSide">
-												<p>******** <sub>BTS*s *******</sub></p>
+												<p v-if="coinList[0]">
+													<span v-if="coinList[0].available > 0">
+														${{ parseInt(coinList[0].available) * 2 }} <sub> ({{
+															coinList[0].available
+														}} AEL)</sub>
+													</span>
+													<span v-else>********<sub> AEL*s *******</sub></span>
+
+												</p>
 											</div>
-											<div
-												class="rightSide justify-content-between align-items-center btnLiast_area">
-												<a href="#" class="defaultBtn">Deposit</a>
-												<a href="#" class="defaultBtn">Transfer</a>
+											<div class="rightSide justify-content-between align-items-center btnLiast_area">
+												<router-link :to="'/overview/spot'" class="defaultBtn">Deposit</router-link>
+												<router-link :to="'/overview/spot'" class="defaultBtn">Transfer</router-link>
 											</div>
 										</div>
 									</div>
@@ -138,11 +154,18 @@
 										<h5>Total assets valuation</h5>
 										<div class="d-flex justify-content-between align-items-center mobilDblock">
 											<div class="leftSide">
-												<p>******** <sub>BTS*s *******</sub></p>
+												<p v-if="coinList[0]">
+													<span v-if="coinList[0].available > 0">
+														${{ parseInt(coinList[0].available) * 2 }} <sub> ({{
+															coinList[0].available
+														}} AEL)</sub>
+													</span>
+													<span v-else>********<sub> AEL*s *******</sub></span>
+
+												</p>
 											</div>
-											<div
-												class="rightSide justify-content-between align-items-center btnLiast_area">
-												<a href="#" class="defaultBtn">Transfer</a>
+											<div class="rightSide justify-content-between align-items-center btnLiast_area">
+												<router-link :to="'/overview/spot'" class="defaultBtn">Transfer</router-link>
 											</div>
 										</div>
 									</div>
@@ -180,6 +203,8 @@ export default {
 		snackbartext: null,
 
 		status: null,
+
+		coinList: [],
 	}),
 	methods: {
 		getProfile() {
@@ -194,13 +219,22 @@ export default {
 			})
 		},
 		clicktocopy() {
-			navigator.clipboard.writeText('https://aelince.com/refer/'+this.refferid);
+			navigator.clipboard.writeText('https://aelince.com/refer/' + this.refferid);
 			this.snackbar = true;
 			this.snackbartext = 'Clipboard Copied';
-		}
+		},
+		getAllCoin() {
+			var userid = localStorage.getItem('profileid');
+			axios.get('/api/getAllTokenspot?userid=' + userid)
+				.then((response) => {
+					console.log(response.data);
+					this.coinList = response.data;
+				})
+		},
 	},
 	created() {
 		this.getProfile()
+		this.getAllCoin();
 
 	}
 

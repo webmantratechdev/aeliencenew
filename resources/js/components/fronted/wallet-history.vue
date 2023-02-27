@@ -30,12 +30,12 @@
                                 <span class="txt">Spot</span>
                             </router-link>
                         </li>
-                        <!-- <li class="nav-item">
-							<a href="#" class="nav-link">
-								<span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
-								<span class="txt">Futures</span>
-							</a>
-						</li> -->
+                        <li class="nav-item">
+                            <router-link to="/overview/stackinglog" class="nav-link">
+                                <span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
+                                <span class="txt">Stacking History</span>
+                            </router-link>
+                        </li>
                         <li class="nav-item active">
                             <router-link to="/overview/wallet-history" class="nav-link">
                                 <span class="icon"><i class="fa-light fa-calendar-clock"></i></span>
@@ -74,19 +74,22 @@
                                         <div class="dashPanelTabNavArea">
                                             <ul class="nav nav-pills">
                                                 <li class="nav-item">
-                                                    <a class="nav-link active" data-bs-toggle="pill"
-                                                        href="#menu1">Deposit record</a>
+                                                    <a class="nav-link active" data-bs-toggle="pill" href="#menu1"
+                                                        @click="getWalletHistory('DEPOSIT')">Deposit record</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" data-bs-toggle="pill" href="#menu2">Withdrawal
+                                                    <a class="nav-link" data-bs-toggle="pill" href="#menu2"
+                                                        @click="getWalletHistory('WITHDRAWAL')">Withdrawal
                                                         record</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" data-bs-toggle="pill" href="#menu3">Transfer
-                                                        records</a>
+                                                    <a class="nav-link" data-bs-toggle="pill" href="#menu3"
+                                                        @click="getWalletHistory('TRANSFER')">Transfer
+                                                        record</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" data-bs-toggle="pill" href="#menu4">Other</a>
+                                                    <a class="nav-link" data-bs-toggle="pill" href="#menu4"
+                                                        @click="getWalletHistory('OTHER')">Other</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -100,12 +103,13 @@
                                                         <table id="example1" class="table soptTable" style="width:100%">
                                                             <thead>
                                                                 <tr>
-                                                                
-                                                                    <th>Currency</th>
+
+                                                                    <th>Token</th>
                                                                     <th>Amount</th>
                                                                     <th>Network</th>
-                                                                    <th>Address</th>
-                                                                    <th>TXID</th>
+                                                                    <th>From</th>
+                                                                    <th>To</th>
+                                                                    <th>Date</th>
                                                                     <th>Status</th>
                                                                 </tr>
                                                             </thead>
@@ -113,18 +117,30 @@
 
                                                                 <tr class="order_item"
                                                                     v-for="deposit in walletHistory.data">
-                                                                    <td data-title="Currency">{{ deposit.currency }}
-                                                                    </td>
+                                                                    <td data-title="Currency"> {{ deposit.depositincurrencu
+                                                                    }}</td>
                                                                     <td data-title="Amount">{{ deposit.amount }}</td>
                                                                     <td data-title="Network">{{ deposit.network }}</td>
-                                                                    <td data-title="Address">{{ deposit.address }}</td>
-                                                                    <td data-title="TXID">{{ deposit.txId }}</td>
+                                                                    <td data-title="Address">{{ deposit.owner_address }}
+                                                                    </td>
+                                                                    <td data-title="Address">{{ deposit.to_address }}</td>
+                                                                    <td data-title="Address">{{ deposit.created_at }}</td>
                                                                     <td data-title="Status">{{ deposit.operationType }}
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tbody v-else>
+                                                                <tr>
+                                                                    <td colspan="6">
+                                                                        <v-progress-linear indeterminate
+                                                                            color="yellow-darken-2"></v-progress-linear>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
 
                                                         </table>
+
+
 
                                                     </div>
                                                 </div>
@@ -137,12 +153,13 @@
                                                         <table id="example2" class="table soptTable" style="width:100%">
                                                             <thead>
                                                                 <tr>
-                                                                  
-                                                                    <th>Currency</th>
+
+                                                                    <th>Token</th>
                                                                     <th>Amount</th>
                                                                     <th>Network</th>
-                                                                    <th>Address</th>
-                                                                    <th>TXID</th>
+                                                                    <th>From</th>
+                                                                    <th>To</th>
+                                                                    <th>Date</th>
                                                                     <th>Status</th>
                                                                 </tr>
                                                             </thead>
@@ -150,13 +167,23 @@
 
                                                                 <tr class="order_item"
                                                                     v-for="deposit in walletHistory.data">
-                                                                    <td data-title="Currency">{{ deposit.currency }}
-                                                                    </td>
+                                                                    <td data-title="Currency"> {{ deposit.depositincurrencu
+                                                                    }}</td>
                                                                     <td data-title="Amount">{{ deposit.amount }}</td>
                                                                     <td data-title="Network">{{ deposit.network }}</td>
-                                                                    <td data-title="Address">{{ deposit.address }}</td>
-                                                                    <td data-title="TXID">{{ deposit.txId }}</td>
+                                                                    <td data-title="Address">{{ deposit.owner_address }}
+                                                                    </td>
+                                                                    <td data-title="Address">{{ deposit.to_address }}</td>
+                                                                    <td data-title="Address">{{ deposit.created_at }}</td>
                                                                     <td data-title="Status">{{ deposit.operationType }}
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tbody v-else>
+                                                                <tr>
+                                                                    <td colspan="6">
+                                                                        <v-progress-linear indeterminate
+                                                                            color="yellow-darken-2"></v-progress-linear>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -173,12 +200,13 @@
                                                         <table id="example3" class="table soptTable" style="width:100%">
                                                             <thead>
                                                                 <tr>
-                                                                 
-                                                                    <th>Currency</th>
+
+                                                                    <th>Token</th>
                                                                     <th>Amount</th>
                                                                     <th>Network</th>
-                                                                    <th>Address</th>
-                                                                    <th>TXID</th>
+                                                                    <th>From</th>
+                                                                    <th>To</th>
+                                                                    <th>Date</th>
                                                                     <th>Status</th>
                                                                 </tr>
                                                             </thead>
@@ -186,13 +214,23 @@
 
                                                                 <tr class="order_item"
                                                                     v-for="deposit in walletHistory.data">
-                                                                    <td data-title="Currency">{{ deposit.currency }}
-                                                                    </td>
+                                                                    <td data-title="Currency"> {{ deposit.depositincurrencu
+                                                                    }}</td>
                                                                     <td data-title="Amount">{{ deposit.amount }}</td>
                                                                     <td data-title="Network">{{ deposit.network }}</td>
-                                                                    <td data-title="Address">{{ deposit.address }}</td>
-                                                                    <td data-title="TXID">{{ deposit.txId }}</td>
+                                                                    <td data-title="Address">{{ deposit.owner_address }}
+                                                                    </td>
+                                                                    <td data-title="Address">{{ deposit.to_address }}</td>
+                                                                    <td data-title="Address">{{ deposit.created_at }}</td>
                                                                     <td data-title="Status">{{ deposit.operationType }}
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tbody v-else>
+                                                                <tr>
+                                                                    <td colspan="6">
+                                                                        <v-progress-linear indeterminate
+                                                                            color="yellow-darken-2"></v-progress-linear>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -208,11 +246,12 @@
                                                             <thead>
                                                                 <tr>
                                                                     <!-- <th>Time</th> -->
-                                                                    <th>Currency</th>
+                                                                    <th>Token</th>
                                                                     <th>Amount</th>
                                                                     <th>Network</th>
-                                                                    <th>Address</th>
-                                                                    <th>TXID</th>
+                                                                    <th>From</th>
+                                                                    <th>To</th>
+                                                                    <th>Date</th>
                                                                     <th>Status</th>
                                                                 </tr>
                                                             </thead>
@@ -220,13 +259,23 @@
 
                                                                 <tr class="order_item"
                                                                     v-for="deposit in walletHistory.data">
-                                                                    <td data-title="Currency">{{ deposit.currency }}
-                                                                    </td>
+                                                                    <td data-title="Currency"> {{ deposit.depositincurrencu
+                                                                    }}</td>
                                                                     <td data-title="Amount">{{ deposit.amount }}</td>
                                                                     <td data-title="Network">{{ deposit.network }}</td>
-                                                                    <td data-title="Address">{{ deposit.address }}</td>
-                                                                    <td data-title="TXID">{{ deposit.txId }}</td>
+                                                                    <td data-title="Address">{{ deposit.owner_address }}
+                                                                    </td>
+                                                                    <td data-title="Address">{{ deposit.to_address }}</td>
+                                                                    <td data-title="Address">{{ deposit.created_at }}</td>
                                                                     <td data-title="Status">{{ deposit.operationType }}
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tbody v-else>
+                                                                <tr>
+                                                                    <td colspan="6">
+                                                                        <v-progress-linear indeterminate
+                                                                            color="yellow-darken-2"></v-progress-linear>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -274,9 +323,10 @@ export default {
     }),
     methods: {
 
-        getWalletHistory() {
+        getWalletHistory($operationType) {
+            this.walletHistory = [];
             var userid = localStorage.getItem('profileid')
-            axios.get('/api/getWalletHistory/' + userid)
+            axios.get('/api/getWalletHistory/' + userid + '/' + $operationType)
                 .then((response) => {
 
                     console.log(response.data);
@@ -297,7 +347,7 @@ export default {
     }, mounted() {
         this.getProfile()
 
-        this.getWalletHistory();
+        this.getWalletHistory('DEPOSIT');
     }
 
 

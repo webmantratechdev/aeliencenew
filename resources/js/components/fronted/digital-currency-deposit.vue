@@ -30,12 +30,12 @@
 								<span class="txt">Spot</span>
 							</router-link>
 						</li>
-						<!-- <li class="nav-item">
-							<a href="#" class="nav-link">
-								<span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
-								<span class="txt">Futures</span>
-							</a>
-						</li> -->
+						<li class="nav-item">
+                            <router-link to="/overview/stackinglog" class="nav-link">
+                                <span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
+                                <span class="txt">Stacking History</span>
+                            </router-link>
+                        </li>
 						<li class="nav-item">
 							<router-link to="/overview/wallet-history" class="nav-link">
 								<span class="icon"><i class="fa-light fa-calendar-clock"></i></span>
@@ -85,19 +85,19 @@
 														the deposit address on this page</p>
 												</div>
 											</li>
-											<li>
+											<li class="active">
 												<div class="content">
 													<h4>Initiate Deposit</h4>
 													<p>Initiate a withdrawl on the other party's platform</p>
 												</div>
 											</li>
-											<li>
+											<li class="active">
 												<div class="content">
 													<h4>Network Confirmation</h4>
 													<p>Wait for the blockchain network to confirm your transfer</p>
 												</div>
 											</li>
-											<li>
+											<li class="active">
 												<div class="content">
 													<h4>Successful Deposit</h4>
 													<p>After blockchain confirmation,Aelince will post it for you.</p>
@@ -110,30 +110,26 @@
 									<div class="pb-3">
 										<div class="row rowBox">
 											<div class="col-lg-6 col-md-6 col-sm-6 col-12 columnBox">
-												<v-autocomplete class="elevation-0 outlined" variant="outlined"
-													:items="coninOp" v-model="conin"
-													@blur="changeRoute"></v-autocomplete>
-												<!-- <div class="form-group">
+												<!-- <v-autocomplete class="elevation-0 outlined" variant="outlined"
+													:items="coninOp"  @blur="changeRoute"></v-autocomplete> -->
+												<div class="form-group">
 													<label class="labelName">Choose Currency</label>
-													<select class="form-select">
-														<option>Dllar</option>
-														<option>Rupee</option>
-														<option>Euro</option>
+													<select class="form-select" v-model="conin" @change="changeRoute">
+														<option v-for="coin in coninOp">{{ coin }}</option>
 													</select>
-												</div> -->
+												</div>
 											</div>
 											<div class="col-lg-6 col-md-6 col-sm-6 col-12 columnBox">
-												<v-autocomplete class="elevation-0 outlined" variant="outlined"
-													:items="networksOp" v-model="networks"
-													@blur="changenework"></v-autocomplete>
-												<!-- <div class="form-group">
+												<!-- <v-autocomplete class="elevation-0 outlined" variant="outlined"
+													:items="networksOp" 
+													@blur="changenework"></v-autocomplete> -->
+												<div class="form-group">
 													<label class="labelName">Network</label>
-													<select class="form-select">
-														<option>BINNANCE SMART CHAIN (BEP20)</option>
-														<option>BINNANCE SMART CHAIN (BEP20)</option>
-														<option>BINNANCE SMART CHAIN (BEP20)</option>
+													<select class="form-select"  v-model="networks" @change="changenework">
+														<option v-for="symbol in networksOp">{{ symbol }}</option>
+														
 													</select>
-												</div> -->
+												</div>
 											</div>
 										</div>
 
@@ -160,14 +156,7 @@
 												<strong>{{ networks }}</strong>
 											</p>
 										</div>
-
-
-
-
 									</div>
-
-
-
 								</div>
 							</div>
 
@@ -184,23 +173,32 @@
 											<table id="example" class="table soptTable" style="width:100%">
 												<thead>
 													<tr>
-														<th>Currency</th>
+														<th>Token</th>
 														<th>Amount</th>
 														<th>Network</th>
-														<th>Address</th>
-														<th>TXID</th>
+														<th>From</th>
+														<th>To</th>
 														<th>Status</th>
 													</tr>
 												</thead>
 												<tbody v-if="depositHistory.data">
 
-													<tr class="order_item" v-for="deposit in depositHistory.data">
-														<td data-title="Currency">{{ deposit.currency }}</td>
+													<tr class="order_item" v-for="deposit in depositHistory.data" >
+														<td data-title="Currency"> {{ deposit.depositincurrencu }}</td>
 														<td data-title="Amount">{{ deposit.amount }}</td>
 														<td data-title="Network">{{ deposit.network }}</td>
-														<td data-title="Address">{{ deposit.address }}</td>
-														<td data-title="TXID">{{ deposit.txId }}</td>
+														<td data-title="Address">{{ deposit.owner_address }}</td>
+														<td data-title="Address">{{ deposit.to_address }}</td>
 														<td data-title="Status">{{ deposit.operationType }}</td>
+													</tr>
+												</tbody>
+
+												<tbody v-else>
+													<tr>
+														<td colspan="6">
+															<v-progress-linear indeterminate
+																color="yellow-darken-2"></v-progress-linear>
+														</td>
 													</tr>
 												</tbody>
 											</table>
@@ -251,7 +249,7 @@ export default {
 
 		depositAddress: null,
 
-		depositHistory:[],
+		depositHistory: [],
 
 	}),
 	methods: {
@@ -286,6 +284,9 @@ export default {
 						netsd.push(value.chain)
 					}
 				})
+
+				console.log(coninsd);
+
 				this.coninOp = coninsd;
 				this.networksOp = netsd;
 
@@ -293,6 +294,8 @@ export default {
 		},
 
 		changenework() {
+
+			console.log(this.networks);
 
 			var conin = this.conin;
 			var networks = this.networks;

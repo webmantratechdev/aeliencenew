@@ -195,10 +195,11 @@
 									</span>
 								</div>
 								<div class="td d-inline-block change" data-title="24h Change" v-if="exchange.base == coin.id" >
-									<span class="sellColor">{{ parseFloat(coin.price).toFixed(3) }}</span>
+									<span class="buyColor">{{ parseFloat(coin.price).toFixed(3) }}</span>
 								</div>
 								<div class="td d-inline-block change" data-title="24h Change" v-if="exchange.base != coin.id" >
-									<span class="sellColor">{{ parseFloat(coin.changePercent24Hr).toFixed(3) }}</span>
+									<span class="sellColor" style="color:green;" v-if="coin.changePercent24Hr > 0">{{ parseFloat(coin.changePercent24Hr).toFixed(3) }}</span>
+									<span class="sellColor" v-else>{{ parseFloat(coin.changePercent24Hr).toFixed(3) }}</span>
 								</div>
 
 								<div class="td d-inline-block" data-title="24h High" v-if="exchange.base == coin.id"> {{ parseFloat(coin.volume).toFixed(3)}} </div>

@@ -1,7 +1,7 @@
 <template>
     <div class="px-5 border-top py-5">
         <div class="h4 d-flex align-item-center">
-            List Of User
+            Closed Ticket
             <v-spacer></v-spacer>
             <div style="max-width:300px;display: flex;">
                 <input type="text" class="form-control" placeholder="Your Email" v-model="searchkey">
@@ -17,37 +17,26 @@
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
-                    <th scope="col">Phone</th>
-                    <th scope="col">Referral</th>
-                    <th scope="col">Regd. Date</th>
+                    <th scope="col">subject</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
 
-                <tr v-for="user in users.data">
-                    <th scope="row">{{ user.name }}</th>
-                    <th scope="row">{{ user.email }}</th>
-                    <th scope="row">{{ user.phone }}</th>
-                    <th scope="row">{{ user.refferal_code }}</th>
-                    <th scope="row">{{ user.created_at }}</th>
-
-
+                <tr v-for="ticket in Ticket.data">
+                    <th scope="row">{{ ticket.name }}</th>
+                    <th scope="row">{{ ticket.email }}</th>
+                    <th scope="row">{{ ticket.subject }}</th>
                     <th scope="row">
-                       
-                            <span v-if="user.status == 'A'" selected>Approve</span>
-                     
-                            <span  v-else-if="user.status == 'M'" selected>Missing</span>
-
+                            <span v-if="ticket.status == 'A'" selected>Answered</span>
+                            <span  v-else-if="ticket.status == 'C'" selected>Closed</span>
                             <span v-else>Pending</span>
-                        
                     </th>
-
                     <th scope="row">
-                        <button class="btn-sm btn btn-danger mr-2" @click="deletItme(user.id)"><i class="fa fa-trash-o"
+                        <button class="btn-sm btn btn-danger mr-2" @click="deletItme(ticket.id)"><i class="fa fa-trash-o"
                                 aria-hidden="true"></i></button>
-                        <button class="btn-sm btn btn-info " @click="viewItem(user.id)"><i class="fa fa-pencil"
+                        <button class="btn-sm btn btn-info " @click="viewItem(ticket.id)"><i class="fa fa-pencil"
                                 aria-hidden="true"></i></button>
                     </th>
 
@@ -87,7 +76,7 @@ export default {
           { title: 'Iron (%)', align: 'end', key: 'iron' },
         ],
 
-        users: [],
+        Ticket: [],
         searchkey: '',
         pagination: {
             current: 1,
@@ -100,63 +89,64 @@ export default {
     }),
     methods: {
         handlePageChange() {
-            this.getAllUsers();
+            this.getAllTicket();
         },
         next() {
-            this.getAllUsers();
+            this.getAllTicket();
         },
         prev() {
-            this.getAllUsers();
+            this.getAllTicket();
         },
 
-        getAllUsers() {
-            axios.get('/api/getAllUsers?page=' + this.pagination.current).then((response) => {
-                this.users = response.data;
+        getAllTicket() {
+            axios.get('/api/getAllTicket?status=a&page=' + this.pagination.current).then((response) => {
+                console.log(response.data);
+                this.Ticket = response.data;
                 this.pagination.current = response.data.current_page;
                 this.pagination.total = response.data.last_page;
             })
         },
 
         filterdata() {
-            this.getAllUsers();
+            this.getAllTicket();
         },
 
-        onChange(userid, event) {
+        onChange(ticketid, event) {
 
             var dataString = {
-                userid: userid,
+                ticketid: ticketid,
                 status: event.target.value,
             }
 
-            axios.post('/api/updateuserstatus', dataString).then((response) => {
+            axios.post('/api/updateTickettatus', dataString).then((response) => {
                 if (response.data == 1) {
                     this.snackbar = true;
                     this.snackbartext = 'KYC status has been updated..';
                 }
             })
         },
-        deletItme(userid) {
+        deletItme(ticketid) {
             if (confirm('Are you sure want to delete??')) {
                 var dataString = {
-                    userid: userid,
+                    ticketid: ticketid,
                 }
-                axios.post('/api/deleteuser', dataString).then((response) => {
+                axios.post('/api/deleteticket', dataString).then((response) => {
                     if (response.data == 1) {
-                        this.getAllUsers()
+                        this.getAllTicket()
                         this.snackbar = true;
                         this.snackbartext = 'deleted...';
                     }
                 })
             }
         },
-        viewItem(userid) {
-            this.$router.push('/console/users/' + userid);
+        viewItem(ticketid) {
+            this.$router.push('/console/ticket/' + ticketid);
         }
 
 
     },
     created() {
-        this.getAllUsers()
+        this.getAllTicket()
     }
 }
 </script>

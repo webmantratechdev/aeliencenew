@@ -30,12 +30,12 @@
 								<span class="txt">Spot</span>
 							</router-link>
 						</li>
-						<!-- <li class="nav-item">
-							<a href="#" class="nav-link">
+						<li class="nav-item">
+							<router-link to="/overview/stackinglog" class="nav-link">
 								<span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
-								<span class="txt">Futures</span>
-							</a>
-						</li> -->
+								<span class="txt">Stacking History</span>
+							</router-link>
+						</li>
 						<li class="nav-item">
 							<router-link to="/overview/wallet-history" class="nav-link">
 								<span class="icon"><i class="fa-light fa-calendar-clock"></i></span>
@@ -120,74 +120,56 @@
 											<div class="col-lg-4 col-md-4 col-sm-6 col-12 columnBox">
 												<div class="form-group">
 													<label class="labelName">Name</label>
-													<input type="text" class="form-control" placeholder="admin"
-														v-model="name">
+													<v-text-field variant="outlined" v-model="name"></v-text-field>
 												</div>
 											</div>
 
 											<div class="col-lg-4 col-md-4 col-sm-6 col-12 columnBox">
 												<div class="form-group">
 													<label class="labelName">Email</label>
-													<input type="text" class="form-control" placeholder="demo@gmail.com"
-														v-model="email">
+													<v-text-field variant="outlined" v-model="email"></v-text-field>
 												</div>
 											</div>
 											<div class="col-lg-4 col-md-4 col-sm-6 col-12 columnBox">
 												<div class="form-group">
 													<label class="labelName">Address</label>
-													<input type="text" class="form-control" placeholder="there"
-														v-model="address">
+													<v-text-field variant="outlined" v-model="address"></v-text-field>
 												</div>
 											</div>
 											<div class="col-lg-4 col-md-4 col-sm-6 col-12 columnBox">
 												<div class="form-group">
-													<label class="labelName">Country :( {{ country }} )</label>
-													<select class="form-control" v-model="country"
-														@change="changeCountry($event)">
-														<option>Select Country</option>
-														<option v-for="countrys in countryOp"
-															:value="countrys.phonecode"> {{ countrys.name }}
-														</option>
-													</select>
+													<label class="labelName">Country</label>
+													<v-autocomplete variant="outlined" v-model="country" :items="countryOp"
+														v-on:change="changeCountry"></v-autocomplete>
 												</div>
 											</div>
 
 											<div class="col-lg-4 col-md-4 col-sm-6 col-12 columnBox">
 												<div class="form-group">
-													<label class="labelName">State : ( {{ state }})</label>
-													<select class="form-control" v-model="state"
-														@change="changeState($event)">
-														<option value="" selected>Select State</option>
-														<option v-for="state in stateOp" :value="state.id">
-															{{ state.name }}
-														</option>
-													</select>
+													<label class="labelName">State </label>
+													<v-autocomplete variant="outlined" v-model="state" :items="stateOp"
+														v-on:change="changeState"></v-autocomplete>
 												</div>
 											</div>
 
 											<div class="col-lg-4 col-md-4 col-sm-6 col-12 columnBox">
 												<div class="form-group">
 													<label class="labelName">City : ({{ city }})</label>
-													<select class="form-control" v-model="city">
-														<option value="" selected>Select City</option>
-														<option v-for="city in cityOp" :value="city.name">
-															{{ city.name }}
-														</option>
-													</select>
+													<v-autocomplete variant="outlined" v-model="city" :items="cityOp"
+														v-on:change="changeState"></v-autocomplete>
 												</div>
 											</div>
 
 											<div class="col-lg-4 col-md-4 col-sm-6 col-12 columnBox">
 												<div class="form-group">
 													<label class="labelName">Zip</label>
-													<input type="text" class="form-control" placeholder="000000"
-														v-model="zip">
+													<v-text-field variant="outlined" v-model="zip"></v-text-field>
 												</div>
 											</div>
 
 											<div class="col-lg-4 col-md-4 col-sm-6 col-12 columnBox">
 												<div class="reSubmitBtnArea">
-													<button type="button" class="reSubmitBtn">Resubmit KYC</button>
+													<!-- <button type="button" class="reSubmitBtn">Resubmit KYC</button> -->
 												</div>
 											</div>
 										</div>
@@ -195,8 +177,8 @@
 
 									<div class="dashPanelFooter">
 										<div class="updateBtnArea text-end">
-											<button type="button" class="updateBtn"
-												@click="updateprofilebyadmin">Update</button>
+											<v-btn variant="large" class="updateBtn"
+												@click="updateprofilebyadmin">Update</v-btn>
 										</div>
 									</div>
 								</div>
@@ -254,14 +236,22 @@ export default {
 		getAllcountry() {
 			axios.get('/api/getAllcountry').then((response) => {
 
-				this.countryOp = response.data;
+				var country = [];
+				response.data.forEach((value, key) => {
+					country.push({ value: value.phonecode, title: value.name });
+				})
+				this.countryOp = country;
 			})
 		},
 
 		getallStatebycountry(countrycode) {
 			if (countrycode) {
 				axios.get('/api/getallStatebycountry/' + countrycode).then((response) => {
-					this.stateOp = response.data;
+					var state = [];
+					response.data.forEach((value, key) => {
+						state.push({ value: value.country_id, title: value.name });
+					})
+					this.stateOp = state;
 				})
 			} else {
 				this.stateOp = [];
@@ -271,7 +261,14 @@ export default {
 		getallCitybystate(stateid) {
 			if (stateid) {
 				axios.get('/api/getallCitybystate/' + stateid).then((response) => {
-					this.cityOp = response.data;
+					
+
+					var city = [];
+					response.data.forEach((value, key) => {
+						city.push({ value: value.name, title: value.name });
+					})
+					this.cityOp = city;
+
 				})
 			} else {
 				this.cityOp = [];
@@ -279,12 +276,13 @@ export default {
 
 		},
 
-		changeCountry(event) {
-			this.getallStatebycountry(event.target.value);
+		changeCountry() {
+			this.getallStatebycountry(this.country);
 		},
 
-		changeState(event) {
-			this.getallCitybystate(event.target.value);
+		changeState() {
+			
+			this.getallCitybystate(this.state);
 		},
 
 		getProfile() {

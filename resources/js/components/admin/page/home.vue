@@ -58,10 +58,11 @@ export default {
             let dataString = [];
 
             axios.get('/api/getAllUsers?page=' + this.pagination.current + '&kycstatus=M').then((response) => {
-                this.pending = response.data.total;
+                
+                this.missing = response.data.total;
             })
             axios.get('/api/getAllUsers?page=' + this.pagination.current + '&kycstatus=P').then((response) => {
-                this.missing = response.data.total;
+                this.pending = response.data.total;
             })
             axios.get('/api/getAllUsers?page=' + this.pagination.current + '&kycstatus=A').then((response) => {
                 this.approve = response.data.total;

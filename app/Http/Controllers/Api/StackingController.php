@@ -22,6 +22,15 @@ class StackingController extends Controller
     }
 
 
+    public function get_staking_currencies_front()
+    {
+
+        $staking_currencies = DB::table('staking_currencies')->paginate(10);
+
+        return response()->json($staking_currencies);
+    }
+
+
 
     public function get_single_staking_currencies($stackid)
     {
@@ -29,7 +38,6 @@ class StackingController extends Controller
 
         return response()->json($staking_currencies);
     }
-
 
 
     public function update_stacking_status($stackid)
@@ -110,70 +118,24 @@ class StackingController extends Controller
     }
 
 
-    public function getCoinRate($coinId)
-    {
-        if ($coinId != 'USDT') {
-            try {
-                $url = 'https://api.binance.com/api/v3/ticker/price?symbol=' . strtoUpper($coinId) . 'USDT';
-                $crypto = file_get_contents($url);
-                $usd = json_decode($crypto, true);
-                $cryptoRate = $usd['price'];
-            } catch (\Throwable $th) {
-                $cryptoRate = '1';
-            }
-            return $cryptoRate;
-        } else {
-            $cryptoRate = '1';
-            return $cryptoRate;
-        }
-    }
 
 
-
-    public function createstackinglog(Request $request)
+    public function getBlockchainPrivateKey($mnemonic, $symbol)
     {
 
-        $stackCoin = DB::table('staking_currencies')->where('id', $request->get('coin_id'))->get()->first();
-
-
-        $price = $this->getCoinRate($request->get('symbol'));
-
-        $data = [
-            'coin_id' => $request->coin_id,
-            'user_id' => $request->get('userid'),
-            'symbol' => $request->symbol,
-            'cost' => $request->get('amount') * $price,
-            'staked' => $request->get('amount'),
-            'start_date' => Carbon::now(),
-            'end_date' => Carbon::now()->addDays($stackCoin->period),
-            'last_stake_date' => Carbon::now()->addDays(1),
-            'status' => 1
+        $array = [
+            'ETH' => 'ethereum',
+            'TRON' => 'tron',
+            'BSC' => 'bsc',
+            'BTC' => 'bitcoin',
+            'AEL' => 'tron',
         ];
 
-        $insert = DB::table('staking_logs')->insert($data);
-
-        if( $insert){
-
-            $ledger_accounts = DB::table('ledger_accounts')->where(['user_id' => $request->get('userid'), 'currency' => $request->symbol])->get(['account_id'])->first();
-
-            
-            $datasdf = $this->transfertowallet($ledger_accounts->account_id, '63e7840d72c112999fa40b06', $request->get('amount'));
-
-            print_r($datasdf);
-            exit;
-        }
-    
-    }
-
-
-    public function transfertowallet($senderAccount, $recipientAccountId, $amount)
-    {
         $curl = curl_init();
 
         $payload = array(
-            "senderAccountId" => $senderAccount,
-            "recipientAccountId" => $recipientAccountId,
-            "amount" => $amount
+            "index" => 1,
+            "mnemonic" => $mnemonic
         );
 
         curl_setopt_array($curl, [
@@ -182,7 +144,7 @@ class StackingController extends Controller
                 "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
             ],
             CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_URL => "https://api.tatum.io/v3/ledger/transaction",
+            CURLOPT_URL => "https://api.tatum.io/v3/" . $array[$symbol] . "/wallet/priv",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CUSTOMREQUEST => "POST",
         ]);
@@ -192,17 +154,133 @@ class StackingController extends Controller
 
         curl_close($curl);
 
-        if ($error) {
-            echo "cURL Error #:" . $error;
-        } else {
-            echo $response;
+        return json_decode($response);
+    }
+
+
+
+    public function createstackinglog(Request $request)
+    {
+
+
+        $stackCoin = DB::table('staking_currencies')->where('id', $request->get('coin_id'))->get()->first();
+
+        $ledger_accounts = DB::table('ledger_accounts')->where(['user_id' => $request->userid, 'currency' => $stackCoin->symbol])->get(['account_id', 'wallet_id', 'memonic', 'xpub'])->first();
+
+        $getwallet =  DB::table('wallets')->where(['id' => $ledger_accounts->wallet_id])->get()->first();
+
+        $userprivatekey = $this->getBlockchainPrivateKey($ledger_accounts->memonic, $stackCoin->symbol);
+
+        $transfer = $this->transfertowallet($getwallet->address, $request->deductAmt, $userprivatekey->key, $stackCoin->symbol);
+
+        if (isset($transfer->txId)) {
+
+            $data = [
+                'coin_id' => $request->coin_id,
+                'user_id' => $request->userid,
+                'symbol' => $stackCoin->symbol,
+                'cost' => $request->deductAmt,
+                'staked' => $request->deductAmt * 2,
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDays($stackCoin->period),
+                'last_stake_date' => Carbon::now()->addDays(1),
+                'stacketype' => 'prestacke',
+                'trxtid' => $transfer->txId,
+                'status' => 1
+            ];
+
+            $insert = DB::table('staking_logs')->insert($data);
+
+        }
+
+        return response()->json($transfer);
+    }
+
+
+    public function transfertowallet($address, $amount, $fromPrivateKey, $symbol)
+    {
+
+        $customtoke = DB::table('custom_tokens')->where('symbol', $symbol)->get()->first();
+
+        if ($customtoke) {
+
+            $privatekey = $this->getBlockchainPrivateKey($customtoke->memonic, $symbol);
+
+            $curl = curl_init();
+
+            $payload = array(
+                "to" => $address,
+                "amount" => "12",
+                "fromPrivateKey" => $privatekey->key,
+            );
+
+            curl_setopt_array($curl, [
+                CURLOPT_HTTPHEADER => [
+                    "Content-Type: application/json",
+                    "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                ],
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_URL => "https://api.tatum.io/v3/tron/transaction",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => "POST",
+            ]);
+
+            $response = curl_exec($curl);
+            $error = curl_error($curl);
+
+            curl_close($curl);
+
+            $respon = json_decode($response);
+
+            
+
+            if (isset($respon->txId)) {
+
+                $curl = curl_init();
+
+                $payload = array(
+                    "fromPrivateKey" => $fromPrivateKey,
+                    "to" => $customtoke->receiving_wallet_address,
+                    "tokenAddress" => $customtoke->address,
+                    "feeLimit" => 12,
+                    "amount" => $amount
+                );
+
+
+                curl_setopt_array($curl, [
+                    CURLOPT_HTTPHEADER => [
+                        "Content-Type: application/json",
+                        "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                    ],
+                    CURLOPT_POSTFIELDS => json_encode($payload),
+                    CURLOPT_URL => "https://api.tatum.io/v3/tron/trc20/transaction",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                ]);
+
+                $response = curl_exec($curl);
+                $error = curl_error($curl);
+
+                curl_close($curl);
+
+               return json_decode($response);
+            }
         }
     }
 
 
-    public function getStackingLog() {
-        $staking_logs = DB::table('staking_logs')->paginate(10);
+    public function getStackingLog()
+    {
+        $staking_logs = DB::table('staking_logs')->orderBy('id', 'DESC')->paginate(10);
 
-        return response()->json($staking_logs);  
+        return response()->json($staking_logs);
+    }
+
+
+    public function get_staking_log_front() {
+        
+        $staking_logs = DB::table('staking_logs')->where('user_id', @$_GET['userid'])->orderBy('id', 'DESC')->paginate(10);
+
+        return response()->json($staking_logs);
     }
 }
