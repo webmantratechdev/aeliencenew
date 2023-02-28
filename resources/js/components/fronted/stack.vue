@@ -461,15 +461,14 @@ export default {
             }
 
             
-            if(this.singlestack.min_stake <= this.lockamount){
+            var availableamount = this.account.balance;
+
+            if(availableamount < this.lockamount){
                 this.snackbar = true;
-                this.snackbartext = `Enter min stack amount `+ parseFloat(this.singlestack.min_stake).toFixed(0) ;
+                this.snackbartext = `Your Account Balance `+ availableamount +` Not Enough! Please Deposit Money`;
                 this.purchaselod = false;
                 return false;
             }
-
-
-            var availableamount = this.account.balance;
 
             if (availableamount > 0) {
 
