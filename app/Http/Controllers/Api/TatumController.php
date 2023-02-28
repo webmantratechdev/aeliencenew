@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Mail;
+
 class TatumController extends Controller
 {
     //
@@ -147,9 +149,7 @@ class TatumController extends Controller
     }
 
 
-
     /**********************************************---------------------------------------------*********/
-
 
     public function getdepositeaddress($coin, $network, $userid)
     {
@@ -351,7 +351,7 @@ class TatumController extends Controller
                                     'txId' => $tr->txID,
                                     'owner_address' => $tr->rawData->contract[0]->parameter->value->ownerAddressBase58,
                                     'to_address' => $tr->rawData->contract[0]->parameter->value->toAddressBase58,
-                                    'depositincurrencu' => ($ws->network == 'TRON')?'TRX':$ws->network,
+                                    'depositincurrencu' => ($ws->network == 'TRON') ? 'TRX' : $ws->network,
                                     'created_at' => date('Y-m-d H:i:s'),
                                     'updated_at'   => date('Y-m-d H:i:s')
                                 ];
@@ -360,7 +360,27 @@ class TatumController extends Controller
                                 $existxt = DB::table('wallet_history')->where('txId', $tr->txID)->get(['txId'])->first();
 
                                 if (empty($existxt)) {
+
+
                                     DB::table('wallet_history')->insert($data);
+
+                                    if ($data['txId'] != '1.0E-6') {
+
+                                        $getuser = DB::table('users')->where('id', $userid)->get(['name', 'email'])->first();
+
+                                        $data = [
+                                            'email' => $getuser->email,
+                                            'name' => $getuser->name,
+                                            'amount' => $data['amount'],
+                                            'symbol' => $data['depositincurrencu']
+                                        ];
+
+
+                                        Mail::send('emails.deposit', $data, function ($message) use ($data) {
+                                            $message->to($data['email'], $data['name'])->subject('Deposit Confirmed');
+                                            $message->from('support@aelince.com', 'Aelince');
+                                        });
+                                    }
                                 }
                             }
                         } else {
@@ -388,6 +408,23 @@ class TatumController extends Controller
 
                             if (empty($existxt)) {
                                 DB::table('wallet_history')->insert($data);
+
+                                if ($data['txId'] != '1.0E-6') {
+
+                                    $getuser = DB::table('users')->where('id', $userid)->get(['name', 'email'])->first();
+
+                                    $data = [
+                                        'email' => $getuser->email,
+                                        'name' => $getuser->name,
+                                        'amount' => $data['amount'],
+                                        'symbol' => $data['depositincurrencu']
+                                    ];
+
+                                    Mail::send('emails.deposit', $data, function ($message) use ($data) {
+                                        $message->to($data['email'], $data['name'])->subject('Deposit Confirmed');
+                                        $message->from('support@aelince.com', 'Aelince');
+                                    });
+                                }
                             }
                         }
                     }
@@ -396,9 +433,9 @@ class TatumController extends Controller
         }
 
         $exasdf =  DB::table('wallet_history')->where(['userid' => $userid, 'operationType' => $operationType])
-        ->where('amount', '>=' , '1')
-        ->where('amount', '!=', '1.0E-6')
-        ->orderBy('id', 'DESC')->paginate(10);
+            ->where('amount', '>=', '1')
+            ->where('amount', '!=', '1.0E-6')
+            ->orderBy('id', 'DESC')->paginate(10);
 
         return response()->json($exasdf);
     }
@@ -410,9 +447,9 @@ class TatumController extends Controller
     {
 
         $exasdf =  DB::table('wallet_history')->where(['userid' => $userid, 'currency' => $coin, 'operationType' => 'DEPOSIT'])
-        ->where('amount', '>=', '1')
-        ->where('amount', '!=', '1.0E-6')
-        ->paginate(10);
+            ->where('amount', '>=', '1')
+            ->where('amount', '!=', '1.0E-6')
+            ->paginate(10);
 
         return response()->json($exasdf);
     }

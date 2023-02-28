@@ -23,7 +23,7 @@
                     <th scope="col">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-if="users.data">
 
                 <tr v-for="user in users.data">
                     <th scope="row">{{ user.name }}</th>
@@ -34,8 +34,7 @@
 
 
                     <th scope="row">
-                        <select class="form-select" aria-label="Default select example"
-                            @change="onChange(user.id, $event)">
+                        <select class="form-select" aria-label="Default select example" @change="onChange(user.id, $event)">
                             <option value="A" v-if="user.status == 'A'" selected>Approve</option>
                             <option value="A" v-else>Approve</option>
                             <option value="M" v-if="user.status == 'M'" selected>Missing</option>
@@ -51,14 +50,20 @@
                         <button class="btn-sm btn btn-info " @click="viewItem(user.id)"><i class="fa fa-pencil"
                                 aria-hidden="true"></i></button>
                     </th>
-
                 </tr>
 
             </tbody>
+            <tbody v-else>
+                <tr>
+                    <td colspan="7">
+                        <v-progress-linear indeterminate color="yellow-darken-2"></v-progress-linear>
+                    </td>
+                </tr>
+            </tbody>
         </table>
 
-        <v-pagination v-model="pagination.current" :total-visible="7" :length="pagination.total" @next="next()"
-            @prev="prev" @update:modelValue="handlePageChange"></v-pagination>
+        <v-pagination v-model="pagination.current" :total-visible="7" :length="pagination.total" @next="next()" @prev="prev"
+            @update:modelValue="handlePageChange"></v-pagination>
 
 
         <v-snackbar v-model="snackbar">
@@ -96,7 +101,7 @@ export default {
         },
 
         getAllUsers() {
-            axios.get('/api/getAllUsers?page=' + this.pagination.current+'&kycstatus=M').then((response) => {
+            axios.get('/api/getAllUsers?page=' + this.pagination.current + '&kycstatus=M').then((response) => {
                 this.users = response.data;
                 this.pagination.current = response.data.current_page;
                 this.pagination.total = response.data.last_page;

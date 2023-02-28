@@ -73,7 +73,7 @@
                         <thead>
                             <tr>
                                 <th>Token</th>
-                                <th>Est APR</th>
+                                <th>Est APY</th>
                                 <th>Duration (days)</th>
                                 <th>Minimum Locked Amount</th>
                                 <th></th>
@@ -90,18 +90,18 @@
                                         <span class="ttl text-uppercase">{{ stocks.symbol }}</span>
                                     </div>
                                 </td>
-                                <td class=""><span class="fontText greenColor">{{ stocks.apr }}%</span></td>
+                                <td class=""><span class="fontText greenColor">{{ parseFloat(stocks.apr).toFixed(0) }}%</span></td>
                                 <td class="">{{ stocks.period }}</td>
-                                <td class=""><span class="fontText text-uppercase">{{ stocks.min_stake }} {{
+                                <td class=""><span class="fontText text-uppercase">{{ parseFloat(stocks.min_stake).toFixed(0) }} {{
                                     stocks.symbol
                                 }}</span></td>
                                 <td class="position-relative">
                                     <div class="d-flex1 align-items-center text-end">
-                                        <span class="position-absolute soldOut">Sold Out</span>
+                                        <!-- <span class="position-absolute soldOut">Sold Out</span> -->
                                         <button type="button" class="elButton2" v-if="stocks.status == 0"
                                             disabled>Check</button>
                                         <button type="button" class="elButton2" v-else data-bs-toggle="modal"
-                                            @click="getsinglestacking(stocks.id)" data-bs-target="#stackModal">Stake Now</button>
+                                            @click="getsinglestacking(stocks.id)" data-bs-target="#stackModal" style="background: #d7a106; color: #000;">Stake Now</button>
                                     </div>
                                 </td>
                             </tr>
@@ -228,7 +228,7 @@
                                                     placeholder="Plaese enter the amount" v-model="lockamount">
                                                 <div class="d-flex">
                                                     <span class="txt">{{ singlestack.symbol }}</span>
-                                                    <span class="max">Max</span>
+                                                    <span class="max" style="cursor: pointer; color: #d7a106;" @click="maxvalue" >Max</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -316,7 +316,7 @@
                                                     <div class="stackModalSummeryCheckBox">
                                                         <div class="form-check">
                                                             <input type="checkbox" class="form-check-input" id="check12"
-                                                                name="option2" value="something">
+                                                                name="option2" value="something" v-model="acceptTerm">
                                                             <label class="form-check-label" for="check12">I have
                                                                 read and I agree to
                                                                 <span class="">Aelince
@@ -395,8 +395,15 @@ export default {
 
 
         purchadareturn: null,
+
+        acceptTerm: null,
     }),
     methods: {
+
+        maxvalue() {
+            this.lockamount = this.account.balance;
+        },
+
         handlePageChange() {
             this.get_staking_currencies_front();
         },
@@ -437,13 +444,31 @@ export default {
 
             this.purchaselod = true;
 
+
+           if(this.acceptTerm == null){
+                this.snackbar = true;
+                this.snackbartext = `Please accept the term and condition`;
+                this.purchaselod = false;
+                return false;
+           }
+
+
             if(this.lockamount == null) {
                 this.snackbar = true;
                 this.snackbartext = `Enter stack amount`;
                 this.purchaselod = false;
                 return false;
             }
+
             
+            if(this.singlestack.min_stake <= this.lockamount){
+                this.snackbar = true;
+                this.snackbartext = `Enter min stack amount `+ parseFloat(this.singlestack.min_stake).toFixed(0) ;
+                this.purchaselod = false;
+                return false;
+            }
+
+
             var availableamount = this.account.balance;
 
             if (availableamount > 0) {
@@ -456,7 +481,6 @@ export default {
                 }
 
                 axios.post("/api/createstackinglog", dataString).then((response) => {
-                    console.log(response.data);
                    if(response.data.txId){
                         this.purchadareturn = response.data.txId;
                         this.get_staking_currencies_front();

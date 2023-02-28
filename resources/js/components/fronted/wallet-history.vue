@@ -130,10 +130,9 @@
                                                                 </tr>
                                                             </tbody>
                                                             <tbody v-else>
-                                                                <tr>
-                                                                    <td colspan="6">
-                                                                        <v-progress-linear indeterminate
-                                                                            color="yellow-darken-2"></v-progress-linear>
+                                                                <tr v-for="nu in 10" class="order_item">
+                                                                    <td colspan="7" style="padding: 15px 0px;">
+                                                                        <v-progress-linear color="indigo-lighten-5" indeterminate  model-value="20" :height="12"></v-progress-linear>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -180,10 +179,9 @@
                                                                 </tr>
                                                             </tbody>
                                                             <tbody v-else>
-                                                                <tr>
-                                                                    <td colspan="6">
-                                                                        <v-progress-linear indeterminate
-                                                                            color="yellow-darken-2"></v-progress-linear>
+                                                                <tr v-for="nu in 10" class="order_item">
+                                                                    <td colspan="7" style="padding: 15px 0px;">
+                                                                        <v-progress-linear color="indigo-lighten-5" indeterminate  model-value="20" :height="12"></v-progress-linear>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -227,10 +225,9 @@
                                                                 </tr>
                                                             </tbody>
                                                             <tbody v-else>
-                                                                <tr>
-                                                                    <td colspan="6">
-                                                                        <v-progress-linear indeterminate
-                                                                            color="yellow-darken-2"></v-progress-linear>
+                                                                <tr v-for="nu in 10" class="order_item">
+                                                                    <td colspan="7" style="padding: 15px 0px;">
+                                                                        <v-progress-linear color="indigo-lighten-5" indeterminate  model-value="20" :height="12"></v-progress-linear>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -272,10 +269,9 @@
                                                                 </tr>
                                                             </tbody>
                                                             <tbody v-else>
-                                                                <tr>
-                                                                    <td colspan="6">
-                                                                        <v-progress-linear indeterminate
-                                                                            color="yellow-darken-2"></v-progress-linear>
+                                                                <tr v-for="nu in 10" class="order_item">
+                                                                    <td colspan="7" style="padding: 15px 0px;">
+                                                                        <v-progress-linear color="indigo-lighten-5" indeterminate  model-value="20" :height="12"></v-progress-linear>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -328,8 +324,6 @@ export default {
             var userid = localStorage.getItem('profileid')
             axios.get('/api/getWalletHistory/' + userid + '/' + $operationType)
                 .then((response) => {
-
-                    console.log(response.data);
                     this.walletHistory = response.data;
                 })
         },
