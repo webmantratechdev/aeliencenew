@@ -168,15 +168,17 @@
         </section>
 
 
-        <div class="modal stackModal" id="stackModal" v-if="purchadareturn == null">
+        <div class="modal stackModal" id="stackModal">
             <div class="modal-dialog stackModalDiolog">
                 <div class="modal-content stackModalContent">
-                    <div class="stackModalRowBox">
+                    <div class="stackModalRowBox" v-if="purchadareturn == null">
                         <div class="stackModalColumnBox leftStackModal">
                             <div class="leftStackModalinner">
                                 <div class="stackModalHeader">
                                     <h4 class="stackModalTitle mb-0">Defi Stacking</h4>
                                 </div>
+
+
                                 <div class="stackModalBody">
                                     <div class="stackModalInfo">
                                         <div class="d-flex alert alert-warning">
@@ -339,6 +341,10 @@
                         </div>
                     </div>
 
+                    <div v-else class="stackModalRowBox" style=" display: block; text-align: center;  padding: 40px;">
+                        <img src="/images/success_img.png" class="img-fluid success_img" style="max-width:100px;">
+                        <h4 class="mt-4">Stacking successfull done</h4>
+                    </div>
 
 
 

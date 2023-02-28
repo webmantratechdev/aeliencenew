@@ -24,7 +24,7 @@
                     <th scope="col">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-if="users.data">
 
                 <tr v-for="user in users.data">
                     <th scope="row">{{ user.name }}</th>
@@ -35,13 +35,13 @@
 
 
                     <th scope="row">
-                       
-                            <span v-if="user.status == 'A'" selected>Approve</span>
-                     
-                            <span  v-else-if="user.status == 'M'" selected>Missing</span>
 
-                            <span v-else>Pending</span>
-                        
+                        <span v-if="user.status == 'A'" selected>Approve</span>
+
+                        <span v-else-if="user.status == 'M'" selected>Missing</span>
+
+                        <span v-else>Pending</span>
+
                     </th>
 
                     <th scope="row">
@@ -54,10 +54,18 @@
                 </tr>
 
             </tbody>
+            <tbody v-else>
+                <tr>
+                    <td colspan="7">
+                        <v-progress-linear indeterminate color="yellow-darken-2"></v-progress-linear>
+                    </td>
+                </tr>
+            </tbody>
+
         </table>
 
-        <v-pagination v-model="pagination.current" :total-visible="7" :length="pagination.total" @next="next()"
-            @prev="prev" @update:modelValue="handlePageChange"></v-pagination>
+        <v-pagination v-model="pagination.current" :total-visible="7" :length="pagination.total" @next="next()" @prev="prev"
+            @update:modelValue="handlePageChange"></v-pagination>
 
 
         <v-snackbar v-model="snackbar">
@@ -74,17 +82,17 @@ export default {
 
 
         headers: [
-          {
-            title: 'Dessert (100g serving)',
-            align: 'start',
-            sortable: false,
-            key: 'name',
-          },
-          { title: 'Calories', align: 'end', key: 'calories' },
-          { title: 'Fat (g)', align: 'end', key: 'fat' },
-          { title: 'Carbs (g)', align: 'end', key: 'carbs' },
-          { title: 'Protein (g)', align: 'end', key: 'protein' },
-          { title: 'Iron (%)', align: 'end', key: 'iron' },
+            {
+                title: 'Dessert (100g serving)',
+                align: 'start',
+                sortable: false,
+                key: 'name',
+            },
+            { title: 'Calories', align: 'end', key: 'calories' },
+            { title: 'Fat (g)', align: 'end', key: 'fat' },
+            { title: 'Carbs (g)', align: 'end', key: 'carbs' },
+            { title: 'Protein (g)', align: 'end', key: 'protein' },
+            { title: 'Iron (%)', align: 'end', key: 'iron' },
         ],
 
         users: [],
@@ -110,6 +118,7 @@ export default {
         },
 
         getAllUsers() {
+            this.users = [];
             axios.get('/api/getAllUsers?page=' + this.pagination.current).then((response) => {
                 this.users = response.data;
                 this.pagination.current = response.data.current_page;

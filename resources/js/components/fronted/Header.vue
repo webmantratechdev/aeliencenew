@@ -35,7 +35,7 @@
                                 <button class="btn-rectangle btn-dasktop"><a href="login">Log In</a></button>
                             </li>
                             <li class="w-100">
-                                <button class="btn-exchange btn-dasktop"><a href="joinus">Sign In</a></button>
+                                <button class="btn-exchange btn-dasktop"><a href="signup">Sign Up</a></button>
                             </li>
                         </ul>
 

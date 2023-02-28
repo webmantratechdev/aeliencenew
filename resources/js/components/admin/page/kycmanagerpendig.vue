@@ -23,7 +23,7 @@
                     <th scope="col">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-if="users.data">
 
                 <tr v-for="user in users.data">
                     <th scope="row">{{ user.name }}</th>
@@ -54,6 +54,13 @@
 
                 </tr>
 
+            </tbody>
+            <tbody v-else>
+                <tr>
+                    <td colspan="7">
+                        <v-progress-linear indeterminate color="yellow-darken-2"></v-progress-linear>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
@@ -96,6 +103,7 @@ export default {
         },
 
         getAllUsers() {
+            this.users = [];
             axios.get('/api/getAllUsers?page=' + this.pagination.current+'&kycstatus=P').then((response) => {
                 this.users = response.data;
                 this.pagination.current = response.data.current_page;

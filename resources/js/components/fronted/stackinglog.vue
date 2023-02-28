@@ -87,7 +87,7 @@
 
                                                 <tr v-for="stacks in users.data">
                                                     <td>{{ stacks.cost }} AEL</td>
-                                                    <td>{{ stacks.staked }}</td>
+                                                    <td>{{ parseFloat(stacks.staked).toFixed(0) }}</td>
                                                     <td>0</td>
                                                     <td>12 Month</td>
                                                     <td>0</td>

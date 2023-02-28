@@ -40,9 +40,7 @@
                                         <router-link to="/forgot-password">Forgot password</router-link>
                                     </div>
                                     <div class="form-group loginRegistrationFormFldBtn_area">
-                                        <button class="loginRegistrationFormFldBtn" @click="loginbtn"
-                                            style="color: #000; text-decoration: none !important; display: block; width: 100%; text-align: center;">Already
-                                            registsred? Login</button>
+                                        <v-btn :loading="loginbtnload" class="loginRegistrationFormFldBtn" style="height: 50px !important;" @click="loginbtn">Already registsred? Login</v-btn>
                                     </div>
                                     <div class="RuleWithText" style="text-align: center;  margin-bottom: 10px;">OR</div>
                                     <div class="form-group loginRegistrationFormFldBtn_area">
@@ -76,9 +74,12 @@ export default {
 
         snackbar: false,
         snackbartext: null,
+
+        loginbtnload: false,
     }),
     methods: {
         loginbtn() {
+            this.loginbtnload = true;
             let dataString = {
                 email: this.email,
                 password: this.password
@@ -96,6 +97,7 @@ export default {
                         this.$router.push('/overview');
                     }
                 }
+                this.loginbtnload = false;
             })
         },
         getProfile() {

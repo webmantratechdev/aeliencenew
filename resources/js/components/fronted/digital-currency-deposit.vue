@@ -31,11 +31,11 @@
 							</router-link>
 						</li>
 						<li class="nav-item">
-                            <router-link to="/overview/stackinglog" class="nav-link">
-                                <span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
-                                <span class="txt">Stacking History</span>
-                            </router-link>
-                        </li>
+							<router-link to="/overview/stackinglog" class="nav-link">
+								<span class="icon"><i class="fa-light fa-list-dropdown"></i></span>
+								<span class="txt">Stacking History</span>
+							</router-link>
+						</li>
 						<li class="nav-item">
 							<router-link to="/overview/wallet-history" class="nav-link">
 								<span class="icon"><i class="fa-light fa-calendar-clock"></i></span>
@@ -106,7 +106,11 @@
 										</ul>
 									</div>
 
-
+									<div class="pb-3">
+										<div class="alert alert-warning">
+											<i class="fa fa-check-square-o" aria-hidden="true"></i>Alert: Please ensure that you have selected the correct network before initiating your <strong>AEL</strong> deposit in the <strong>TRC-20</strong> network, as choosing the wrong network could result in the loss of your tokens.
+										</div>
+									</div>
 									<div class="pb-3">
 										<div class="row rowBox">
 											<div class="col-lg-6 col-md-6 col-sm-6 col-12 columnBox">
@@ -125,9 +129,9 @@
 													@blur="changenework"></v-autocomplete> -->
 												<div class="form-group">
 													<label class="labelName">Network</label>
-													<select class="form-select"  v-model="networks" @change="changenework">
-														<option v-for="symbol in networksOp">{{ symbol }}</option>
-														
+													<select class="form-select" v-model="networks" @change="changenework">
+														<option v-for="symbol in networksOp" :value="symbol.chain">{{ symbol.chain }} ({{ symbol.network }})</option>
+
 													</select>
 												</div>
 											</div>
@@ -183,7 +187,7 @@
 												</thead>
 												<tbody v-if="depositHistory.data">
 
-													<tr class="order_item" v-for="deposit in depositHistory.data" >
+													<tr class="order_item" v-for="deposit in depositHistory.data">
 														<td data-title="Currency"> {{ deposit.depositincurrencu }}</td>
 														<td data-title="Amount">{{ deposit.amount }}</td>
 														<td data-title="Network">{{ deposit.network }}</td>
@@ -256,11 +260,11 @@ export default {
 
 		changeRoute() {
 
-			var netsd = ['Choose Transfer Network',];
+			var netsd = [{chain:'Choose Transfer Network', network:''}];
 			this.coinList.filter((value, key) => {
 
 				if (this.conin == value.symbol) {
-					netsd.push(value.chain)
+					netsd.push({chain:value.chain, network:value.network})
 				}
 
 			})
@@ -277,11 +281,11 @@ export default {
 				this.coinList = response.data;
 
 				var coninsd = [];
-				var netsd = ['Choose Transfer Network',];
+				var netsd = [{chain:'Choose Transfer Network', network:''}];
 				response.data.filter((value, key) => {
 					coninsd.push(value.symbol)
 					if (this.conin == value.symbol) {
-						netsd.push(value.chain)
+						netsd.push({chain:value.chain, network:value.network})
 					}
 				})
 
