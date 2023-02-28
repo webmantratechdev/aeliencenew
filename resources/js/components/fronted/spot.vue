@@ -180,8 +180,8 @@
 																:to="'/overview/digital-currency-deposit/' + coin.symbol"
 																type="button"
 																class="alButton alButtonDefault"><span>Deposit</span></router-link>
-															<button type="button"
-																class="alButton alButtonDefault"><span>Withdraw</span></button>
+															<router-link :to="'/overview/withdrawal/'+ coin.symbol"
+																class="alButton alButtonDefault"><span>Withdraw</span></router-link>
 															<button type="button"
 																class="alButton alButtonDefault"><span>Trades</span></button>
 														</div>

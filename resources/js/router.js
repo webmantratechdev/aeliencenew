@@ -36,6 +36,7 @@ import reffrecode from './components/fronted/reffrecode.vue';
 import digitalcurrencydeposit from './components/fronted/digital-currency-deposit.vue';
 import staking from './components/fronted/stack.vue';
 import stackinglog from './components/fronted/stackinglog.vue';
+import withdrawal from './components/fronted/withdrawal.vue';
 
 
 // admin
@@ -61,6 +62,10 @@ import ticketpending from './components/admin/page/ticketpending.vue';
 import ticketclose from './components/admin/page/ticketclose.vue';
 import ticketanswer from './components/admin/page/ticketanswer.vue';
 import ticketview from './components/admin/page/ticketview.vue';
+
+import deposit from './components/admin/page/deposit.vue';
+
+
 
 
 const routes = [
@@ -99,6 +104,7 @@ const routes = [
   { path: '/overview/digital-currency-deposit/:currency', component: digitalcurrencydeposit },
   { path: '/overview/stacking', component: staking },
   { path: '/overview/stackinglog', component: stackinglog },
+  { path: '/overview/withdrawal/:currency', component: withdrawal },
 
   // admin
   {
@@ -128,6 +134,9 @@ const routes = [
       { path: '/console/ticketclose', component: ticketclose, },
       { path: '/console/ticketanswer', component: ticketanswer, },
       { path: '/console/ticket/:ticketid', component: ticketview, },
+
+      // deposit
+      { path: '/console/deposit', component: deposit, },
 
 
     ]

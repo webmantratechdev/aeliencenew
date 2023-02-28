@@ -86,6 +86,7 @@ export default {
       {
         text: 'Deposits', icon: 'mdi-wallet-outline', url: '/console/deposit',
         child: [
+          { text: 'All ', icon: 'mdi-clock', url: '/console/deposit' },
           { text: 'Tranding Wallet', icon: 'mdi-clock', url: '/console/trading-wallet' },
 
         ]

@@ -87,3 +87,11 @@ Route::get('/getsingleticket/{ticketid}', 'App\Http\Controllers\Api\SupportContr
 Route::post('/replyticket', 'App\Http\Controllers\Api\SupportController@replyticket');
 Route::post('/addticket', 'App\Http\Controllers\Api\SupportController@addticket');
 
+
+// withdrawal
+
+Route::post('/withdrawal', 'App\Http\Controllers\Api\WithdrawalController@withdrawal');
+
+
+// getAllDeposit
+Route::get('/getAllDeposit', 'App\Http\Controllers\Api\depositController@getAllDeposit');
