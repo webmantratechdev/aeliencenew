@@ -266,9 +266,12 @@ class TatumController extends Controller
         $response = curl_exec($curl);
         $error = curl_error($curl);
 
+        
         curl_close($curl);
 
         $res =  json_decode($response);
+
+
 
         // trc20 trans
         $curl = curl_init();
@@ -290,7 +293,6 @@ class TatumController extends Controller
         $trc20re = json_decode($response);
 
         $obj_merged = (object)[];
-
 
 
         $array1 = $array2 = [];
@@ -319,11 +321,13 @@ class TatumController extends Controller
             'AEL' => 'tron'
         ];
 
+
         $getwallet = DB::table('wallets')->where(['user_id' => $userid])->get(['user_id', 'address', 'network', 'symbol']);
 
         foreach ($getwallet as $ws) {
 
             $return = $this->getblockchaintransation($ws->address, $array[$ws->network]);
+
 
             if (isset($return->transactions)) {
 
@@ -364,7 +368,7 @@ class TatumController extends Controller
 
                                     DB::table('wallet_history')->insert($data);
 
-                                    if ($data['txId'] != '1.0E-6') {
+                                    if ($data['amount'] != '1.0E-6') {
 
                                         $getuser = DB::table('users')->where('id', $userid)->get(['name', 'email'])->first();
 
@@ -466,6 +470,7 @@ class TatumController extends Controller
             'TRON' => 'tron',
             'BSC' => 'bsc',
             'BTC' => 'bitcoin',
+            'AEL' => 'tron'
         ];
 
 

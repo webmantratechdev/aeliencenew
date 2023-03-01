@@ -27,7 +27,7 @@
                     <th scope="col">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-if="users.data">
 
                 <tr v-for="user in users.data">
                     <th scope="row">{{ user.name }}</th>
@@ -48,6 +48,15 @@
 
                 </tr>
 
+            </tbody>
+
+            <tbody v-else>
+                <tr v-for="nu in 10" class="order_item">
+                    <td colspan="7" style="padding: 15px 0px;">
+                        <v-progress-linear color="indigo-lighten-5" indeterminate model-value="20"
+                            :height="12"></v-progress-linear>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
@@ -145,6 +154,7 @@ export default {
         },
 
         get_custom_tokens() {
+            this.users = [];
             axios.get('/api/get_custom_tokens?page=' + this.pagination.current).then((response) => {
                 this.users = response.data;
                 this.pagination.current = response.data.current_page;

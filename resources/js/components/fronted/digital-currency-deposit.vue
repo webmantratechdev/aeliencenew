@@ -108,7 +108,10 @@
 
 									<div class="pb-3">
 										<div class="alert alert-warning">
-											<i class="fa fa-check-square-o" aria-hidden="true"></i>Alert: Please ensure that you have selected the correct network before initiating your <strong>AEL</strong> deposit in the <strong>TRC-20</strong> network, as choosing the wrong network could result in the loss of your tokens.
+											<i class="fa fa-check-square-o" aria-hidden="true"></i>Alert: Please ensure that
+											you have selected the correct network before initiating your
+											<strong>AEL</strong> deposit in the <strong>TRC-20</strong> network, as choosing
+											the wrong network could result in the loss of your tokens.
 										</div>
 									</div>
 									<div class="pb-3">
@@ -130,7 +133,8 @@
 												<div class="form-group">
 													<label class="labelName">Network</label>
 													<select class="form-select" v-model="networks" @change="changenework">
-														<option v-for="symbol in networksOp" :value="symbol.chain">{{ symbol.chain }} ({{ symbol.network }})</option>
+														<option v-for="symbol in networksOp" :value="symbol.chain">{{
+															symbol.chain }} ({{ symbol.network }})</option>
 
 													</select>
 												</div>
@@ -148,7 +152,19 @@
 											<p>Deposit Address <span style="font-weight:bold;">{{ depositAddress }}
 												</span> <span class="badge badge-outline-info"
 													style="font-size: 12px;  margin-left: 8px;  border-radius: 10px;  border: 1px dotted #cb9a00;  color: #fec00f; cursor:pointer;"
-													@click="clicktocopy">Copy</span></p>
+													@click="clicktocopy">Copy</span>
+											
+												<v-btn variant="text">
+													<i class="fa fa-qrcode fa-1x" aria-hidden="true"></i>
+													<v-menu activator="parent" style="min-width:150px">
+														<v-list>
+															<v-img :src="'https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl='+depositAddress"></v-img>
+														</v-list>
+													</v-menu>
+												</v-btn>
+
+
+											</p>
 										</div>
 
 										<div class="" v-if="depositAddress">
@@ -198,12 +214,13 @@
 												</tbody>
 
 												<tbody v-else>
-														<tr v-for="nu in 10" class="order_item">
-															<td colspan="7" style="padding: 15px 0px;">
-																<v-progress-linear color="indigo-lighten-5" indeterminate  model-value="20" :height="12"></v-progress-linear>
-															</td>
-														</tr>
-													</tbody>
+													<tr v-for="nu in 10" class="order_item">
+														<td colspan="7" style="padding: 15px 0px;">
+															<v-progress-linear color="indigo-lighten-5" indeterminate
+																model-value="20" :height="12"></v-progress-linear>
+														</td>
+													</tr>
+												</tbody>
 											</table>
 
 										</div>
@@ -259,11 +276,11 @@ export default {
 
 		changeRoute() {
 
-			var netsd = [{chain:'Choose Transfer Network', network:''}];
+			var netsd = [{ chain: 'Choose Transfer Network', network: '' }];
 			this.coinList.filter((value, key) => {
 
 				if (this.conin == value.symbol) {
-					netsd.push({chain:value.chain, network:value.network})
+					netsd.push({ chain: value.chain, network: value.network })
 				}
 
 			})
@@ -280,11 +297,11 @@ export default {
 				this.coinList = response.data;
 
 				var coninsd = [];
-				var netsd = [{chain:'Choose Transfer Network', network:''}];
+				var netsd = [{ chain: 'Choose Transfer Network', network: '' }];
 				response.data.filter((value, key) => {
 					coninsd.push(value.symbol)
 					if (this.conin == value.symbol) {
-						netsd.push({chain:value.chain, network:value.network})
+						netsd.push({ chain: value.chain, network: value.network })
 					}
 				})
 
@@ -348,3 +365,8 @@ export default {
 
 }
 </script>
+<style>
+.v-overlay.v-overlay--absolute.v-overlay--active.v-theme--light.v-locale--is-ltr.v-menu .v-overlay__content {
+    min-width: 150px !important;
+}
+</style>

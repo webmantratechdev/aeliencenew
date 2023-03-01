@@ -68,7 +68,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="stakingTable">
+                <div class="stakingTable tableResponsive">
                     <table class="table table-hover1">
                         <thead>
                             <tr>
@@ -80,8 +80,8 @@
                             </tr>
                         </thead>
                         <tbody v-if="users.data">
-                            <tr v-for="stocks in users.data">
-                                <td class="">
+                            <tr class="tableItem" v-for="stocks in users.data">
+                                <td class="" data-title="Token" >
                                     <div class="d-flex align-items-center">
                                         <span class="icon me-3">
                                             <img :src="'/upload/' + stocks.icon" class="img-fluid" alt=""
@@ -90,18 +90,19 @@
                                         <span class="ttl text-uppercase">{{ stocks.symbol }}</span>
                                     </div>
                                 </td>
-                                <td class=""><span class="fontText greenColor">{{ parseFloat(stocks.apr).toFixed(0) }}%</span></td>
-                                <td class="">{{ stocks.period }}</td>
-                                <td class=""><span class="fontText text-uppercase">{{ parseFloat(stocks.min_stake).toFixed(0) }} {{
+                                <td class="" data-title="Est APY"><span class="fontText greenColor">{{ parseFloat(stocks.apr).toFixed(0) }}%</span></td>
+                                <td class="" data-title="Duration (days)">{{ stocks.period }}</td>
+                                <td class="" data-title="Minimum Locked Amount"><span class="fontText text-uppercase">{{ parseFloat(stocks.min_stake).toFixed(0) }} {{
                                     stocks.symbol
                                 }}</span></td>
-                                <td class="position-relative">
+                                <td class="position-relative" data-title="Action">
                                     <div class="d-flex1 align-items-center text-end">
                                         <!-- <span class="position-absolute soldOut">Sold Out</span> -->
-                                        <button type="button" class="elButton2" v-if="stocks.status == 0"
-                                            disabled>Check</button>
-                                        <button type="button" class="elButton2" v-else data-bs-toggle="modal"
+                                       
+
+                                        <button v-if="isLogin != ''" type="button" class="elButton2" data-bs-toggle="modal"
                                             @click="getsinglestacking(stocks.id)" data-bs-target="#stackModal" style="background: #d7a106; color: #000;">Stake Now</button>
+                                        <router-link to="/login"></router-link>
                                     </div>
                                 </td>
                             </tr>
@@ -331,7 +332,9 @@
                                         </div>
 
                                         <div class="stackModalSummeryBtnArea">
-                                            <v-btn type="button" class="stackModalSummeryBtn" :loading="purchaselod" @click="stackconfirmpurchage">Confirm</v-btn>
+
+                                            <v-btn type="button" class="stackModalSummeryBtn"  :loading="purchaselod" @click="stackconfirmpurchage">Confirm</v-btn>
+                                          
 
                                         </div>
 
@@ -397,6 +400,8 @@ export default {
         purchadareturn: null,
 
         acceptTerm: null,
+
+        isLogin: null,
     }),
     methods: {
 
@@ -480,9 +485,15 @@ export default {
                 }
 
                 axios.post("/api/createstackinglog", dataString).then((response) => {
+
+                    console.log(response.data);
+
                    if(response.data.txId){
                         this.purchadareturn = response.data.txId;
                         this.get_staking_currencies_front();
+                   }else{
+                    this.snackbar = true;
+                    this.snackbartext = `Something went wrong. Please try after sometime..`;
                    }
                    this.purchaselod = false;
                 })
@@ -498,6 +509,7 @@ export default {
     },
     mounted() {
         this.get_staking_currencies_front()
+        this.isLogin = localStorage.getItem('profielid');
     }
 }
 </script>

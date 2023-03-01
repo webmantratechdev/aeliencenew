@@ -24,7 +24,7 @@
                     <th scope="col">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-if="users.data">
 
                 <tr v-for="user in users.data">
                     <th scope="row">{{ user.symbol }}</th>
@@ -46,6 +46,15 @@
 
                 </tr>
 
+            </tbody>
+
+            <tbody v-else>
+                <tr v-for="nu in 10" class="order_item">
+                    <td colspan="7" style="padding: 15px 0px;">
+                        <v-progress-linear color="indigo-lighten-5" indeterminate model-value="20"
+                            :height="12"></v-progress-linear>
+                    </td>
+                </tr>
             </tbody>
         </table>
 
@@ -88,6 +97,7 @@ export default {
         },
 
         getStackingLog() {
+            this.users = [];
             axios.get('/api/getStackingLog?page=' + this.pagination.current).then((response) => {
                 this.users = response.data;
                 this.pagination.current = response.data.current_page;

@@ -75,6 +75,7 @@ Route::post('/update_staking_currencies', 'App\Http\Controllers\Api\StackingCont
 Route::get('/update_stacking_status/{stackid}', 'App\Http\Controllers\Api\StackingController@update_stacking_status');
 Route::post('/createstackinglog', 'App\Http\Controllers\Api\StackingController@createstackinglog');
 Route::get('/getStackingLog', 'App\Http\Controllers\Api\StackingController@getStackingLog');
+Route::get('/getTotalStackAmount', 'App\Http\Controllers\Api\StackingController@getTotalStackAmount');
 
 Route::get('/get_staking_currencies_front', 'App\Http\Controllers\Api\StackingController@get_staking_currencies_front');
 Route::get('/get_staking_log_front', 'App\Http\Controllers\Api\StackingController@get_staking_log_front');
@@ -90,8 +91,10 @@ Route::post('/addticket', 'App\Http\Controllers\Api\SupportController@addticket'
 
 // withdrawal
 
+Route::post('/withdrawalendotp', 'App\Http\Controllers\Api\WithdrawalController@withdrawalendotp');
 Route::post('/withdrawal', 'App\Http\Controllers\Api\WithdrawalController@withdrawal');
 
 
 // getAllDeposit
 Route::get('/getAllDeposit', 'App\Http\Controllers\Api\depositController@getAllDeposit');
+Route::get('/getTotalDepositAmount', 'App\Http\Controllers\Api\depositController@getTotalDepositAmount');

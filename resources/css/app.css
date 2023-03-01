@@ -5504,12 +5504,112 @@ margin-bottom:20px;
 
 
 
+    .tableResponsive{
+        overflow-y: inherit;
+        overflow-x: inherit;
+    }	
+    .tableResponsive .dataTables_length{
+        width: 100%;
+        padding: 10px;
+    }
+    div.tableResponsive>div.dataTables_wrapper>div.row>div[class^="col-"]:last-child {
+        padding-right: 0;
+        padding-left: 0px;
+    }
+    
+    .tableResponsive .dataTables_filter{
+        float: left;
+        padding: 0 10px;
+        width:100%;
+    }	
+    div.tableResponsive div.dataTables_filter label {   
+        display: flex;
+    }
+    div.tableResponsive div.dataTables_filter input {   
+        width: 100% !important;
+    }
+    .tableResponsive table {
+        border-spacing: 0;
+        width: 100%;
+        border-collapse: collapse;
+        border: 0 !important;
+        display:block;
+    }
+    .tableResponsive table tbody{display:block;}
+    .tableResponsive table tbody tr{display: block; border: 1px solid #D2D0E1; margin-bottom: 20px;border-radius: 15px;}
+    .tableResponsive table.TableBorder{
+        border: 1px solid #D2D0E1 !important;
+        border-radius: 15px;
+    }
+    .tableResponsive table.TableBorder tbody tr{margin-bottom:0px;	border: 0;	border-radius:0px;}
+    .tableResponsive table thead { display: none;}
+    .tableResponsive table .tableItem {}
+    .tableResponsive table tr td {	
+        padding-bottom: 10px;
+        padding-top: 10px;
+        border-color: #D2D0E1;      
+        text-align: right;
+        font-size: 12px;
+        line-height:17px;	
+        border-radius: 0px;	
+        display: flex;
+        justify-content: space-between;
+    }
+    .ipoNewPageSecBlkinner .ipoNewPageTable tbody td {
+        font-size: 12px;
+        line-height: 24px;
+        font-weight:500;
+    }
+    .tableResponsive table tr td[data-title]::before {
+        content: attr(data-title) ": ";
+        font-weight: 600;
+        float: left;
+        font-size: 11px;
+        line-height: 16px;
+        color: #000000;
+        text-align: left;  
+        margin-left:10px;
+    }
+    .tableResponsive table tr td:not(:last-child) {
+        /*border-style: solid;
+        border-width: 0 0 1px 0;*/
+    }
 
 
+    .d-flex.stakingFilterAreainner{
+        display:block !important;
+    }
+    .stakingSearchAreainner {        
+        width: 100%;
+    }
+
+    .stackModalContent .stackModalRowBox {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .stackModalContent .stackModalColumnBox {
+        width: 100%;
+    }
+    .stackModalContent  .btn-close{
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
 
 
+    .stakingBannerContent p.para {
+        font-size: 14px;
+    }
 
+    .stakingBannerContent h1.title {
+        font-size: 20px;
+    }
 
+    .stakingBannerSec {
+   
+        padding: 16px 0;
+    }
 
 
 }

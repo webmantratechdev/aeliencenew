@@ -99,7 +99,8 @@
                                             <li class="active">
                                                 <div class="content">
                                                     <h4>Withdrawal successful</h4>
-                                                    <p>Your withdrawn assets have been successfully sent to the delivery address</p>
+                                                    <p>Your withdrawn assets have been successfully sent to the delivery
+                                                        address</p>
                                                 </div>
                                             </li>
                                         </ul>
@@ -129,22 +130,24 @@
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-12 columnBox">
                                                 <div class="form-group">
                                                     <label class="labelName">Withdrawal address</label>
-                                                    <input type="text" name="" id="" class="form-control" v-model="withdrawalAddress">
+                                                    <input type="text" name="" id="" placeholder="Enter withdrawal address"
+                                                        class="form-control" v-model="withdrawalAddress">
                                                 </div>
                                             </div>
                                             <div class="col-12"></div>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-12 columnBox">
                                                 <div class="form-group">
                                                     <label class="labelName">Withdrawal Amount</label>
-                                                    <input type="text" name="" id="" class="form-control" v-model="withdrawalAmount">
+                                                    <input type="text" placeholder="Min withdrawal limit 5.00000000" name=""
+                                                        id="" class="form-control" v-model="withdrawalAmount">
                                                 </div>
                                             </div>
 
-                                            <p>Amount {{ account.balance }} ET Avbl</p>
-                                            <p>Fee 2.00000000 ET</p>
+                                            <p>Amount {{ account.balance }} {{ conin }} Avbl</p>
+                                            <p>Fee 2 {{ conin }}</p>
 
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-12 columnBox">
-                                               <v-btn x-large color="orange" @click="withdrawal">withdrawal</v-btn>
+                                                <v-btn x-large color="orange" @click="withdrawalendotp" :loading="btnloadtop">withdrawal</v-btn>
                                             </div>
                                         </div>
 
@@ -162,6 +165,24 @@
         <v-snackbar v-model="snackbar">
             {{ snackbartext }}
         </v-snackbar>
+
+
+        <v-dialog v-model="dialog" persistent max-width="400">
+            <v-toolbar dark color="black">
+                <v-toolbar-title>Verify OTP</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn icon dark @click="dialog = false">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <v-card>
+                <v-card-text>
+                    <v-text-field label="Enter email OTP" variant="outlined" v-model="emailOtp"></v-text-field>
+                    <v-text-field label="Enter phone OTP" variant="outlined" v-model="phoneOtp"></v-text-field>
+                    <v-btn @click="withdrawal" color="orange" :loading="finalwithdraw">Submit</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
 
     </div>
 </template>
@@ -199,23 +220,110 @@ export default {
         withdrawalAddress: null,
         withdrawalAmount: null,
 
+        otps: [],
+        dialog: false,
+        emailOtp: null,
+        phoneOtp: null,
+
+        btnloadtop: false,
+        finalwithdraw: false,
+
     }),
     methods: {
 
+
+        withdrawalendotp() {
+            this.btnloadtop = true;
+            if (this.networks == 'Choose Transfer Network') {
+                this.snackbar = true;
+                this.snackbartext = 'Choose Transfer Network';
+                this.btnloadtop = false;
+                return false;
+            } else if (this.withdrawalAddress == null) {
+                this.snackbar = true;
+                this.snackbartext = 'Enter withdrawal address';
+                this.btnloadtop = false;
+                return false;
+            } else if (this.withdrawalAmount == null) {
+                this.snackbar = true;
+                this.snackbartext = 'Min withdrawal limit 5';
+                this.btnloadtop = false;
+                return false;
+            } else if (this.account.balance < this.withdrawalAmount) {
+                this.snackbar = true;
+                this.snackbartext = 'Max withdrawal limit ' + this.account.balance;
+                this.btnloadtop = false;
+                return false;
+            } else {
+                axios.post('/api/withdrawalendotp', { userid: localStorage.getItem('profileid') }).then((response) => {
+                    this.dialog = true;
+                    this.otps = response.data;
+                    this.btnloadtop = false;
+                })
+            }
+
+        },
+
         withdrawal() {
 
+            this.finalwithdraw = true;
+
+            if (this.networks == 'Choose Transfer Network') {
+                this.snackbar = true;
+                this.snackbartext = 'Choose Transfer Network';
+                this.finalwithdraw = false;
+                return false;
+            } else if (this.withdrawalAddress == null) {
+                this.snackbar = true;
+                this.snackbartext = 'Enter withdrawal address';
+                this.finalwithdraw = false;
+                return false;
+            } else if (this.withdrawalAmount == null) {
+                this.snackbar = true;
+                this.snackbartext = 'Min withdrawal limit 5';
+                this.finalwithdraw = false;
+                return false;
+            } else if (this.account.balance < this.withdrawalAmount) {
+                this.snackbar = true;
+                this.snackbartext = 'Max withdrawal limit ' + this.account.balance;
+                this.finalwithdraw = false;
+                return false;
+            } else if (this.emailOtp != this.otps.email) {
+                this.snackbar = true;
+                this.snackbartext = 'Invalid email otp';
+                this.finalwithdraw = false;
+                return false;
+            } else if (this.phoneOtp != this.otps.phone) {
+                this.snackbar = true;
+                this.snackbartext = 'Invalid mobile otp';
+                this.finalwithdraw = false;
+                return false;
+            } else {
                 var dataString = {
                     userid: localStorage.getItem('profileid'),
-                    conin:this.conin,
-                    networks:this.networks,
+                    conin: this.conin,
+                    networks: this.networks,
                     availableAmount: this.account.balance,
                     withdrawalAddress: this.withdrawalAddress,
                     withdrawalAmount: this.withdrawalAmount,
                 }
 
                 axios.post('/api/withdrawal', dataString).then((response) => {
-                        console.log(response.data);
+                    if (response.data.txId) {
+                        this.snackbar = true;
+                        this.snackbartext = 'withdrawal completed...';
+                    } else {
+                        this.snackbar = true;
+                        this.snackbartext = 'Something went wrong ! Please try after sometime...';
+                    }
+                    this.dialog = false;
+                    this.finalwithdraw = false;
+                    this.$router.push('/overview/overview');
                 })
+            }
+
+
+
         },
 
         getaccountidbycontin(symbol) {

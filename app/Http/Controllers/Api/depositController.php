@@ -40,4 +40,11 @@ class depositController extends Controller
 
         return response()->json($wallet_history);
     }
+
+    public function getTotalDepositAmount() {
+        return DB::table('wallet_history')
+        ->where('currency', 'AEL')
+        ->where('depositincurrencu', '!=', 'TRX')
+        ->where('amount', '!=', '1.0E-6')->sum('amount');
+    }
 }

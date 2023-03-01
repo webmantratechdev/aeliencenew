@@ -190,11 +190,35 @@ class StackingController extends Controller
             ];
 
             $insert = DB::table('staking_logs')->insert($data);
-
         }
 
         return response()->json($transfer);
     }
+
+
+
+    public function getwalletbalance($address)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, [
+            CURLOPT_HTTPHEADER => [
+                "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+            ],
+            CURLOPT_URL => "https://api.tatum.io/v3/tron/account/" . $address,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ]);
+
+        $response = curl_exec($curl);
+        $error = curl_error($curl);
+
+        curl_close($curl);
+
+        return json_decode($response);
+    }
+
 
 
     public function transfertowallet($address, $amount, $fromPrivateKey, $symbol)
@@ -204,35 +228,44 @@ class StackingController extends Controller
 
         if ($customtoke) {
 
-            $privatekey = $this->getBlockchainPrivateKey($customtoke->memonic, $symbol);
+            $account = $this->getwalletbalance($address);
 
-            $curl = curl_init();
+            $balance =  $account->balance / 1000000;
 
-            $payload = array(
-                "to" => $address,
-                "amount" => "12",
-                "fromPrivateKey" => $privatekey->key,
-            );
+            $respon = (object)array();
 
-            curl_setopt_array($curl, [
-                CURLOPT_HTTPHEADER => [
-                    "Content-Type: application/json",
-                    "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
-                ],
-                CURLOPT_POSTFIELDS => json_encode($payload),
-                CURLOPT_URL => "https://api.tatum.io/v3/tron/transaction",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_CUSTOMREQUEST => "POST",
-            ]);
+            if ($balance < 10) {
+                
+                $privatekey = $this->getBlockchainPrivateKey($customtoke->memonic, $symbol);
 
-            $response = curl_exec($curl);
-            $error = curl_error($curl);
+                $curl = curl_init();
 
-            curl_close($curl);
+                $payload = array(
+                    "to" => $address,
+                    "amount" => "12",
+                    "fromPrivateKey" => $privatekey->key,
+                );
 
-            $respon = json_decode($response);
+                curl_setopt_array($curl, [
+                    CURLOPT_HTTPHEADER => [
+                        "Content-Type: application/json",
+                        "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                    ],
+                    CURLOPT_POSTFIELDS => json_encode($payload),
+                    CURLOPT_URL => "https://api.tatum.io/v3/tron/transaction",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                ]);
 
-            
+                $response = curl_exec($curl);
+                $error = curl_error($curl);
+
+                curl_close($curl);
+
+                $respon = json_decode($response);
+            }else{
+                $respon->txId = '234dsfsaf4sadfa345defasdf';
+            }
 
             if (isset($respon->txId)) {
 
@@ -263,7 +296,7 @@ class StackingController extends Controller
 
                 curl_close($curl);
 
-               return json_decode($response);
+                return json_decode($response);
             }
         }
     }
@@ -277,8 +310,15 @@ class StackingController extends Controller
     }
 
 
-    public function get_staking_log_front() {
-        
+    public function getTotalStackAmount() {
+        $staking_logs = DB::table('staking_logs')->sum('cost');
+        return $staking_logs;
+    }
+
+
+    public function get_staking_log_front()
+    {
+
         $staking_logs = DB::table('staking_logs')->where('user_id', @$_GET['userid'])->orderBy('id', 'DESC')->paginate(10);
 
         return response()->json($staking_logs);

@@ -27,10 +27,10 @@
                     <th scope="col">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody v-if="users.data">
 
                 <tr v-for="user in users.data">
-                    <th scope="row"><v-img :src="'/images/'+user.icon" style="width: 50px;"></v-img></th>
+                    <th scope="row"><v-img :src="'/upload/' + user.icon" style="width: 30px;"></v-img></th>
                     <th scope="row">{{ user.title }}</th>
                     <th scope="row">{{ user.symbol }}</th>
                     <th scope="row">{{ user.network }}</th>
@@ -39,12 +39,12 @@
                     <th scope="row">
                         <v-switch color="orange" :model-value="true" v-if="user.status == 1" label="on"
                             v-on:change="update_stacking_status(user.id)"></v-switch>
-                        <v-switch :model-value="false" v-else label="on"  v-on:change="update_stacking_status(user.id)"></v-switch>
+                        <v-switch :model-value="false" v-else label="on"
+                            v-on:change="update_stacking_status(user.id)"></v-switch>
                     </th>
                     <th scope="row">{{ user.created_at }}</th>
                     <th scope="row">
-                        <button class="btn-sm btn btn-danger mr-2"><i class="fa fa-trash-o"
-                                aria-hidden="true"></i></button>
+                        <button class="btn-sm btn btn-danger mr-2"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                         <button class="btn-sm btn btn-info " @click="viewItem(user.id)"><i class="fa fa-pencil"
                                 aria-hidden="true"></i></button>
                     </th>
@@ -52,10 +52,18 @@
                 </tr>
 
             </tbody>
+            <tbody v-else>
+                <tr v-for="nu in 10" class="order_item">
+                    <td colspan="7" style="padding: 15px 0px;">
+                        <v-progress-linear color="indigo-lighten-5" indeterminate model-value="20"
+                            :height="12"></v-progress-linear>
+                    </td>
+                </tr>
+            </tbody>
         </table>
 
-        <v-pagination v-model="pagination.current" :total-visible="7" :length="pagination.total" @next="next()"
-            @prev="prev" @update:modelValue="handlePageChange"></v-pagination>
+        <v-pagination v-model="pagination.current" :total-visible="7" :length="pagination.total" @next="next()" @prev="prev"
+            @update:modelValue="handlePageChange"></v-pagination>
 
         <v-dialog style="max-width: 1000px;" v-model="currencybox" persistent>
 
@@ -68,28 +76,24 @@
                 <v-card-text>
                     <v-row>
                         <v-col cols="4">
-                            <v-text-field label="Title" variant="outlined" v-model="title"
-                                hide-details=""></v-text-field>
+                            <v-text-field label="Title" variant="outlined" v-model="title" hide-details=""></v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field label="Symbol" variant="outlined" v-model="symbol"
-                                hide-details=""></v-text-field>
+                            <v-text-field label="Symbol" variant="outlined" v-model="symbol" hide-details=""></v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <v-text-field label="Network" variant="outlined" v-model="network"
                                 hide-details=""></v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field label="Price" variant="outlined" v-model="price"
-                                hide-details=""></v-text-field>
+                            <v-text-field label="Price" variant="outlined" v-model="price" hide-details=""></v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <v-text-field label="Duration (Days)" variant="outlined" v-model="period"
                                 hide-details=""></v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field label="Profit" variant="outlined" v-model="profit"
-                                hide-details=""></v-text-field>
+                            <v-text-field label="Profit" variant="outlined" v-model="profit" hide-details=""></v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <v-text-field label="Total Amount" variant="outlined" v-model="amount"
@@ -104,16 +108,15 @@
                                 hide-details=""></v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field label="Staked" variant="outlined" v-model="staked"
-                                hide-details=""></v-text-field>
+                            <v-text-field label="Staked" variant="outlined" v-model="staked" hide-details=""></v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <v-text-field label="Annual Percentage Rate (APR)" variant="outlined" v-model="apr"
                                 hide-details=""></v-text-field>
                         </v-col>
                         <v-col cols="4">
-                            <v-text-field label="Profit Gain (Only Daily for now)" variant="outlined"
-                                v-model="profit_unit" hide-details=""></v-text-field>
+                            <v-text-field label="Profit Gain (Only Daily for now)" variant="outlined" v-model="profit_unit"
+                                hide-details=""></v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <v-text-field label="Daily Profit" variant="outlined" v-model="daily_profit"
@@ -127,8 +130,7 @@
                             <label class="form-label" for="method">Coin Icon</label>
                             <div class="img_upload_area">
                                 <div class="box">
-                                    <div class="js--image-preview"
-                                        :style="'background-image: url(/upload/' + icon + ');'">
+                                    <div class="js--image-preview" :style="'background-image: url(/upload/' + icon + ');'">
                                     </div>
                                     <div class="upload-options">
                                         <label>
@@ -258,6 +260,7 @@ export default {
         },
 
         get_staking_currencies() {
+            this.users = [];
             axios.get('/api/get_staking_currencies?page=' + this.pagination.current).then((response) => {
                 this.users = response.data;
                 this.pagination.current = response.data.current_page;
@@ -352,7 +355,7 @@ export default {
         },
 
         update_stacking_status(stackid) {
-           
+
             axios.get('/api/update_stacking_status/' + stackid).then((response) => {
 
                 if (response.data.status == 1) {
