@@ -54,6 +54,13 @@
 								<span class="txt">ID-Verification</span>
 							</router-link>
 						</li>
+
+						<li class="nav-item">
+							<router-link to="/overview/myreferral" class="nav-link">
+								<span class="icon"><i class="fa-light fa-address-card"></i></span>
+								<span class="txt">My Referral</span>
+							</router-link>
+						</li>
 						<li class="nav-item active">
 							<router-link to="/overview/account-security" class="nav-link">
 								<span class="icon"><i class="fa-light fa-file-invoice"></i></span>

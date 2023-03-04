@@ -318,7 +318,7 @@ export default {
                     }
                     this.dialog = false;
                     this.finalwithdraw = false;
-                    this.$router.push('/overview/overview');
+                    this.$router.push('/overview');
                 })
             }
 

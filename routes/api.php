@@ -98,3 +98,8 @@ Route::post('/withdrawal', 'App\Http\Controllers\Api\WithdrawalController@withdr
 // getAllDeposit
 Route::get('/getAllDeposit', 'App\Http\Controllers\Api\depositController@getAllDeposit');
 Route::get('/getTotalDepositAmount', 'App\Http\Controllers\Api\depositController@getTotalDepositAmount');
+
+
+// MLM Controller
+Route::get('/getaccountreferral/{userid}', 'App\Http\Controllers\Api\MLMController@getaccountreferral');
+

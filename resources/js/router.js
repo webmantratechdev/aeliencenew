@@ -37,6 +37,7 @@ import digitalcurrencydeposit from './components/fronted/digital-currency-deposi
 import staking from './components/fronted/stack.vue';
 import stackinglog from './components/fronted/stackinglog.vue';
 import withdrawal from './components/fronted/withdrawal.vue';
+import Myreferral from './components/fronted/Myreferral.vue';
 
 
 // admin
@@ -105,6 +106,7 @@ const routes = [
   { path: '/overview/stacking', component: staking },
   { path: '/overview/stackinglog', component: stackinglog },
   { path: '/overview/withdrawal/:currency', component: withdrawal },
+  { path: '/overview/myreferral', component: Myreferral },
 
   // admin
   {

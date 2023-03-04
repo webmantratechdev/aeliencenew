@@ -35,10 +35,11 @@
       <v-menu>
         <template v-slot:activator="{ props }">
 
-          <v-btn v-bind="props" text>
+          <v-btn v-bind="props" text class="mr-2" style="margin-right: 8px;">
             <v-avatar color="grey-darken-1" size="30"></v-avatar> My Profile
             <v-icon>mdi-chevron-down mdi</v-icon>
           </v-btn>
+
         </template>
         <v-list>
           <v-list-item>
@@ -54,7 +55,7 @@
       </v-menu>
     </v-app-bar>
 
-    <v-main>
+    <v-main style="background-color: #ebebeb;">
       <router-view></router-view>
     </v-main>
   </v-app>

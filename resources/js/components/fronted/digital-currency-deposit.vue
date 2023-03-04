@@ -305,8 +305,6 @@ export default {
 					}
 				})
 
-				console.log(coninsd);
-
 				this.coninOp = coninsd;
 				this.networksOp = netsd;
 
@@ -314,8 +312,6 @@ export default {
 		},
 
 		changenework() {
-
-			console.log(this.networks);
 
 			var conin = this.conin;
 			var networks = this.networks;
@@ -332,6 +328,7 @@ export default {
 
 			axios.get('/api/getdepositeaddress/' + coin + '/' + network + '/' + userid)
 				.then((response) => {
+
 					if (response.data) {
 						this.depositAddress = response.data;
 						this.overlay = false;
