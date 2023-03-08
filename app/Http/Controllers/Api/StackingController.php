@@ -235,7 +235,7 @@ class StackingController extends Controller
             $respon = (object)array();
 
             if ($balance < 10) {
-                
+
                 $privatekey = $this->getBlockchainPrivateKey($customtoke->memonic, $symbol);
 
                 $curl = curl_init();
@@ -263,7 +263,7 @@ class StackingController extends Controller
                 curl_close($curl);
 
                 $respon = json_decode($response);
-            }else{
+            } else {
                 $respon->txId = '234dsfsaf4sadfa345defasdf';
             }
 
@@ -304,13 +304,61 @@ class StackingController extends Controller
 
     public function getStackingLog()
     {
-        $staking_logs = DB::table('staking_logs')->orderBy('id', 'DESC')->paginate(10);
+        $staking_logs = DB::table('staking_logs')->join('users', 'staking_logs.user_id', '=', 'users.id')->select('staking_logs.*', 'users.phone', 'users.name')->orderBy('id', 'DESC')->paginate(10);
+
+        foreach ($staking_logs as $log) {
+
+
+            $log->withdrawal = DB::table('staking_transaction')->where('stackid', $log->id)->sum('release_amount');
+
+
+            $start = $log->start_date;
+            $date = Carbon::parse($start);
+            $now = Carbon::now();
+            $diff = $date->diffInDays($now);
+
+            // total stacking day
+            $enddate = Carbon::parse($log->end_date);
+            $endday = $date->diffInDays($enddate);
+
+            if ($diff < $endday) {
+
+                $dailyprofit = ($log->staked / $endday) * $diff;
+
+                DB::table('staking_logs')->where('id', $log->id)->update(['total_profit' => $dailyprofit]);
+
+                if (date('d') == 01) {
+
+                    $data = [
+                        'stackid' => $log->id,
+                        'userid' => $log->user_id,
+                        'release_amount' => $dailyprofit,
+                        'from_deposit' => '',
+                        'to_deposit' => '',
+                        'txtid' => '',
+                        'status' => 0
+                    ];
+
+                    DB::table('staking_transaction')->insert($data);
+                }
+            }
+        }
 
         return response()->json($staking_logs);
     }
 
 
-    public function getTotalStackAmount() {
+
+    public function stakingtransaction($hid){
+
+        $stakingtransaction = DB::table('staking_transaction')->where('stackid', $hid)->orderBy('id', 'DESC')->paginate(10);
+
+        return response()->json($stakingtransaction);
+    }
+
+
+    public function getTotalStackAmount()
+    {
         $staking_logs = DB::table('staking_logs')->sum('cost');
         return $staking_logs;
     }

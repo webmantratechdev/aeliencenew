@@ -1,9 +1,10 @@
 <template>
     <div class="px-5 border-top py-5">
+
         <div class="h4 d-flex align-item-center mb-5">
-            Pendig Ticket
+            Staking Transaction History
             <v-spacer></v-spacer>
-            <v-btn color="grey-darken-4" dark class="elevation-0">Create New</v-btn>
+            <v-btn color="grey-darken-4" dark class="elevation-0" @click="currencybox = true">Create New</v-btn>
         </div>
 
         <v-card class="mb-5 elevation-0">
@@ -37,38 +38,58 @@
             </v-card-title>
             <v-card-text>
 
-                <table class="table table">
+                <table class="table">
                     <thead>
                         <tr>
                             <th scope="col"><input type="checkbox"></th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">subject</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">From</th>
+                            <th scope="col">To</th>
+                            <th scope="col">TxtId</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Withdrawal Status</th>
+                            <th scope="col">Date</th>
+
+                            <th scope="col" style="text-align: right;">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody v-if="users.data">
 
-                        <tr v-for="ticket in Ticket.data">
+                        <tr v-for="user in users.data">
                             <th scope="col"><input type="checkbox"></th>
-                            <th scope="row">{{ ticket.name }}</th>
-                            <th scope="row">{{ ticket.email }}</th>
-                            <th scope="row">{{ ticket.subject }}</th>
                             <th scope="row">
-                                <span v-if="ticket.status == 'A'" selected>Answered</span>
-                                <span v-else-if="ticket.status == 'C'" selected>Closed</span>
-                                <span v-else>Pending</span>
+                                <span v-if="user.from_deposit">{{ user.from_deposit }}</span>
+                                <span v-else>-----------------------------</span>
                             </th>
                             <th scope="row">
-                                <button class="btn-sm btn btn-danger mr-2" @click="deletItme(ticket.id)"><i
-                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                <button class="btn-sm btn btn-info " @click="viewItem(ticket.id)"><i class="fa fa-pencil"
-                                        aria-hidden="true"></i></button>
+                                <span v-if="user.to_deposit">{{ user.to_deposit }}</span>
+                                <span v-else>-----------------------------</span>
+                            </th>
+                            <th scope="row">
+                                <span v-if="user.txtid">{{ user.txtid }}</span>
+                                <span v-else>-----------------------------</span>
+                            </th>
+                            <th scope="row">{{ user.release_amount }}</th>
+                            <th scope="row">
+                                <span v-if="user.status == 1" selected>Success</span>
+                                <span v-else selected>Pending</span>
+                            </th>
+                            <th scope="row">{{ user.created_at }}</th>
+                            <th scope="row" style="text-align: right;">
+                                <button class="btn-sm btn btn-warning" title="Transaction History"
+                                    @click="view(user.id)"><v-icon>mdi-eye</v-icon></button>
                             </th>
 
                         </tr>
 
+                    </tbody>
+
+                    <tbody v-else>
+                        <tr v-for="nu in 10" class="order_item">
+                            <td colspan="11" style="padding: 15px 0px;">
+                                <v-progress-linear color="indigo-lighten-5" indeterminate model-value="20"
+                                    :height="12"></v-progress-linear>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -87,8 +108,7 @@
 export default {
     data: () => ({
 
-
-        Ticket: [],
+        users: [],
         searchkey: '',
         pagination: {
             current: 1,
@@ -101,64 +121,51 @@ export default {
     }),
     methods: {
         handlePageChange() {
-            this.getAllTicket();
+            this.getStackingLog();
         },
         next() {
-            this.getAllTicket();
+            this.getStackingLog();
         },
         prev() {
-            this.getAllTicket();
+            this.getStackingLog();
         },
 
-        getAllTicket() {
-            axios.get('/api/getAllTicket?status=p&page=' + this.pagination.current).then((response) => {
-                console.log(response.data);
-                this.Ticket = response.data;
+        getStackingLog() {
+            var userid = this.$route.params.stackid;
+            this.users = [];
+            axios.get('/api/stakingtransaction/' + userid + '?page=' + this.pagination.current).then((response) => {
+                this.users = response.data;
                 this.pagination.current = response.data.current_page;
                 this.pagination.total = response.data.last_page;
             })
         },
 
         filterdata() {
-            this.getAllTicket();
+            this.getStackingLog();
         },
 
-        onChange(ticketid, event) {
+        onChange(userid, event) {
 
             var dataString = {
-                ticketid: ticketid,
+                userid: userid,
                 status: event.target.value,
             }
 
-            axios.post('/api/updateTickettatus', dataString).then((response) => {
+            axios.post('/api/getStackingLog', dataString).then((response) => {
                 if (response.data == 1) {
                     this.snackbar = true;
                     this.snackbartext = 'KYC status has been updated..';
                 }
             })
         },
-        deletItme(ticketid) {
-            if (confirm('Are you sure want to delete??')) {
-                var dataString = {
-                    ticketid: ticketid,
-                }
-                axios.post('/api/deleteticket', dataString).then((response) => {
-                    if (response.data == 1) {
-                        this.getAllTicket()
-                        this.snackbar = true;
-                        this.snackbartext = 'deleted...';
-                    }
-                })
-            }
+        view(userid) {
+            
         },
-        viewItem(ticketid) {
-            this.$router.push('/console/ticket/' + ticketid);
-        }
 
 
     },
     created() {
-        this.getAllTicket()
+        this.getStackingLog()
     }
 }
 </script>

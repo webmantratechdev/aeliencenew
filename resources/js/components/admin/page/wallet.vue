@@ -1,9 +1,8 @@
 <template>
     <div class="px-5 border-top py-5">
         <div class="h4 d-flex align-item-center mb-5">
-            Pendig Ticket
+            Wallet
             <v-spacer></v-spacer>
-            <v-btn color="grey-darken-4" dark class="elevation-0">Create New</v-btn>
         </div>
 
         <v-card class="mb-5 elevation-0">
@@ -36,44 +35,50 @@
                     @next="next()" @prev="prev" @update:modelValue="handlePageChange"></v-pagination>
             </v-card-title>
             <v-card-text>
-
                 <table class="table table">
                     <thead>
                         <tr>
                             <th scope="col"><input type="checkbox"></th>
                             <th scope="col">Name</th>
+                            <th scope="col">Phone</th>
                             <th scope="col">Email</th>
-                            <th scope="col">subject</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Deposit Address</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Date</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody v-if="users.data">
 
-                        <tr v-for="ticket in Ticket.data">
+                        <tr v-for="user in users.data">
                             <th scope="col"><input type="checkbox"></th>
-                            <th scope="row">{{ ticket.name }}</th>
-                            <th scope="row">{{ ticket.email }}</th>
-                            <th scope="row">{{ ticket.subject }}</th>
+                            <th scope="row">{{ user.name }}</th>
+                            <th scope="row">{{ user.phone }}</th>
+                            <th scope="row">{{ user.email }}</th>
+                            <th scope="row">{{ user.address }}</th>
+                            <th scope="row">{{ user.balance }} {{ user.symbol }}</th>
+                            <th scope="row">{{ user.created_at }}</th>
                             <th scope="row">
-                                <span v-if="ticket.status == 'A'" selected>Answered</span>
-                                <span v-else-if="ticket.status == 'C'" selected>Closed</span>
-                                <span v-else>Pending</span>
+                                <button class="btn-sm btn btn-dark" title="Transaction History"
+                                    @click="transactionhistory(user.address)"><v-icon>mdi-swap-horizontal</v-icon></button>
                             </th>
-                            <th scope="row">
-                                <button class="btn-sm btn btn-danger mr-2" @click="deletItme(ticket.id)"><i
-                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                <button class="btn-sm btn btn-info " @click="viewItem(ticket.id)"><i class="fa fa-pencil"
-                                        aria-hidden="true"></i></button>
-                            </th>
-
                         </tr>
 
                     </tbody>
+                    <tbody v-else>
+                        <tr v-for="nu in 10" class="order_item">
+                            <td colspan="8" style="padding: 15px 0px;">
+                                <v-progress-linear color="indigo-lighten-5" indeterminate model-value="20"
+                                    :height="12"></v-progress-linear>
+                            </td>
+                        </tr>
+                    </tbody>
+
                 </table>
 
             </v-card-text>
         </v-card>
+
 
         <v-snackbar v-model="snackbar">
             {{ snackbartext }}
@@ -87,8 +92,7 @@
 export default {
     data: () => ({
 
-
-        Ticket: [],
+        users: [],
         searchkey: '',
         pagination: {
             current: 1,
@@ -101,64 +105,37 @@ export default {
     }),
     methods: {
         handlePageChange() {
-            this.getAllTicket();
+            this.getAllWallet();
         },
         next() {
-            this.getAllTicket();
+            this.getAllWallet();
         },
         prev() {
-            this.getAllTicket();
+            this.getAllWallet();
         },
 
-        getAllTicket() {
-            axios.get('/api/getAllTicket?status=p&page=' + this.pagination.current).then((response) => {
-                console.log(response.data);
-                this.Ticket = response.data;
+        getAllWallet() {
+            this.users = [];
+            axios.get('/api/getAllWallet?page=' + this.pagination.current + '&keyword=' + this.searchkey).then((response) => {
+                this.users = response.data;
                 this.pagination.current = response.data.current_page;
                 this.pagination.total = response.data.last_page;
             })
         },
 
         filterdata() {
-            this.getAllTicket();
+            this.getAllWallet();
         },
 
-        onChange(ticketid, event) {
+        
+        transactionhistory(userid) {
 
-            var dataString = {
-                ticketid: ticketid,
-                status: event.target.value,
-            }
-
-            axios.post('/api/updateTickettatus', dataString).then((response) => {
-                if (response.data == 1) {
-                    this.snackbar = true;
-                    this.snackbartext = 'KYC status has been updated..';
-                }
-            })
-        },
-        deletItme(ticketid) {
-            if (confirm('Are you sure want to delete??')) {
-                var dataString = {
-                    ticketid: ticketid,
-                }
-                axios.post('/api/deleteticket', dataString).then((response) => {
-                    if (response.data == 1) {
-                        this.getAllTicket()
-                        this.snackbar = true;
-                        this.snackbartext = 'deleted...';
-                    }
-                })
-            }
-        },
-        viewItem(ticketid) {
-            this.$router.push('/console/ticket/' + ticketid);
         }
 
 
     },
     created() {
-        this.getAllTicket()
+        this.getAllWallet()
     }
 }
 </script>

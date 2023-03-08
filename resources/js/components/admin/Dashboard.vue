@@ -87,9 +87,9 @@ export default {
       {
         text: 'Deposits', icon: 'mdi-wallet-outline', url: '/console/deposit',
         child: [
-          { text: 'All ', icon: 'mdi-clock', url: '/console/deposit' },
-          { text: 'Tranding Wallet', icon: 'mdi-clock', url: '/console/trading-wallet' },
-
+          { text: 'Wallet', icon: 'mdi-clock', url: '/console/wallet' },
+          { text: 'Wallet History ', icon: 'mdi-clock', url: '/console/deposit' },
+          { text: 'Pending Stacking', icon: 'mdi-clock', url: '/console/pendingstacking' },
         ]
       },
       {
@@ -111,6 +111,13 @@ export default {
       { text: 'Withdrawals', icon: 'mdi-swap-horizontal' },
       { text: 'Manage Invites', icon: 'mdi-share-variant-outline' },
       { text: 'Custom Token', icon: 'mdi-litecoin', url: '/console/customtoken' },
+      {
+        text: 'MLM Manager', icon: 'mdi-sitemap-outline',
+        child: [
+          { text: 'Level', icon: 'mdi-clock', url: '/console/mlmLevel' },
+          { text: 'Ranks', icon: 'mdi-clock', url: '/console/mlm' },
+        ]
+      },
       { text: 'Orders', icon: 'mdi-package-variant' },
       {
         text: 'Settings', icon: 'mdi-cog-outline',
@@ -124,7 +131,7 @@ export default {
       {
         text: 'Staking', icon: 'mdi-flag', url: '', child: [
           { text: 'Coin', icon: 'mdi-clock', url: '/console/stakingcurrencies' },
-          { text: 'Logs', icon: 'mdi-clock', url: '/console/stakinglogs' },
+          { text: 'Statking Logs', icon: 'mdi-clock', url: '/console/stakinglogs' },
         ]
       },
       {
@@ -164,3 +171,8 @@ export default {
 
 }
 </script>
+<style>
+.v-navigation-drawer__content::-webkit-scrollbar {
+    width: 1px;
+}
+</style>

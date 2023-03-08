@@ -1,9 +1,9 @@
 <template>
     <div class="px-5 border-top py-5">
         <div class="h4 d-flex align-item-center mb-5">
-           Custom Token
+            Custom Token
             <v-spacer></v-spacer>
-            <v-btn color="grey-darken-4" dark class="elevation-0"  @click="tokenbox = true">Create New</v-btn>
+            <v-btn color="grey-darken-4" dark class="elevation-0" @click="tokenbox = true">Create New</v-btn>
         </div>
 
         <v-card class="mb-5 elevation-0">
@@ -39,6 +39,7 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th scope="row"><input type="checkbox"></th>
                             <th scope="col">Token</th>
                             <th scope="col">Network</th>
                             <th scope="col">Account</th>
@@ -52,6 +53,7 @@
                     <tbody v-if="users.data">
 
                         <tr v-for="user in users.data">
+                            <th scope="row"><input type="checkbox"></th>
                             <th scope="row">{{ user.name }}</th>
                             <th scope="row">{{ user.chain }}</th>
                             <th scope="row">{{ user.account_id }}</th>
@@ -64,7 +66,7 @@
                             <th scope="row">
                                 <button class="btn-sm btn btn-danger mr-2" @click="deletItme(user.id)"><i
                                         class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                <button class="btn-sm btn btn-info " @click="viewItem(user.id)"><i class="fa fa-pencil"
+                                <button class="btn-sm btn btn-dark " @click="viewItem(user.id)"><i class="fa fa-pencil"
                                         aria-hidden="true"></i></button>
                             </th>
 
@@ -74,7 +76,7 @@
 
                     <tbody v-else>
                         <tr v-for="nu in 10" class="order_item">
-                            <td colspan="7" style="padding: 15px 0px;">
+                            <td colspan="9" style="padding: 15px 0px;">
                                 <v-progress-linear color="indigo-lighten-5" indeterminate model-value="20"
                                     :height="12"></v-progress-linear>
                             </td>

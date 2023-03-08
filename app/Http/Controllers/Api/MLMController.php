@@ -11,6 +11,14 @@ class MLMController extends Controller
 {
     //
 
+
+    public function getMLMLevel(){
+
+        $level = DB::table('mlm_level')->paginate(10);
+        return response()->json($level);
+
+    }
+
     public function getaccountreferral($userid)
     {
 

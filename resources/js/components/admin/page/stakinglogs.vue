@@ -41,19 +41,25 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th scope="col"><input type="checkbox"></th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Phone</th>
                             <th scope="col">symbol</th>
                             <th scope="col">cost</th>
                             <th scope="col">staked</th>
                             <th scope="col">Start date</th>
                             <th scope="col">End date</th>
                             <th scope="col">Status</th>
-                            <th scope="col">User</th>
+                            <th scope="col">Balance(USDT)</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody v-if="users.data">
 
                         <tr v-for="user in users.data">
+                            <th scope="col"><input type="checkbox"></th>
+                            <th scope="row"><router-link :to="'/console/users/' + user.user_id" style="text-decoration:none; color:#444;">{{ user.name }}</router-link></th>
+                            <th scope="row"><router-link :to="'/console/users/' + user.user_id" style="text-decoration:none; color:#444;">{{ user.phone }}</router-link></th>
                             <th scope="row">{{ user.symbol }}</th>
                             <th scope="row">{{ user.cost }}</th>
                             <th scope="row">{{ user.staked }}</th>
@@ -63,12 +69,9 @@
                                 <span v-if="user.status == 1" selected>Success</span>
                                 <span v-else selected>Faild</span>
                             </th>
-                            <th scope="row"><v-btn :to="'/console/users/' + user.user_id">View</v-btn></th>
+                            <th scope="row">{{ parseFloat(user.total_profit) - parseFloat(user.withdrawal) }}</th>
                             <th scope="row">
-                                <button class="btn-sm btn btn-danger mr-2" @click="deletItme(user.id)"><i
-                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                <button class="btn-sm btn btn-info " @click="viewItem(user.id)"><i class="fa fa-pencil"
-                                        aria-hidden="true"></i></button>
+                                <button class="btn-sm btn btn-dark" title="Transaction History" @click="transactionhistory(user.id)"><v-icon>mdi-swap-horizontal</v-icon></button>
                             </th>
 
                         </tr>
@@ -77,7 +80,7 @@
 
                     <tbody v-else>
                         <tr v-for="nu in 10" class="order_item">
-                            <td colspan="7" style="padding: 15px 0px;">
+                            <td colspan="11" style="padding: 15px 0px;">
                                 <v-progress-linear color="indigo-lighten-5" indeterminate model-value="20"
                                     :height="12"></v-progress-linear>
                             </td>
@@ -149,12 +152,9 @@ export default {
                 }
             })
         },
-        deletItme(userid) {
-
+        transactionhistory(userid) {
+                this.$router.push('/console/stakingtransaction/'+userid);
         },
-        viewItem(userid) {
-
-        }
 
 
     },

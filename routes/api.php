@@ -76,6 +76,8 @@ Route::get('/update_stacking_status/{stackid}', 'App\Http\Controllers\Api\Stacki
 Route::post('/createstackinglog', 'App\Http\Controllers\Api\StackingController@createstackinglog');
 Route::get('/getStackingLog', 'App\Http\Controllers\Api\StackingController@getStackingLog');
 Route::get('/getTotalStackAmount', 'App\Http\Controllers\Api\StackingController@getTotalStackAmount');
+Route::get('/stakingtransaction/{hid}', 'App\Http\Controllers\Api\StackingController@stakingtransaction');
+
 
 Route::get('/get_staking_currencies_front', 'App\Http\Controllers\Api\StackingController@get_staking_currencies_front');
 Route::get('/get_staking_log_front', 'App\Http\Controllers\Api\StackingController@get_staking_log_front');
@@ -101,5 +103,10 @@ Route::get('/getTotalDepositAmount', 'App\Http\Controllers\Api\depositController
 
 
 // MLM Controller
+Route::get('/getMLMLevel', 'App\Http\Controllers\Api\MLMController@getMLMLevel');
 Route::get('/getaccountreferral/{userid}', 'App\Http\Controllers\Api\MLMController@getaccountreferral');
 
+// wallet
+Route::get('/getAllWallet', 'App\Http\Controllers\Api\WalletController@getAllWallet');
+Route::get('/pendingstacking', 'App\Http\Controllers\Api\WalletController@pendingstacking');
+Route::get('/updatewalletamountAfterstack/{txtid}', 'App\Http\Controllers\Api\WalletController@updatewalletamountAfterstack');

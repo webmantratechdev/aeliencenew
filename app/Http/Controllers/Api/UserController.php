@@ -295,9 +295,9 @@ class UserController extends Controller
 
         $users = '';
         if (!empty($filterby)) {
-            $users =  DB::table('users')->where(['role' => 'U', 'status' => $filterby])->paginate(25);
+            $users =  DB::table('users')->where(['role' => 'U', 'status' => $filterby])->paginate(10);
         } else {
-            $users =  DB::table('users')->where('role', 'U')->paginate(25);
+            $users =  DB::table('users')->where('role', 'U')->paginate(10);
         }
 
 

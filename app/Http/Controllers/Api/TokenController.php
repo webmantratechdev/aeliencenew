@@ -13,25 +13,49 @@ class TokenController extends Controller
     //
 
 
-    public function getmasterwalletbalance($address)
+    public function getmasterwalletbalance($address, $network)
     {
-        $curl = curl_init();
 
-        curl_setopt_array($curl, [
-            CURLOPT_HTTPHEADER => [
-                "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
-            ],
-            CURLOPT_URL => "https://api.tatum.io/v3/tron/account/" . $address,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => "GET",
-        ]);
 
-        $response = curl_exec($curl);
-        $error = curl_error($curl);
+        if ($network == 'ETH') {
 
-        curl_close($curl);
+            $curl = curl_init();
 
-        return json_decode($response);
+            curl_setopt_array($curl, [
+                CURLOPT_HTTPHEADER => [
+                    "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                ],
+                CURLOPT_URL => "https://api.tatum.io/v3/ethereum/account/balance/" . $address,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => "GET",
+            ]);
+
+            $response = curl_exec($curl);
+            $error = curl_error($curl);
+
+            curl_close($curl);
+
+            return json_decode($response);
+        } else {
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, [
+                CURLOPT_HTTPHEADER => [
+                    "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                ],
+                CURLOPT_URL => "https://api.tatum.io/v3/tron/account/" . $address,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => "GET",
+            ]);
+
+            $response = curl_exec($curl);
+            $error = curl_error($curl);
+
+            curl_close($curl);
+
+            return json_decode($response);
+        }
     }
 
     public function getAllToken()
@@ -134,11 +158,12 @@ class TokenController extends Controller
     public function get_custom_tokens()
     {
 
-        $custom_tokens = DB::table('custom_tokens')->get(['id', 'master_wallet_address']);
+        $custom_tokens = DB::table('custom_tokens')->get(['id', 'master_wallet_address', 'chain']);
 
         foreach ($custom_tokens as $token) {
 
-            $return = $this->getmasterwalletbalance($token->master_wallet_address);
+            $return = $this->getmasterwalletbalance($token->master_wallet_address, $token->chain);
+
 
             if (isset($return->balance)) {
 

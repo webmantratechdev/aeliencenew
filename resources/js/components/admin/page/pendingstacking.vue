@@ -1,9 +1,8 @@
 <template>
     <div class="px-5 border-top py-5">
         <div class="h4 d-flex align-item-center mb-5">
-            Pending KYC
+            Pending Stacking [ {{ users.total }} ]
             <v-spacer></v-spacer>
-            <v-btn color="grey-darken-4" dark class="elevation-0">Create New</v-btn>
         </div>
 
         <v-card class="mb-5 elevation-0">
@@ -36,49 +35,36 @@
                     @next="next()" @prev="prev" @update:modelValue="handlePageChange"></v-pagination>
             </v-card-title>
             <v-card-text>
-                <table class="table">
+                <table class="table table">
                     <thead>
                         <tr>
                             <th scope="col"><input type="checkbox"></th>
                             <th scope="col">Name</th>
-                            <th scope="col">Email</th>
                             <th scope="col">Phone</th>
-                            <th scope="col">Referral</th>
-                            <th scope="col">Regd. Date</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Deposit Address</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Date</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody v-if="users.data">
 
                         <tr v-for="user in users.data">
-                            <th scope="row"><input type="checkbox"></th>
+                            <th scope="col"><input type="checkbox"></th>
                             <th scope="row">{{ user.name }}</th>
-                            <th scope="row">{{ user.email }}</th>
                             <th scope="row">{{ user.phone }}</th>
-                            <th scope="row">{{ user.refferal_code }}</th>
+                            <th scope="row">{{ user.email }}</th>
+                            <th scope="row">{{ user.address }}</th>
+                            <th scope="row">{{ user.balance }} {{ user.symbol }}</th>
                             <th scope="row">{{ user.created_at }}</th>
-
-
                             <th scope="row">
-                                <select class="form-select" aria-label="Default select example"
-                                    @change="onChange(user.id, $event)">
-                                    <option value="A" v-if="user.status == 'A'" selected>Approve</option>
-                                    <option value="A" v-else>Approve</option>
-                                    <option value="M" v-if="user.status == 'M'" selected>Missing</option>
-                                    <option value="M" v-else>Missing</option>
-                                    <option value="P" v-if="user.status == 'P'" selected>Pending</option>
-                                    <option value="P" v-else>Pending</option>
-                                </select>
+                                <button class="btn-sm btn btn-warning mr-2"
+                                    @click="stacknow(user.user_id, user.id, user.balance)"
+                                    title="Stack Now"><v-icon>mdi-send</v-icon></button>
+                                <button class="btn-sm btn btn-dark" title="Transaction History"
+                                    @click="transactionhistory(user.id)"><v-icon>mdi-swap-horizontal</v-icon></button>
                             </th>
-
-                            <th scope="row">
-                                <button class="btn-sm btn btn-danger mr-2" @click="deletItme(user.id)"><i
-                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                <button class="btn-sm btn btn-info " @click="viewItem(user.id)"><i class="fa fa-pencil"
-                                        aria-hidden="true"></i></button>
-                            </th>
-
                         </tr>
 
                     </tbody>
@@ -90,10 +76,31 @@
                             </td>
                         </tr>
                     </tbody>
+
                 </table>
+
             </v-card-text>
         </v-card>
 
+
+        <v-dialog max-width="400" v-model="stackconfirm">
+            <v-card>
+                <v-toolbar dark color="grey-darken-4">
+                    <v-toolbar-title>Stack Amount</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn icon dark @click="stackconfirm = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
+                <v-card-text class="py-10">
+
+                    <v-text-field variant="outlined" label="Total Amount" v-model="availableAmt"></v-text-field>
+                    <v-text-field variant="outlined" label="Stacking Amount" v-model="deductAmt"></v-text-field>
+                   
+                    <v-btn @click="stacknowconfirm" :loading="stacknowconfirmload" color="grey-darken-4" size="large">Stack Confirm</v-btn>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
 
         <v-snackbar v-model="snackbar">
             {{ snackbartext }}
@@ -107,6 +114,8 @@
 export default {
     data: () => ({
 
+        stackconfirm: false,
+
         users: [],
         searchkey: '',
         pagination: {
@@ -117,21 +126,32 @@ export default {
         snackbar: false,
         snackbartext: null,
 
+
+
+        userid: null,
+        coin_id: null,
+        deductAmt: null,
+        availableAmt: null,
+
+        stacknowconfirmload: false,
+
     }),
     methods: {
         handlePageChange() {
-            this.getAllUsers();
+            this.pendingstacking();
         },
         next() {
-            this.getAllUsers();
+            this.pendingstacking();
         },
         prev() {
-            this.getAllUsers();
+            this.pendingstacking();
         },
 
-        getAllUsers() {
+        pendingstacking() {
             this.users = [];
-            axios.get('/api/getAllUsers?page=' + this.pagination.current + '&kycstatus=P').then((response) => {
+            axios.get('/api/pendingstacking?page=' + this.pagination.current + '&keyword=' + this.searchkey).then((response) => {
+
+                console.log(response.data);
                 this.users = response.data;
                 this.pagination.current = response.data.current_page;
                 this.pagination.total = response.data.last_page;
@@ -139,46 +159,64 @@ export default {
         },
 
         filterdata() {
-            this.getAllUsers();
+            this.pendingstacking();
         },
 
-        onChange(userid, event) {
 
-            var dataString = {
-                userid: userid,
-                status: event.target.value,
-            }
+        stacknow(userid, coin_id, amount) {
+            this.userid = userid;
+            this.coin_id = coin_id;
+            this.deductAmt = amount;
+            this.availableAmt = amount;
+            this.stackconfirm = true;
+        },
 
-            axios.post('/api/updateuserstatus', dataString).then((response) => {
-                if (response.data == 1) {
-                    this.snackbar = true;
-                    this.snackbartext = 'KYC status has been updated..';
-                    this.getAllUsers();
+
+        stacknowconfirm() {
+            
+            this.stacknowconfirmload = true;
+
+                var dataString = {
+                    userid: this.userid,
+                    coin_id: this.coin_id,
+                    deductAmt: this.deductAmt,
+                    availableAmt: this.availableAmt,
                 }
+
+
+                axios.post("/api/createstackinglog", dataString).then((response) => {
+
+                    if (response.data.txId) {
+
+                        this.updatewalletamountAfterstack(response.data.txId);
+
+                        this.stackconfirm = false;
+                       
+                    } else {
+                        this.snackbar = true;
+                        this.snackbartext = `Something went wrong. Please try after sometime..`;
+                    }
+
+                    this.stacknowconfirmload = false;
+
+                })
+
+            
+        },
+        updatewalletamountAfterstack(txtid){
+            axios.get("/api/updatewalletamountAfterstack/"+txtid).then((response) => {
+                this.pendingstacking();
             })
         },
-        deletItme(userid) {
-            if (confirm('Are you sure want to delete??')) {
-                var dataString = {
-                    userid: userid,
-                }
-                axios.post('/api/deleteuser', dataString).then((response) => {
-                    if (response.data == 1) {
-                        this.getAllUsers()
-                        this.snackbar = true;
-                        this.snackbartext = 'deleted...';
-                    }
-                })
-            }
-        },
-        viewItem(userid) {
-            this.$router.push('/console/users/' + userid);
+
+        transactionhistory(userid) {
+
         }
 
 
     },
     created() {
-        this.getAllUsers()
+        this.pendingstacking()
     }
 }
 </script>

@@ -85,7 +85,7 @@
 
                     <tbody v-else>
                         <tr v-for="nu in 10" class="order_item">
-                            <td colspan="7" style="padding: 15px 0px;">
+                            <td colspan="8" style="padding: 15px 0px;">
                                 <v-progress-linear color="indigo-lighten-5" indeterminate model-value="20"
                                     :height="12"></v-progress-linear>
                             </td>

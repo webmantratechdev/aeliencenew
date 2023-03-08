@@ -51,8 +51,11 @@ import kycmanagermising from './components/admin/page/kycmanagermising.vue';
 import kycmanagerapprove from './components/admin/page/kycmanagerapprove.vue';
 import customtoken from './components/admin/page/customtoken.vue';
 import blockchains from './components/admin/page/blockchains.vue';
+
 import stakingcurrencies from './components/admin/page/stakingcurrencies.vue';
 import stakinglogs from './components/admin/page/stakinglogs.vue';
+import stakingtransaction from './components/admin/page/stakingtransaction.vue';
+
 import settingGeneral from './components/admin/page/settingGeneral.vue';
 import settingPlateform from './components/admin/page/settingPlateform.vue';
 import settingApi from './components/admin/page/settingApi.vue';
@@ -65,6 +68,12 @@ import ticketanswer from './components/admin/page/ticketanswer.vue';
 import ticketview from './components/admin/page/ticketview.vue';
 
 import deposit from './components/admin/page/deposit.vue';
+import Wallet from './components/admin/page/wallet.vue';
+import pendingstacking from './components/admin/page/pendingstacking.vue';
+
+
+import MLM from './components/admin/page/Mlm.vue';
+import MlmLevel from './components/admin/page/MlmLevel.vue';
 
 
 
@@ -122,8 +131,11 @@ const routes = [
       { path: '/console/kycmanagerapprove', component: kycmanagerapprove, },
       { path: '/console/customtoken', component: customtoken, },
       { path: '/console/blockchains', component: blockchains, },
+
+
       { path: '/console/stakingcurrencies', component: stakingcurrencies, },
       { path: '/console/stakinglogs', component: stakinglogs, },
+      { path: '/console/stakingtransaction/:stackid', component: stakingtransaction, },
 
       // setting
       { path: '/console/general-setting', component: settingGeneral, },
@@ -139,6 +151,12 @@ const routes = [
 
       // deposit
       { path: '/console/deposit', component: deposit, },
+      { path: '/console/wallet', component: Wallet, },
+      { path: '/console/pendingstacking', component: pendingstacking, },
+
+      //
+      { path: '/console/mlm', component: MLM, },
+      { path: '/console/mlmLevel', component: MlmLevel, },
 
 
     ]

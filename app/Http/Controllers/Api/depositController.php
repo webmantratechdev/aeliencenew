@@ -26,7 +26,7 @@ class depositController extends Controller
             ->where('depositincurrencu', '!=', 'TRX')
             ->where('amount', '!=', '1.0E-6')
             ->where('phone', $phone)
-            ->orderBy('id', 'DESC')->paginate(15);
+            ->orderBy('id', 'DESC')->paginate(10);
         }else{
             $wallet_history =   DB::table('wallet_history')
             ->join('users', 'wallet_history.userid', '=', 'users.id')
@@ -34,7 +34,7 @@ class depositController extends Controller
             ->where('currency', 'AEL')
             ->where('depositincurrencu', '!=', 'TRX')
             ->where('amount', '!=', '1.0E-6')
-            ->orderBy('id', 'DESC')->paginate(15);
+            ->orderBy('id', 'DESC')->paginate(10);
         }
        
 

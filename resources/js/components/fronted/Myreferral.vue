@@ -74,7 +74,7 @@
 
                             <div class="dashPanel">
                                 <div class="dashPanelHeader d-flex">
-                                    <h2 class="title mb-2">Referral</h2>
+                                    <h2 class="title mb-2">My Referral</h2>
                                     <v-spacer></v-spacer>
                                     <select class="form-control" style="max-width: 150px;" v-model="lavels" @change="changelevel">
                                         <option v-for="key in 21" :value="key">{{ key }} Level</option>
