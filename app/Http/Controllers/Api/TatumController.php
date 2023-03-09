@@ -204,7 +204,6 @@ class TatumController extends Controller
 
             $return = $this->getblockchaintransation($ws->address, $ws->network);
 
-
             if (isset($return->transactions)) {
 
                 if (is_object($return->transactions)) {
@@ -264,10 +263,7 @@ class TatumController extends Controller
                             }
                         } else {
 
-                            $operationTypes = 'WITHDRAWAL';
-                            if (isset($tr->type) == 'Transfer') {
-                                $operationTypes = 'DEPOSIT';
-                            }
+                            $operationTypes = ($tr->to == $ws->address) ? 'DEPOSIT' : 'WITHDRAWAL';
 
                             $data = [
                                 'userid' => $userid,

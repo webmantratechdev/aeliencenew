@@ -127,7 +127,7 @@ export default {
 
         getStackingLog() {
             this.users = [];
-            axios.get('/api/getStackingLog?page=' + this.pagination.current).then((response) => {
+            axios.get('/api/getStackingLog?page=' + this.pagination.current + '&keyword=' + this.searchkey).then((response) => {
                 this.users = response.data;
                 this.pagination.current = response.data.current_page;
                 this.pagination.total = response.data.last_page;

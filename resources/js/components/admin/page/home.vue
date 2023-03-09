@@ -115,7 +115,7 @@ export default {
                 this.aeltokenTrx = response.data.data[0].master_wallet_balance
             })
             
-            axios.get('/api/getAllDeposit?page=' + this.pagination.current+'&keyword=').then((response) => {
+            axios.get('/api/getTotalWalletadddress?page=' + this.pagination.current+'&keyword=').then((response) => {
                 this.totalDeposit = response.data.total;
             })
             axios.get('/api/getTotalDepositAmount').then((response) => {

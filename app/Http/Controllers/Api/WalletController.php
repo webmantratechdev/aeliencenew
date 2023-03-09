@@ -58,42 +58,59 @@ class WalletController extends Controller
 
     public function getAllWallet()
     {
-            $wallets = DB::table('wallets')->paginate(10);
-            
-            foreach($wallets as $wallet){
 
-                $balance = $this->getmasterwalletbalance($wallet->address, $wallet->network);
-                $finalleBalance = 0;
-                if($wallet->symbol == 'AEL'){
-                    if(isset($balance->trc20[0])){
-                        $erc20 = (array)$balance->trc20[0];
-                        $finalleBalance = $erc20['TM4q3gujYR7JUaFrZpM8x1P7NbQd6hwJts'] / 100000000;
-                    }
+        $keyword = @$_GET['keyword'];
+
+        $wallets = DB::table('wallets')->join('users', 'wallets.user_id', '=', 'users.id')
+            ->select('wallets.*', 'users.phone', 'users.name', 'users.email')
+            ->where('users.phone', 'like', '%' . $keyword . '%')
+            ->orWhere('users.email', 'like', '%' . $keyword . '%')
+            ->orWhere('wallets.address', 'like', '%' . $keyword . '%')
+            ->paginate(10);
+
+        foreach ($wallets as $wallet) {
+
+            $balance = $this->getmasterwalletbalance($wallet->address, $wallet->network);
+            $finalleBalance = 0;
+            if ($wallet->symbol == 'AEL') {
+                if (isset($balance->trc20[0])) {
+                    $erc20 = (array)$balance->trc20[0];
+                    $finalleBalance = $erc20['TM4q3gujYR7JUaFrZpM8x1P7NbQd6hwJts'] / 100000000;
                 }
-    
-                DB::table('wallets')->where('address', $wallet->address)->update(['balance' => $finalleBalance]);
             }
 
-            $wallets = DB::table('wallets')
-            ->join('users', 'wallets.user_id', '=', 'users.id')
-            ->select('wallets.*', 'users.phone', 'users.name', 'users.email')->paginate(10);
+            DB::table('wallets')->where('address', $wallet->address)->update(['balance' => $finalleBalance]);
+        }
+        return response()->json($wallets);
+    }
 
-            return response()->json($wallets);
+    public function getTotalWalletadddress()
+    {
+        $wallets = DB::table('wallets')->paginate(10);
+        return response()->json($wallets);
     }
 
     public function pendingstacking()
     {
+        $keyword = @$_GET['keyword'];
+        
         $wallets = DB::table('wallets')
             ->join('users', 'wallets.user_id', '=', 'users.id')
             ->join('staking_currencies', 'wallets.symbol', '=', 'staking_currencies.symbol')
-            ->select('wallets.*', 'staking_currencies.id', 'users.phone', 'users.name', 'users.email')->where('balance', '>', '1')->paginate(10);
-    
+            ->select('wallets.*', 'staking_currencies.id', 'users.phone', 'users.name', 'users.email')
+            ->where('balance', '>', '1')
+            ->where('users.phone', 'like', '%' . $keyword . '%')
+            ->orWhere('users.email', 'like', '%' . $keyword . '%')
+            ->orWhere('wallets.address', 'like', '%' . $keyword . '%')
+            ->paginate(10);
+
 
         return response()->json($wallets);
     }
 
 
-    public function updatewalletamountAfterstack($txtid){
+    public function updatewalletamountAfterstack($txtid)
+    {
 
         $staking_logs = DB::table('staking_logs')->where('trxtid', $txtid)->get(['user_id', 'symbol', 'cost'])->first();
 
@@ -102,7 +119,6 @@ class WalletController extends Controller
 
         $finalAmount = $wallets->balance - $staking_logs->cost;
 
-       return DB::table('wallets')->where(['user_id' => $staking_logs->user_id, 'symbol' => $staking_logs->symbol])->update(['balance' => $finalAmount]);
-
+        return DB::table('wallets')->where(['user_id' => $staking_logs->user_id, 'symbol' => $staking_logs->symbol])->update(['balance' => $finalAmount]);
     }
 }

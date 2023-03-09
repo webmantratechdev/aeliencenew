@@ -1,7 +1,7 @@
 <template>
     <div class="px-5 border-top py-5">
         <div class="h4 d-flex align-item-center mb-5">
-            Deposit
+            Wallet History
             <v-spacer></v-spacer>
         </div>
 
@@ -41,7 +41,9 @@
                             <th scope="col"><input type="checkbox"></th>
                             <th scope="col">Name</th>
                             <th scope="col">Phone</th>
-                            <th scope="col">Deposit Address</th>
+                            <th scope="col">From</th>
+                            <th scope="col">To</th>
+                            <th scope="col">Type</th>
                             <th scope="col">Amount</th>
                             <th scope="col">Date</th>
                             <th scope="col">Action</th>
@@ -54,12 +56,12 @@
                             <th scope="row">{{ user.name }}</th>
                             <th scope="row">{{ user.phone }}</th>
                             <th scope="row">{{ user.owner_address }}</th>
+                            <th scope="row">{{ user.to_address }}</th>
+                            <th scope="row">{{ user.operationType }}</th>
                             <th scope="row">{{ user.amount }} {{ user.depositincurrencu }}</th>
                             <th scope="row">{{ user.created_at }}</th>
                             <th scope="row">
-                                <button class="btn-sm btn btn-danger mr-2" @click="deletItme(user.id)"><i
-                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                <button class="btn-sm btn btn-info " @click="viewItem(user.id)"><i class="fa fa-pencil"
+                                <button class="btn-sm btn btn-dark " @click="viewItem(user.id)"><i class="fa fa-eye"
                                         aria-hidden="true"></i></button>
                             </th>
                         </tr>
@@ -67,7 +69,7 @@
                     </tbody>
                     <tbody v-else>
                         <tr v-for="nu in 10" class="order_item">
-                            <td colspan="7" style="padding: 15px 0px;">
+                            <td colspan="9" style="padding: 15px 0px;">
                                 <v-progress-linear color="indigo-lighten-5" indeterminate model-value="20"
                                     :height="12"></v-progress-linear>
                             </td>
@@ -130,6 +132,12 @@ export default {
         },
 
         getAllUsers() {
+
+            var keyword = this.$route.query.keyword;
+            if(keyword){
+                this.searchkey = keyword;
+            }
+
             this.users = [];
             axios.get('/api/getAllDeposit?page=' + this.pagination.current + '&keyword=' + this.searchkey).then((response) => {
                 this.users = response.data;
@@ -156,22 +164,9 @@ export default {
                 }
             })
         },
-        deletItme(userid) {
-            if (confirm('Are you sure want to delete??')) {
-                var dataString = {
-                    userid: userid,
-                }
-                axios.post('/api/deleteuser', dataString).then((response) => {
-                    if (response.data == 1) {
-                        this.getAllUsers()
-                        this.snackbar = true;
-                        this.snackbartext = 'deleted...';
-                    }
-                })
-            }
-        },
+        
         viewItem(userid) {
-            this.$router.push('/console/users/' + userid);
+         
         }
 
 

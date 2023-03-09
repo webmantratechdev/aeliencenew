@@ -85,9 +85,9 @@ export default {
         ]
       },
       {
-        text: 'Deposits', icon: 'mdi-wallet-outline', url: '/console/deposit',
+        text: 'Wallet', icon: 'mdi-wallet-outline', url: '/console/deposit',
         child: [
-          { text: 'Wallet', icon: 'mdi-clock', url: '/console/wallet' },
+          { text: 'All Wallet', icon: 'mdi-clock', url: '/console/wallet' },
           { text: 'Wallet History ', icon: 'mdi-clock', url: '/console/deposit' },
           { text: 'Pending Stacking', icon: 'mdi-clock', url: '/console/pendingstacking' },
         ]

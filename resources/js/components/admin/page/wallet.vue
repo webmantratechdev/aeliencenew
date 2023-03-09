@@ -1,7 +1,7 @@
 <template>
     <div class="px-5 border-top py-5">
         <div class="h4 d-flex align-item-center mb-5">
-            Wallet
+            All Wallet [{{ users.total }}]
             <v-spacer></v-spacer>
         </div>
 
@@ -129,7 +129,7 @@ export default {
 
         
         transactionhistory(userid) {
-
+            this.$router.push('/console/deposit?keyword='+userid);
         }
 
 

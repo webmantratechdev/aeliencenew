@@ -304,7 +304,14 @@ class StackingController extends Controller
 
     public function getStackingLog()
     {
-        $staking_logs = DB::table('staking_logs')->join('users', 'staking_logs.user_id', '=', 'users.id')->select('staking_logs.*', 'users.phone', 'users.name')->orderBy('id', 'DESC')->paginate(10);
+        $keyword = @$_GET['keyword'];
+
+        $staking_logs = DB::table('staking_logs')
+            ->join('users', 'staking_logs.user_id', '=', 'users.id')
+            ->select('staking_logs.*', 'users.phone', 'users.name')
+            ->where('users.phone', 'like', '%' . $keyword . '%')
+            ->orWhere('users.email', 'like', '%' . $keyword . '%')
+            ->orderBy('id', 'DESC')->paginate(10);
 
         foreach ($staking_logs as $log) {
 
@@ -349,7 +356,8 @@ class StackingController extends Controller
 
 
 
-    public function stakingtransaction($hid){
+    public function stakingtransaction($hid)
+    {
 
         $stakingtransaction = DB::table('staking_transaction')->where('stackid', $hid)->orderBy('id', 'DESC')->paginate(10);
 

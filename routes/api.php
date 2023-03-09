@@ -100,6 +100,7 @@ Route::post('/withdrawal', 'App\Http\Controllers\Api\WithdrawalController@withdr
 // getAllDeposit
 Route::get('/getAllDeposit', 'App\Http\Controllers\Api\depositController@getAllDeposit');
 Route::get('/getTotalDepositAmount', 'App\Http\Controllers\Api\depositController@getTotalDepositAmount');
+Route::get('/stackingHistory', 'App\Http\Controllers\Api\depositController@stackingHistory');
 
 
 // MLM Controller
@@ -110,3 +111,4 @@ Route::get('/getaccountreferral/{userid}', 'App\Http\Controllers\Api\MLMControll
 Route::get('/getAllWallet', 'App\Http\Controllers\Api\WalletController@getAllWallet');
 Route::get('/pendingstacking', 'App\Http\Controllers\Api\WalletController@pendingstacking');
 Route::get('/updatewalletamountAfterstack/{txtid}', 'App\Http\Controllers\Api\WalletController@updatewalletamountAfterstack');
+Route::get('/getTotalWalletadddress', 'App\Http\Controllers\Api\WalletController@getTotalWalletadddress');
