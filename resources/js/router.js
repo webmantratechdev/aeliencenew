@@ -45,6 +45,7 @@ import Dashboard from './components/admin/Dashboard.vue';
 import home from './components/admin/page/home.vue';
 import Users from './components/admin/page/Users.vue';
 import Usersview from './components/admin/page/Usersview.vue';
+import usernostacking from './components/admin/page/usernostacking.vue';
 import kycmanager from './components/admin/page/kycmanager.vue';
 import kycmanagerpendig from './components/admin/page/kycmanagerpendig.vue';
 import kycmanagermising from './components/admin/page/kycmanagermising.vue';
@@ -125,6 +126,7 @@ const routes = [
       { path: '/console/home', component: home, },
       { path: '/console/users', component: Users, },
       { path: '/console/users/:userid', component: Usersview, },
+      { path: '/console/usernostacking', component: usernostacking, },
       { path: '/console/kycmanager', component: kycmanager, },
       { path: '/console/kycmanagerpendig', component: kycmanagerpendig, },
       { path: '/console/kycmanagermising', component: kycmanagermising, },

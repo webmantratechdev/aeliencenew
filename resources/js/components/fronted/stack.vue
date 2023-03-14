@@ -81,7 +81,7 @@
                         </thead>
                         <tbody v-if="users.data">
                             <tr class="tableItem" v-for="stocks in users.data">
-                                <td class="" data-title="Token" >
+                                <td class="" data-title="Token"  v-if="stocks.status == 1">
                                     <div class="d-flex align-items-center">
                                         <span class="icon me-3">
                                             <img :src="'/upload/' + stocks.icon" class="img-fluid" alt=""
@@ -90,20 +90,29 @@
                                         <span class="ttl text-uppercase">{{ stocks.symbol }}</span>
                                     </div>
                                 </td>
-                                <td class="" data-title="Est APY"><span class="fontText greenColor">{{ parseFloat(stocks.apr).toFixed(0) }}%</span></td>
-                                <td class="" data-title="Duration (days)">{{ stocks.period }}</td>
-                                <td class="" data-title="Minimum Locked Amount"><span class="fontText text-uppercase">{{ parseFloat(stocks.min_stake).toFixed(0) }} {{
+                                <td class="" data-title="Est APY"  v-if="stocks.status == 1"><span class="fontText greenColor">{{ parseFloat(stocks.apr).toFixed(0) }}%</span></td>
+                                <td class="" data-title="Duration (days)"  v-if="stocks.status == 1">{{ stocks.period }}</td>
+                                <td class="" data-title="Minimum Locked Amount"  v-if="stocks.status == 1"><span class="fontText text-uppercase">{{ parseFloat(stocks.min_stake).toFixed(0) }} {{
                                     stocks.symbol
                                 }}</span></td>
-                                <td class="position-relative" data-title="Action">
-                                    <div class="d-flex1 align-items-center text-end">
+                                <td class="position-relative" data-title="Action"  v-if="stocks.status == 1">
+                                    <div class="d-flex1 align-items-center text-end" v-if="stocks.status == 1">
                                         <!-- <span class="position-absolute soldOut">Sold Out</span> -->
                                        
 
-                                        <button v-if="isLogin != ''" type="button" class="elButton2" data-bs-toggle="modal"
-                                            @click="getsinglestacking(stocks.id)" data-bs-target="#stackModal" style="background: #d7a106; color: #000;">Stake Now</button>
-                                        <router-link to="/login"></router-link>
+                                        <button v-if="isLogin != ''" type="button" class="elButton2" data-bs-toggle="modal" @click="getsinglestacking(stocks.id)" data-bs-target="#stackModal" style="background: #d7a106; color: #000;">Stake Now</button>
+                                        <router-link to="/login" v-else></router-link>
+
                                     </div>
+                                    <div class="d-flex1 align-items-center text-end" v-else>
+                                        <!-- <span class="position-absolute soldOut">Sold Out</span> -->
+                                       
+
+                                        <button  type="button" class="elButton2" data-bs-toggle="modal" style="background: #d7a106; color: #000;">Expired</button>
+                                       
+
+                                    </div>
+
                                 </td>
                             </tr>
 
@@ -437,7 +446,7 @@ export default {
 
         getaccountidbycontin() {
             var userid = localStorage.getItem('profileid');
-            axios.get('/api/getaccountidbycontin/' + userid + '/' + this.singlestack.symbol).then((response) => {
+            axios.get('/api/getaccountidbycontin/' + userid + '/' + this.singlestack.symbol+'/'+this.singlestack.network).then((response) => {
                 if (response.data) {
                     console.log(response.data);
                     this.account = response.data;

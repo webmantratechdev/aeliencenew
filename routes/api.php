@@ -39,6 +39,12 @@ Route::post('/userauthgoogle', 'App\Http\Controllers\Api\UserController@userauth
 Route::post('/usergoogleotpverify', 'App\Http\Controllers\Api\UserController@usergoogleotpverify');
 
 
+Route::get('/usernostacking', 'App\Http\Controllers\Api\UserController@usernostacking');
+
+
+
+
+
 Route::get('/getAllcountry', 'App\Http\Controllers\Api\UserController@getAllcountry');
 Route::get('/getallStatebycountry/{countrycode}', 'App\Http\Controllers\Api\UserController@getallStatebycountry');
 Route::get('/getallCitybystate/{stateid}', 'App\Http\Controllers\Api\UserController@getallCitybystate');
@@ -55,15 +61,17 @@ Route::get('/getorderbook/{pair}', 'App\Http\Controllers\Api\BinanceController@g
 Route::get('/getdepositeaddress/{coin}/{network}/{userid}', 'App\Http\Controllers\Api\TatumController@getdepositeaddress');
 Route::get('/getWalletHistory/{userid}/{operationType}', 'App\Http\Controllers\Api\TatumController@getWalletHistory');
 Route::get('/getrecentdepositHistory/{coin}/{userid}', 'App\Http\Controllers\Api\TatumController@getrecentdepositHistory');
-Route::get('/getaccountidbycontin/{userid}/{symbold}', 'App\Http\Controllers\Api\TatumController@getaccountidbycontin');
+Route::get('/getaccountidbycontin/{userid}/{symbold}/{network}', 'App\Http\Controllers\Api\TatumController@getaccountidbycontin');
 
 // network controller
 
 Route::get('/getAllnetwork', 'App\Http\Controllers\Api\NetworkController@getAllnetwork');
+Route::get('/getneworkbycoin/{coin}', 'App\Http\Controllers\Api\NetworkController@getneworkbycoin');
 
 // token controller
 Route::get('/getAllToken', 'App\Http\Controllers\Api\TokenController@getAllToken');
 Route::get('/get_custom_tokens', 'App\Http\Controllers\Api\TokenController@get_custom_tokens');
+Route::post('/addcustomtoken', 'App\Http\Controllers\Api\TokenController@addcustomtoken');
 Route::get('/getAllTokenspot', 'App\Http\Controllers\Api\TokenController@getAllTokenspot');
 
 

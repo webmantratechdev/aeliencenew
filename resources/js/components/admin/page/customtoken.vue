@@ -87,53 +87,68 @@
         </v-card>
 
 
-        <v-dialog v-model="tokenbox" style="max-width: 500px;">
+        <v-dialog v-model="tokenbox" style="max-width: 700px;">
+
             <v-card>
+                <v-toolbar dark color="grey-darken-4">
+                    <v-toolbar-title>Token Details</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn icon dark @click="tokenbox = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
                 <v-card-text>
-                    <div class="modal-body flex-grow-1">
-                        <div class="mb-1">
-                            <label class="form-label" for="symbol">Symbol</label>
-                            <input type="text" class="form-control" name="symbol">
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label" for="name">Name</label>
-                            <input type="text" class="form-control" name="name">
-                            <small class="text-danger">*No Spaces</small>
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label" for="cap">Total Cap</label>
-                            <input type="number" class="form-control" name="cap">
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label" for="supply">Supply</label>
-                            <input type="number" class="form-control" name="supply">
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label" for="decimals">Digits</label>
-                            <input type="number" class="form-control" name="decimals">
-                            <small class="text-warning">Number of decimal points</small>
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label" for="hash">Hash</label>
-                            <input type="text" class="form-control" name="hash">
-                            <small class="text-warning">*Your smart contract creation transaction id</small>
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label" for="token_address">Token Address</label>
-                            <input type="text" class="form-control" name="token_address">
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label" for="holder_address">Holder Address</label>
-                            <input type="text" class="form-control" name="holder_address">
-                            <small class="text-warning">*Holder address must be identical to the blockchain wallet
-                                address
-                                to use same Xpub for wallets generation</small>
-                        </div>
-                        <button type="submit"
-                            class="btn btn-primary data-submit me-1 waves-effect waves-float waves-light">Add</button>
-                        <button type="reset" class="btn btn-outline-secondary waves-effect" data-bs-dismiss="modal"
-                            @click="tokenbox = false">Cancel</button>
-                    </div>
+                    <v-row>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="Name" hide-details v-model="name"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="symbol" hide-details v-model="symbol"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="Network" hide-details v-model="chain"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="type" hide-details v-model="type"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="supply" hide-details v-model="supply"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="withdraw fee" hide-details
+                                v-model="withdraw_fee"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="Withdraw Min" hide-details
+                                v-model="withdraw_min"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="Withdraw Max" hide-details
+                                v-model="withdraw_max"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="Hash" hide-details v-model="hash"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="Decimals" hide-details
+                                v-model="decimals"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="cap" hide-details
+                                v-model="cap"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                            <v-text-field variant="outlined" label="Contract address" hide-details
+                                v-model="address"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="12">
+                            <v-text-field variant="outlined" label="Receiving wallet address" hide-details
+                                v-model="receiving_wallet_address"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="3">
+                            <v-btn color="grey-darken-4"  size="large" @click="addcustomtoken">Submit</v-btn>
+                        </v-col>
+                    </v-row>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -159,12 +174,73 @@ export default {
             current: 1,
             total: 0
         },
-
         snackbar: false,
         snackbartext: null,
 
+
+
+        chain: null,
+        symbol: null,
+        name: null,
+        account_id: null,
+        address: null,
+        holder_address: null,
+        cap: 50000000,
+        supply: '100000000',
+        hash: null,
+        decimals: 8,
+        testnet: null,
+        base_pair: 'USDT',
+        type: null,
+        status: 1,
+        withdraw_fee: 1,
+        withdraw_min: 1.00000000,
+        withdraw_max: 10000.00000000,
+        master_wallet_address: null,
+        master_wallet_balance: null,
+        receiving_wallet_address: null,
+        memonic: null,
+        xpub: null,
+
+
     }),
     methods: {
+
+        addcustomtoken() {
+            var dataString = {
+                chain: this.chain,
+                symbol: this.symbol,
+                name: this.name,
+                account_id: this.account_id,
+                address: this.address,
+                holder_address: this.holder_address,
+                cap: this.cap,
+                supply: this.supply,
+                hash: this.hash,
+                decimals: this.decimals,
+                testnet: this.testnet,
+                base_pair: this.base_pair,
+                type: this.type,
+                status: this.status,
+                withdraw_fee: this.withdraw_fee,
+                withdraw_min: this.withdraw_min,
+                withdraw_max: this.withdraw_max,
+                master_wallet_address: this.master_wallet_address,
+                master_wallet_balance: this.master_wallet_balance,
+                receiving_wallet_address: this.receiving_wallet_address,
+                memonic: this.memonic,
+                xpub: this.xpub,
+            }
+
+            axios.post('/api/addcustomtoken', dataString).then((response) => {
+                console.log(response.data);
+               if(response.data.status == 200){
+                   this.get_custom_tokens();
+                    this.tokenbox = false;
+               }
+            })
+        },
+
         handlePageChange() {
             this.get_custom_tokens();
         },

@@ -147,8 +147,8 @@
 												</tr>
 											</thead>
 											<tbody v-if="coinList[0]">
-												<tr class="order_item" v-for="coin in coinList">
-													<td data-title="Currency">
+												<tr class="order_item" v-for="coin in coinList" >
+													<td data-title="Currency" v-if="coin.status == null || coin.status == 1">
 														<div class="d-inline-flex align-items-center SpotIcontxt">
 															<div class="icon">
 																<img :src="'/images/cryptoCurrency/' + coin.symbol.toLowerCase() + '.png'"
@@ -163,31 +163,31 @@
 															</div>
 														</div>
 													</td>
-													<td data-title="All">
+													<td data-title="All" v-if="coin.status == null || coin.status == 1">
 														<span v-if="coin.all > 0">{{ coin.all }}</span>
 														<span v-else>*******</span>
 													</td>
-													<td data-title="available">
+													<td data-title="available" v-if="coin.status == null || coin.status == 1">
 														<span v-if="coin.available > 0">{{ coin.available }}</span>
 														<span v-else>*******</span>
 													</td>
-													<td data-title="In Order">
+													<td data-title="In Order" v-if="coin.status == null || coin.status == 1"> 
 														<span v-if="coin.inorder > 0">{{ coin.inorder }}</span>
 														<span v-else>*******</span>
 													</td>
-													<td data-title="BTC Equity Value">
+													<td data-title="BTC Equity Value" v-if="coin.status == null || coin.status == 1">
 														<span v-if="coin.btn_equity_value > 0">{{ coin.btn_equity_value
 														}}</span>
 														<span v-else>*******</span>
 													</td>
-													<td data-title="BTC Equity Value">
+													<td data-title="BTC Equity Value" v-if="coin.status == null || coin.status == 1">
 														<div class="SpotBtnArea">
 															<router-link
 																:to="'/overview/digital-currency-deposit/' + coin.symbol"
 																type="button"
 																class="alButton alButtonDefault"><span>Deposit</span></router-link>
-															<router-link :to="'/overview/withdrawal/'+ coin.symbol"
-																class="alButton alButtonDefault"><span>Withdraw</span></router-link>
+															<!-- <router-link :to="'/overview/withdrawal/'+ coin.symbol"
+																class="alButton alButtonDefault"><span>Withdraw</span></router-link> -->
 															<button type="button"
 																class="alButton alButtonDefault"><span>Trades</span></button>
 														</div>

@@ -27,10 +27,8 @@ class depositController extends Controller
             ->orWhere('users.phone', 'like', '%'.$keyword.'%')
             ->orWhere('users.name', 'like', '%'.$keyword.'%')
             ->orderBy('id', 'DESC')->paginate(10);
-
-
-
         return response()->json($wallet_history);
+        
     }
 
     public function getTotalDepositAmount()
@@ -67,6 +65,7 @@ class depositController extends Controller
 
             if (isset(json_decode($response)->transactions)) {
                 foreach (json_decode($response)->transactions as $walldf) {
+
                     if (isset($walldf->txID)) {
                         $exist = DB::table('wallet_history')->where('txId', $walldf->txID)->get(['txId'])->first();
                         if (!is_object($exist)) {
@@ -88,6 +87,9 @@ class depositController extends Controller
                             ];
 
                             DB::table('wallet_history')->insert($data);
+
+                            print_r($data);
+
                         }
                     }
                 }

@@ -18,4 +18,10 @@ class NetworkController extends Controller
         return response()->json($newtworkd);
 
      }
+
+
+     public function getneworkbycoin($coin) {
+        $mainnet_tokens = DB::table('mainnet_tokens')->where('symbol', $coin)->get(['chain'])->first();
+        return response()->json($mainnet_tokens);
+     }
 }

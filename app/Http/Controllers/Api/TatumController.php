@@ -23,10 +23,10 @@ class TatumController extends Controller
         curl_setopt_array($curl, [
             CURLOPT_HTTPHEADER => [
                 "Content-Type: application/json",
-                "x-api-key: ".tatumauth('key')
+                "x-api-key: " . tatumauth('key')
             ],
             CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_URL => tatumauth('url')."tron/transaction",
+            CURLOPT_URL => tatumauth('url') . "tron/transaction",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CUSTOMREQUEST => "POST",
         ]);
@@ -138,7 +138,7 @@ class TatumController extends Controller
 
         curl_setopt_array($curl, [
             CURLOPT_HTTPHEADER => [
-                "x-api-key: ".tatumauth('key')
+                "x-api-key: " . tatumauth('key')
             ],
             CURLOPT_URL => tatumauth('url') . networkapicall($network) . "/transaction/account/" . $address,
             CURLOPT_RETURNTRANSFER => true,
@@ -160,9 +160,9 @@ class TatumController extends Controller
 
             curl_setopt_array($curl, [
                 CURLOPT_HTTPHEADER => [
-                    "x-api-key: ".tatumauth('key')
+                    "x-api-key: " . tatumauth('key')
                 ],
-                CURLOPT_URL => tatumauth('url')."tron/transaction/account/" . $address . "/trc20",
+                CURLOPT_URL => tatumauth('url') . "tron/transaction/account/" . $address . "/trc20",
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_CUSTOMREQUEST => "GET",
             ]);
@@ -321,11 +321,36 @@ class TatumController extends Controller
     public function getBlockchainBalance($address, $network, $symbol)
     {
 
+        if ($network == 'BSC') {
+
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, [
+                CURLOPT_HTTPHEADER => [
+                    "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                ],
+                CURLOPT_URL => "https://api.tatum.io/v3/blockchain/token/balance/BSC/0x5061075F6F1d6eE59cAbCaa96a1aa8DE3059d60f/" . $address,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => "GET",
+            ]);
+
+            $response = curl_exec($curl);
+            $error = curl_error($curl);
+
+            curl_close($curl);
+
+            return json_decode($response);
+
+            exit;
+        }
+
+
         $curl = curl_init();
 
         curl_setopt_array($curl, [
             CURLOPT_HTTPHEADER => [
-                "x-api-key: ".tatumauth('key')
+                "x-api-key: " . tatumauth('key')
             ],
             CURLOPT_URL => tatumauth('url') . networkapicall($network) . "/account/" . $address,
             CURLOPT_RETURNTRANSFER => true,
@@ -355,19 +380,33 @@ class TatumController extends Controller
         }
     }
 
-    public function getaccountidbycontin($userid,  $symbold)
+    public function getaccountidbycontin($userid,  $symbold, $network)
     {
 
-        $wallet = DB::table('wallets')->where(['user_id' => $userid, 'symbol' => $symbold])->get()->first();
+        $wallet = DB::table('wallets')->where(['user_id' => $userid, 'symbol' => $symbold, 'network' => $network])->get()->first();
 
         $retursn = $this->getBlockchainBalance($wallet->address, $wallet->network, $symbold);
 
-        $data = [
-            'stackDate' => date('Y-m-d H:i:s'),
-            'valueDate' => date('Y-m-d H:i:s', time() + 86400),
-            'distributionDate' => date('Y-m-d H:i:s', time() + 86400),
-            'balance' => isset($retursn->balance) ? $retursn->balance / 100000000 : "0.0000",
-        ];
+        if($network == 'BSC'){
+
+            $data = [
+                'stackDate' => date('Y-m-d H:i:s'),
+                'valueDate' => date('Y-m-d H:i:s', time() + 86400),
+                'distributionDate' => date('Y-m-d H:i:s', time() + 86400),
+                'balance' => isset($retursn->balance) ? $retursn->balance / 1000000000000000000 : "0.0000",
+            ];
+
+        
+        }else{
+            $data = [
+                'stackDate' => date('Y-m-d H:i:s'),
+                'valueDate' => date('Y-m-d H:i:s', time() + 86400),
+                'distributionDate' => date('Y-m-d H:i:s', time() + 86400),
+                'balance' => isset($retursn->balance) ? $retursn->balance / 100000000 : "0.0000",
+            ];
+        }
+
+        
 
         return response()->json($data);
     }

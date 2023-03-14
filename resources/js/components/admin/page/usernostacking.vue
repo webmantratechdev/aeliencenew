@@ -1,10 +1,9 @@
 <template>
     <div class="px-5 border-top py-5">
-        
         <div class="h4 d-flex align-item-center mb-5">
-            Staking Log
+            No Stacking User
             <v-spacer></v-spacer>
-            <v-btn color="grey-darken-4" dark class="elevation-0" @click="currencybox = true">Create New</v-btn>
+            <v-btn color="grey-darken-4" dark class="elevation-0">Create New</v-btn>
         </div>
 
         <v-card class="mb-5 elevation-0">
@@ -23,8 +22,7 @@
                         <v-text-field density="compact" variant="outlined" hide-details="" type="date"></v-text-field>
                     </v-col>
 
-                    <v-col cols="12" md="2"><v-btn color="grey-darken-4" class="elevation-0" @click="filterdata"
-                            block>Search</v-btn></v-col>
+                    <v-col cols="12" md="2"><v-btn color="grey-darken-4" class="elevation-0" @click="filterdata" block>Search</v-btn></v-col>
                 </v-row>
             </v-card-text>
         </v-card>
@@ -33,63 +31,69 @@
             <v-card-title class="d-flex align-center">
                 <p>Records</p>
                 <v-spacer></v-spacer>
-                <v-pagination density="compact" v-model="pagination.current" :total-visible="7" :length="pagination.total"
-                    @next="next()" @prev="prev" @update:modelValue="handlePageChange"></v-pagination>
+                <v-pagination  density="compact" v-model="pagination.current" :total-visible="7" :length="pagination.total" @next="next()"
+                    @prev="prev" @update:modelValue="handlePageChange"></v-pagination>
             </v-card-title>
             <v-card-text>
 
-                <table class="table">
+                <table class="table table">
                     <thead>
                         <tr>
                             <th scope="col"><input type="checkbox"></th>
+                            <th scope="col">Userid</th>
                             <th scope="col">Name</th>
+                            <th scope="col">Email</th>
                             <th scope="col">Phone</th>
-                            <th scope="col">symbol</th>
-                            <th scope="col">cost</th>
-                            <th scope="col">staked</th>
-                            <th scope="col">Start date</th>
-                            <th scope="col">End date</th>
+                            <th scope="col">Referral</th>
+                            <th scope="col">Regd. Date</th>
                             <th scope="col">Status</th>
-                            <th scope="col">Balance(USDT)</th>
-                            <th scope="col">Action</th>
+                            <th scope="col" style="text-align:right">Action</th>
                         </tr>
                     </thead>
                     <tbody v-if="users.data">
 
                         <tr v-for="user in users.data">
-                            <th scope="col"><input type="checkbox"></th>
-                            <th scope="row"><router-link :to="'/console/users/' + user.user_id" style="text-decoration:none; color:#444;">{{ user.name }}</router-link></th>
-                            <th scope="row"><router-link :to="'/console/users/' + user.user_id" style="text-decoration:none; color:#444;">{{ user.phone }}</router-link></th>
-                            <th scope="row">{{ user.symbol }}</th>
-                            <th scope="row">{{ user.cost }}</th>
-                            <th scope="row">{{ user.staked }}</th>
-                            <th scope="row">{{ user.start_date }}</th>
-                            <th scope="row">{{ user.end_date }}</th>
+                            <th scope="row"><input type="checkbox"></th>
+                            <th scope="row">{{ user.id }}</th>
+                            <th scope="row">{{ user.name }}</th>
+                            <th scope="row">{{ user.email }}</th>
+                            <th scope="row">{{ user.phone }}</th>
+                            <th scope="row">{{ user.refferal_code }}</th>
+                            <th scope="row">{{ user.created_at }}</th>
                             <th scope="row">
-                                <span v-if="user.status == 1" selected>Success</span>
-                                <span v-else selected>Faild</span>
+                                <span v-if="user.status == 'A'" selected>Approve</span>
+                                <span v-else-if="user.status == 'M'" selected>Missing</span>
+                                <span v-else>Pending</span>
                             </th>
-                            <th scope="row">{{ parseFloat(user.total_profit) - parseFloat(user.withdrawal) }}</th>
-                            <th scope="row">
-                                <button class="btn-sm btn btn-dark" title="Transaction History" @click="transactionhistory(user.id)"><v-icon>mdi-swap-horizontal</v-icon></button>
+
+                            <th scope="row" style="text-align:right">
+                                <button class="btn-sm btn btn-danger mr-2" @click="deletItme(user.id)"><i
+                                        class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                <button class="btn-sm btn btn-dark " @click="viewItem(user.id)"><i class="fa fa-pencil"
+                                        aria-hidden="true"></i></button>
                             </th>
 
                         </tr>
 
                     </tbody>
-
                     <tbody v-else>
                         <tr v-for="nu in 10" class="order_item">
-                            <td colspan="11" style="padding: 15px 0px;">
+                            <td colspan="9" style="padding: 15px 0px;">
                                 <v-progress-linear color="indigo-lighten-5" indeterminate model-value="20"
                                     :height="12"></v-progress-linear>
                             </td>
                         </tr>
                     </tbody>
+
                 </table>
+
+
 
             </v-card-text>
         </v-card>
+
+
+
 
         <v-snackbar v-model="snackbar">
             {{ snackbartext }}
@@ -102,6 +106,8 @@
 <script>
 export default {
     data: () => ({
+
+
 
         users: [],
         searchkey: '',
@@ -116,19 +122,18 @@ export default {
     }),
     methods: {
         handlePageChange() {
-            this.getStackingLog();
+            this.usernostacking();
         },
         next() {
-            this.getStackingLog();
+            this.usernostacking();
         },
         prev() {
-            this.getStackingLog();
+            this.usernostacking();
         },
 
-        getStackingLog() {
+        usernostacking() {
             this.users = [];
-            axios.get('/api/getStackingLog?page=' + this.pagination.current + '&keyword=' + this.searchkey).then((response) => {
-                console.log(response.data);
+            axios.get('/api/usernostacking?page=' + this.pagination.current + '&keyword=' + this.searchkey).then((response) => {
                 this.users = response.data;
                 this.pagination.current = response.data.current_page;
                 this.pagination.total = response.data.last_page;
@@ -136,7 +141,7 @@ export default {
         },
 
         filterdata() {
-            this.getStackingLog();
+            this.usernostacking();
         },
 
         onChange(userid, event) {
@@ -146,21 +151,35 @@ export default {
                 status: event.target.value,
             }
 
-            axios.post('/api/getStackingLog', dataString).then((response) => {
+            axios.post('/api/updateuserstatus', dataString).then((response) => {
                 if (response.data == 1) {
                     this.snackbar = true;
                     this.snackbartext = 'KYC status has been updated..';
                 }
             })
         },
-        transactionhistory(userid) {
-                this.$router.push('/console/stakingtransaction/'+userid);
+        deletItme(userid) {
+            if (confirm('Are you sure want to delete??')) {
+                var dataString = {
+                    userid: userid,
+                }
+                axios.post('/api/deleteuser', dataString).then((response) => {
+                    if (response.data == 1) {
+                        this.usernostacking()
+                        this.snackbar = true;
+                        this.snackbartext = 'deleted...';
+                    }
+                })
+            }
         },
+        viewItem(userid) {
+            this.$router.push('/console/users/' + userid);
+        }
 
 
     },
     created() {
-        this.getStackingLog()
+        this.usernostacking()
     }
 }
 </script>

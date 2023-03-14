@@ -92,7 +92,7 @@
                                             <tbody v-if="users.data">
 
                                                 <tr v-for="stacks in users.data">
-                                                    <td>{{ stacks.cost }} AEL</td>
+                                                    <td>{{ stacks.cost }} {{ stacks.symbol }}</td>
                                                     <td>{{ parseFloat(stacks.staked).toFixed(0) }}</td>
                                                     <td>0</td>
                                                     <td>12 Month</td>

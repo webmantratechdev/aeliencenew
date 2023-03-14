@@ -20,23 +20,21 @@
                             <div class="d-flex align-items-center nowrap">
                                 <div class="itemFlex">
                                     <span class="d-block ttl"><small>24th Change</small></span>
-                                    <span class="d-block txt bold"
-                                        style="color:red;">{{ parseFloat(coinDetails.changePercent24Hr).toFixed(2) }}</span>
+                                    <span class="d-block txt bold" style="color:red;">{{
+                                        parseFloat(coinDetails.changePercent24Hr).toFixed(2) }}</span>
                                 </div>
                                 <div class="itemFlex">
                                     <span class="d-block ttl"><small>24th High</small></span>
-                                    <span
-                                        class="d-block txt bold">{{ parseFloat(coinDetails.vwap24Hr).toFixed(8) }}</span>
+                                    <span class="d-block txt bold">{{ parseFloat(coinDetails.vwap24Hr).toFixed(8) }}</span>
                                 </div>
                                 <div class="itemFlex">
                                     <span class="d-block ttl"><small>24th Low</small></span>
-                                    <span
-                                        class="d-block txt bold">{{ parseFloat(coinDetails.vwap24Hr).toFixed(8) }}</span>
+                                    <span class="d-block txt bold">{{ parseFloat(coinDetails.vwap24Hr).toFixed(8) }}</span>
                                 </div>
                                 <div class="itemFlex">
                                     <span class="d-block ttl"><small>24th Vol({{ coinDetails.symbol }})</small></span>
-                                    <span
-                                        class="d-block txt bold">{{ parseFloat(coinDetails.volumeUsd24Hr).toFixed(2) }}</span>
+                                    <span class="d-block txt bold">{{ parseFloat(coinDetails.volumeUsd24Hr).toFixed(2)
+                                    }}</span>
                                 </div>
                             </div>
                         </div>
@@ -150,13 +148,15 @@
 
                                         </div>
                                         <div class="entrustBodyOrderAvarage bold">
-                                            <span class="buyColor" v-if="orderbook.bids">{{ parseFloat(orderbook.bids[0][0]).toFixed(2) }}</span>
-                                            <em class="pointer "  v-if="orderbook.bids">${{ parseFloat(orderbook.bids[0][1]).toFixed(2) }}</em>
+                                            <span class="buyColor" v-if="orderbook.bids">{{
+                                                parseFloat(orderbook.bids[0][0]).toFixed(2) }}</span>
+                                            <em class="pointer " v-if="orderbook.bids">${{
+                                                parseFloat(orderbook.bids[0][1]).toFixed(2) }}</em>
                                         </div>
                                         <div class="entrustBodyOrderBuy">
                                             <div class="entrustBodyOrderBuyList">
 
-                                                <div class="entrustBodyOrderItem"  v-for="bids in orderbook.bids">
+                                                <div class="entrustBodyOrderItem" v-for="bids in orderbook.bids">
                                                     <div class="d-flex justify-content-between flexBetween">
                                                         <div class="entrustBodyTitleItem buyColor">
                                                             {{ parseFloat(bids[0]).toFixed(2) }}
@@ -165,7 +165,7 @@
                                                             {{ parseFloat(bids[1]).toFixed(2) }}
                                                         </div>
                                                         <div class="entrustBodyTitleItem right">
-                                                            {{ bids[1] / bids[1]}}
+                                                            {{ bids[1] / bids[1] }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -254,19 +254,17 @@
                             </div>
                             <div class="formBodypanel limitForm" style="display:none;">
                                 <div class="limitFormItem">
-                                    <div
-                                        class="d-flex justify-content-between align-items-center inputBox inputReadonly">
+                                    <div class="d-flex justify-content-between align-items-center inputBox inputReadonly">
                                         <span class="d-inline-block prefix">Price</span>
                                         <input type="text" class="" placeholder="" value="23299.85" readonly="readonly">
                                         <span class="d-inline-block uppercase suffix">USDT</span>
                                     </div>
                                 </div>
                                 <div class="limitFormItem">
-                                    <div
-                                        class="d-flex justify-content-between align-items-center inputBox inputReadonly">
+                                    <div class="d-flex justify-content-between align-items-center inputBox inputReadonly">
                                         <span class="d-inline-block prefix">Amount</span>
                                         <input type="text" class="" placeholder="">
-                                        <span class="d-inline-block uppercase suffix">BTC</span>
+                                        <span class="d-inline-block uppercase suffix">{{ pair1 }}</span>
                                     </div>
 
 
@@ -282,8 +280,7 @@
                             </div>
                             <div class="formBodypanel marketForm">
                                 <div class="limitFormItem">
-                                    <div
-                                        class="d-flex justify-content-between align-items-center inputBox inputReadonly">
+                                    <div class="d-flex justify-content-between align-items-center inputBox inputReadonly">
                                         <span class="d-inline-block prefix">Price</span>
                                         <input type="text" class="" placeholder="" value="Market" readonly="readonly">
                                         <span class="d-inline-block uppercase suffix">USDT</span>
@@ -311,7 +308,7 @@
                                                         class="d-flex justify-content-between align-items-center inputBox inputReadonly">
                                                         <span class="d-inline-block prefix">Amount</span>
                                                         <input type="text" class="" placeholder="">
-                                                        <span class="d-inline-block uppercase suffix">BTC</span>
+                                                        <span class="d-inline-block uppercase suffix">{{ pair1 }}</span>
                                                     </div>
 
 
@@ -346,8 +343,10 @@
                             </div>
 
                             <div class="loginRegiisterBtnArea">
-                                <button type="button" class="loginRegiisterBtn"><span>Log In or Register</span></button>
+                                <button type="button" class="loginRegiisterBtn" v-if="activeUser == null"><span>Log In or Register</span></button>
+                                <button type="button" class="loginRegiisterBtn" v-else><span>Buy Now</span></button>
                             </div>
+
 
                         </div>
 
@@ -387,32 +386,80 @@ export default {
         exchange: [],
         coinDetails: [],
 
-        orderbook:[],
+        orderbook: [],
+
+
+        activeUser: localStorage.getItem('profileid'),
+
+        pair1: null,
+        pair2: null,
+
+        pair1address: null,
+        pair2address: null,
+
+
     }),
+    mounted() {
+
+        setInterval(this.getOrderbook, 2000);
+
+        this.trading();
+        this.getallConin();
+        this.getOrderbook();
+
+        let cointoken = this.$route.params.coinpair;
+        const myArray = cointoken.split("_")
+        this.pair1address= this.getneworkbycoin(myArray[0]);
+        this.pair2address = this.getneworkbycoin(myArray[1]);
+
+
+         
+
+    },
     methods: {
+
+        getdepositeaddress(coin, network) {
+
+            var userid = localStorage.getItem('profileid')
+            if (userid) {
+                axios.get('/api/getdepositeaddress/' + coin + '/' + network + '/' + userid)
+                    .then((response) => {
+                       return response.data;
+                    })
+            }
+        },
+
+        getneworkbycoin(coin) {
+
+            axios.get('/api/getneworkbycoin/' + coin).then((response) => {
+                this.getdepositeaddress(coin, response.data.chain);
+            })
+        },
+
         getallConin() {
             axios.get('https://api.coincap.io/v2/assets?Authorization=Bearer').then((response) => {
 
                 let cointoken = this.$route.params.coinpair;
-
                 const myArray = cointoken.split("_")
-
                 const object1 = [];
                 response.data.data.filter((value, Key) => {
+                    
                     if (value.symbol == myArray[0]) {
                         object1.push(value);
                     }
                 })
-
                 this.coinDetails = object1[0];
+
             })
         },
 
         trading() {
 
             let cointoken = this.$route.params.coinpair;
-
             const myArray = cointoken.split("_")
+
+            this.pair1 = myArray[0];
+            this.pair2 = myArray[1];
 
             new TradingView.widget(
                 {
@@ -430,35 +477,19 @@ export default {
                     "container_id": "tradingview_cba47"
                 }
             );
+
+
         },
 
         getOrderbook() {
             let cointoken = this.$route.params.coinpair;
 
             const myArray = cointoken.split("_")
-            axios.get('/api/getorderbook/'+myArray[0] + myArray[1]).then((response) => {
+            axios.get('/api/getorderbook/' + myArray[0] + myArray[1]).then((response) => {
                 this.orderbook = response.data;
             });
         }
     },
-    mounted() {
 
-        setInterval(this.getOrderbook, 2000);
-
-        this.trading();
-        this.getallConin();
-
-        this.getOrderbook();
-
-        // let cointoken = this.$route.params.coinpair;
-
-        // const myArray = cointoken.split("_")
-
-        // const tradeWs = new WebSocket('wss://ws.coincap.io/trades/binance')
-
-        // tradeWs.onmessage =  (msg) => {
-        // 	console.log(msg);
-        // }
-    }
 }
 </script>

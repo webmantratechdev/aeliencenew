@@ -415,4 +415,32 @@ class UserController extends Controller
         }
 
     }
+
+
+    public function usernostacking() {
+        $keyword = @$_GET['keyword'];
+        if(!empty($keyword)){
+            
+            $users =  DB::table('users') 
+            ->leftJoin('staking_logs', 'users.id','staking_logs.user_id')
+            ->select('users.*', 'staking_logs.user_id')
+            ->whereNull('staking_logs.user_id')
+            ->where('users.id', 'like', '%'.$keyword.'%')
+            ->orWhere('users.email', 'like', '%'.$keyword.'%')
+            ->orWhere('users.phone', 'like', '%'.$keyword.'%')
+            ->orWhere('users.name', 'like', '%'.$keyword.'%')
+            ->paginate(10);
+            return response()->json($users); 
+
+        }else{
+            $users =  DB::table('users') 
+            ->leftJoin('staking_logs', 'users.id','staking_logs.user_id')
+            ->select('users.*', 'staking_logs.user_id')
+            ->whereNull('staking_logs.user_id')
+    
+            ->paginate(10);
+            return response()->json($users);
+        }
+    
+    }
 }

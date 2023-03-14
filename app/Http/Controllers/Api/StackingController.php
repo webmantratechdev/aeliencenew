@@ -118,60 +118,18 @@ class StackingController extends Controller
     }
 
 
-
-
-    public function getBlockchainPrivateKey($mnemonic, $symbol)
-    {
-
-        $array = [
-            'ETH' => 'ethereum',
-            'TRON' => 'tron',
-            'BSC' => 'bsc',
-            'BTC' => 'bitcoin',
-            'AEL' => 'tron',
-        ];
-
-        $curl = curl_init();
-
-        $payload = array(
-            "index" => 1,
-            "mnemonic" => $mnemonic
-        );
-
-        curl_setopt_array($curl, [
-            CURLOPT_HTTPHEADER => [
-                "Content-Type: application/json",
-                "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
-            ],
-            CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_URL => "https://api.tatum.io/v3/" . $array[$symbol] . "/wallet/priv",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => "POST",
-        ]);
-
-        $response = curl_exec($curl);
-        $error = curl_error($curl);
-
-        curl_close($curl);
-
-        return json_decode($response);
-    }
-
-
-
     public function createstackinglog(Request $request)
     {
 
-
         $stackCoin = DB::table('staking_currencies')->where('id', $request->get('coin_id'))->get()->first();
 
-        $ledger_accounts = DB::table('ledger_accounts')->where(['user_id' => $request->userid, 'currency' => $stackCoin->symbol])->get(['account_id', 'wallet_id', 'memonic', 'xpub'])->first();
+        $ledger_accounts = DB::table('ledger_accounts')->where(['user_id' => $request->userid, 'currency' => $stackCoin->symbol, 'network' => $stackCoin->network])->get(['account_id', 'wallet_id', 'memonic', 'xpub'])->first();
 
         $getwallet =  DB::table('wallets')->where(['id' => $ledger_accounts->wallet_id])->get()->first();
 
-        $userprivatekey = $this->getBlockchainPrivateKey($ledger_accounts->memonic, $stackCoin->symbol);
+        $userprivatekey = generateBlockchainPrivateKey($ledger_accounts->memonic, $stackCoin->network);
 
-        $transfer = $this->transfertowallet($getwallet->address, $request->deductAmt, $userprivatekey->key, $stackCoin->symbol);
+        $transfer = $this->transfertowallet($getwallet->address, $request->deductAmt, $userprivatekey->key, $stackCoin->symbol, $stackCoin->network);
 
         if (isset($transfer->txId)) {
 
@@ -184,7 +142,7 @@ class StackingController extends Controller
                 'start_date' => Carbon::now(),
                 'end_date' => Carbon::now()->addDays($stackCoin->period),
                 'last_stake_date' => Carbon::now()->addDays(1),
-                'stacketype' => 'prestacke',
+                'stacketype' => 'poststacke',
                 'trxtid' => $transfer->txId,
                 'status' => 1
             ];
@@ -221,10 +179,72 @@ class StackingController extends Controller
 
 
 
-    public function transfertowallet($address, $amount, $fromPrivateKey, $symbol)
+    public function transfertowallet($address, $amount, $fromPrivateKey, $symbol, $network)
     {
 
         $customtoke = DB::table('custom_tokens')->where('symbol', $symbol)->get()->first();
+
+        if ($network == 'BSC') {
+
+            $privatekey = generateBlockchainPrivateKey($customtoke->memonic, $customtoke->chain);
+
+            $curl = curl_init();
+
+            $payload = array(
+                "to" => $address,
+                "currency" => "BSC",
+                "amount" => "0.0001",
+                "fromPrivateKey" =>  $privatekey->key
+            );
+
+            curl_setopt_array($curl, [
+                CURLOPT_HTTPHEADER => [
+                    "Content-Type: application/json",
+                    "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                ],
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_URL => "https://api.tatum.io/v3/bsc/transaction",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => "POST",
+            ]);
+
+            $response = curl_exec($curl);
+            $error = curl_error($curl);
+
+            curl_close($curl);
+
+            $transfer = json_decode($response);
+
+            if (isset($transfer->txId)) {
+
+                $curl = curl_init();
+
+                $payload = array(
+                    "chain" => "BSC",
+                    "to" => $customtoke->receiving_wallet_address,
+                    "contractAddress" => $customtoke->address,
+                    "amount" => $amount,
+                    "digits" => 18,
+                    "fromPrivateKey" => $fromPrivateKey
+                );
+
+                curl_setopt_array($curl, [
+                    CURLOPT_HTTPHEADER => [
+                        "Content-Type: application/json",
+                        "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                    ],
+                    CURLOPT_POSTFIELDS => json_encode($payload),
+                    CURLOPT_URL => "https://api.tatum.io/v3/blockchain/token/transaction",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                ]);
+
+                $response = curl_exec($curl);
+                $error = curl_error($curl);
+                return json_decode($response);
+            }
+            exit;
+        }
 
         if ($customtoke) {
 
@@ -236,7 +256,7 @@ class StackingController extends Controller
 
             if ($balance < 10) {
 
-                $privatekey = $this->getBlockchainPrivateKey($customtoke->memonic, $symbol);
+                $privatekey = generateBlockchainPrivateKey($customtoke->memonic, $customtoke->chain);
 
                 $curl = curl_init();
 

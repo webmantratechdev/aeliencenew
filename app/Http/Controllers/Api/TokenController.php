@@ -36,6 +36,25 @@ class TokenController extends Controller
             curl_close($curl);
 
             return json_decode($response);
+        } elseif ($network == 'BSC') {
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, [
+                CURLOPT_HTTPHEADER => [
+                    "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                ],
+                CURLOPT_URL => "https://api.tatum.io/v3/bsc/account/balance/" . $address,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => "GET",
+            ]);
+
+            $response = curl_exec($curl);
+            $error = curl_error($curl);
+
+            curl_close($curl);
+
+            return json_decode($response);
         } else {
 
             $curl = curl_init();
@@ -70,12 +89,37 @@ class TokenController extends Controller
     public function getwalletbalanceblockchain($network, $address)
     {
 
+        if ($network == 'BSC') {
+
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, [
+                CURLOPT_HTTPHEADER => [
+                    "x-api-key: faa062a1-7d7b-4021-8ea4-f8995c608eda"
+                ],
+                CURLOPT_URL => "https://api.tatum.io/v3/blockchain/token/balance/BSC/0x5061075F6F1d6eE59cAbCaa96a1aa8DE3059d60f/" . $address,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => "GET",
+            ]);
+
+            $response = curl_exec($curl);
+            $error = curl_error($curl);
+
+            curl_close($curl);
+
+            return json_decode($response);
+
+            exit;
+        }
+
         $array = [
             'ETH' => 'ethereum',
             'TRON' => 'tron',
             'BSC' => 'bsc',
             'BTC' => 'bitcoin',
-            'AEL' => 'tron'
+            'AEL' => 'tron',
+            'Aelince' => 'tron'
         ];
 
         if (isset($array[$network])) {
@@ -104,7 +148,12 @@ class TokenController extends Controller
     public function getAllTokenspot()
     {
 
-        $tokens = DB::table('mainnet_tokens')->orderBy('id', 'DESC')->get(['symbol', 'chain']);
+        $tokens = DB::table('mainnet_tokens')
+            ->leftJoin('staking_currencies', 'mainnet_tokens.symbol', 'staking_currencies.symbol')
+            ->select('mainnet_tokens.*', 'staking_currencies.status')
+            ->where('mainnet_tokens.status', 1)
+            ->orderBy('id', 'DESC')
+            ->get(['symbol', 'chain']);
 
         $data = [];
 
@@ -124,21 +173,39 @@ class TokenController extends Controller
 
                     $object = (array)$conarray;
 
+                    $customtoke = DB::table('custom_tokens')->where('symbol', $exitWallet->symbol)->get(['address'])->first();
+
+
                     $data[] = [
                         'symbol' => $token->symbol,
-                        'all' => isset($object['TM4q3gujYR7JUaFrZpM8x1P7NbQd6hwJts']) ? $object['TM4q3gujYR7JUaFrZpM8x1P7NbQd6hwJts'] / 100000000 : 0,
-                        'available' => isset($object['TM4q3gujYR7JUaFrZpM8x1P7NbQd6hwJts']) ? $object['TM4q3gujYR7JUaFrZpM8x1P7NbQd6hwJts'] / 100000000 : 0,
+                        'all' => isset($object[$customtoke->address]) ? $object[$customtoke->address] / 100000000 : 0,
+                        'available' => isset($object[$customtoke->address]) ? $object[$customtoke->address] / 100000000 : 0,
                         'inorder' => 0,
                         'btn_equity_value' => 0,
+                        'status' => $token->status,
                     ];
                 } else {
-                    $data[] = [
-                        'symbol' => $token->symbol,
-                        'all' => isset($balance->balance) ? $balance->balance  / 100000000 : 0,
-                        'available' => isset($balance->balance) ? $balance->balance  / 100000000 : 0,
-                        'inorder' => 0,
-                        'btn_equity_value' => 0,
-                    ];
+
+                    if($token->chain == 'BSC'){
+                        $data[] = [
+                            'symbol' => $token->symbol,
+                            'all' => isset($balance->balance) ? $balance->balance  / 1000000000000000000 : 0,
+                            'available' => isset($balance->balance) ? $balance->balance  / 1000000000000000000 : 0,
+                            'inorder' => 0,
+                            'btn_equity_value' => 0,
+                            'status' => $token->status,
+                        ];
+                    }else{
+                        $data[] = [
+                            'symbol' => $token->symbol,
+                            'all' => isset($balance->balance) ? $balance->balance  / 100000000 : 0,
+                            'available' => isset($balance->balance) ? $balance->balance  / 100000000 : 0,
+                            'inorder' => 0,
+                            'btn_equity_value' => 0,
+                            'status' => $token->status,
+                        ];
+                    }
+                   
                 }
             } else {
                 $data[] = [
@@ -147,6 +214,7 @@ class TokenController extends Controller
                     'available' => 0,
                     'inorder' => 0,
                     'btn_equity_value' => 0,
+                    'status' => $token->status,
                 ];
             }
         }
@@ -154,6 +222,83 @@ class TokenController extends Controller
         return response()->json($data);
     }
 
+
+    public function addcustomtoken(Request $request)
+    {
+
+        // $exist = DB::table('custom_tokens')
+        //     ->where(['chain' => $request->get('chain'), 'symbol' => $request->get('symbol')])
+        //     ->get(['chain', 'symbol', 'name'])->first();
+
+        // if ($exist) {
+        //     return response()->json(['status' => 401, 'message' => 'Token already registered']);
+        //     exit;
+        // }
+
+        $data = [
+            'chain' => $request->get('chain'),
+            'symbol' => $request->get('symbol'),
+            'name' => $request->get('name'),
+            'account_id' => $request->get('account_id'),
+            'address' => $request->get('address'),
+            'holder_address' => $request->get('holder_address'),
+            'cap' => $request->get('cap'),
+            'supply' => $request->get('supply'),
+            'hash' => $request->get('hash'),
+            'decimals' => $request->get('decimals'),
+            'testnet' => $request->get('testnet'),
+            'base_pair' => $request->get('base_pair'),
+            'type' => $request->get('type'),
+            'status' => $request->get('status'),
+            'actions' => $request->get('actions'),
+            'withdraw_fee' => $request->get('withdraw_fee'),
+            'withdraw_min' => $request->get('withdraw_min'),
+            'withdraw_max' => $request->get('withdraw_max'),
+            'has_memo' => $request->get('has_memo'),
+            'master_wallet_address' => $request->get('master_wallet_address'),
+            'master_wallet_balance' => $request->get('master_wallet_balance'),
+            'receiving_wallet_address' => $request->get('receiving_wallet_address'),
+            'memonic' => $request->get('memonic'),
+            'xpub' => $request->get('xpub'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+
+        $insert =  DB::table('custom_tokens')->insert($data);
+        if ($insert) {
+
+            $wallet = generateBlockchainWallet($request->get('chain'));
+
+            $walletaddress = generateBlockchainAddress($wallet->xpub,  $request->get('chain'));
+
+            if ($request->get('chain') == 'TRON') {
+                $payload = array(
+                    "symbol" => $data['symbol'],
+                    "supply" => $data['supply'],
+                    "decimals" => $data['decimals'],
+                    "type" => $data['type'],
+                    "description" => $data['name'],
+                    "address" => $request->get('address'),
+                    "basePair" => "USDT"
+                );
+
+                $apijson = tron_token_register_api($payload);
+
+                $updatedata = [
+                    'account_id' =>  $apijson->accountId,
+                    'holder_address' =>  $apijson->address,
+                    'master_wallet_address' =>  $walletaddress->address,
+                    'memonic' =>  $wallet->mnemonic,
+                    'xpub' =>  $wallet->xpub,
+                ];
+
+                DB::table('custom_tokens')->where(['chain' => $request->get('chain'), 'symbol' => $request->get('symbol')])->update($updatedata);
+            }
+
+            return response()->json(['status' => 200, 'message' => 'Token has been registered']);
+        }
+    }
 
     public function get_custom_tokens()
     {
@@ -167,7 +312,11 @@ class TokenController extends Controller
 
             if (isset($return->balance)) {
 
-                $balance = $return->balance / 1000000;
+                if ($token->chain == 'BSC') { 
+                    $balance = $return->balance;
+                }else{
+                    $balance = $return->balance / 1000000;
+                }
 
                 DB::table('custom_tokens')->where('id', $token->id)->update(['master_wallet_balance' => $balance]);
             }
