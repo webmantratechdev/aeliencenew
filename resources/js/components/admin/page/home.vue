@@ -7,21 +7,20 @@
         </div>
 
         <v-row>
+
             <v-col md="3">
-                <v-card to="/console/kycmanager"  class="elevation-0">
+                <v-card to="/console/kycmanager" class="elevation-0">
                     <v-card-text>
-
-                        <h2> {{ parseInt(pending)+ parseInt(missing) + parseInt(approve) }}</h2>
+                        <h2> {{ userAll }}</h2>
                         All KYC
-
                     </v-card-text>
-
                 </v-card>
             </v-col>
+
             <v-col md="3">
-                <v-card to="/console/kycmanagerpendig"  class="elevation-0">
+                <v-card to="/console/kycmanagerpendig" class="elevation-0">
                     <v-card-text>
-                        <h2> {{ pending }}</h2>
+                        <h2> {{ userPending }}</h2>
                         Pending KYC
                     </v-card-text>
                 </v-card>
@@ -29,7 +28,7 @@
             <v-col md="3">
                 <v-card to="/console/kycmanagermising" class="elevation-0">
                     <v-card-text>
-                        <h2>{{ missing }}</h2> 
+                        <h2>{{ userMissing }}</h2>
                         Missing KYC
                     </v-card-text>
                 </v-card>
@@ -37,8 +36,32 @@
             <v-col md="3">
                 <v-card to="/console/kycmanagerapprove" class="elevation-0">
                     <v-card-text>
-                        <h2>{{ approve }} </h2> 
+                        <h2>{{ userApprove }} </h2>
                         Approved KYC
+                    </v-card-text>
+                </v-card>
+            </v-col>
+
+            <v-col md="12">
+                AEL ( TRON )
+            </v-col>
+
+            <v-col md="3">
+                <v-card to="/console/stakinglogs" class="elevation-0">
+                    <v-card-text>
+                        <h2>{{ aeltotalstacking }} <small style="font-size: 14px;">( {{ aelstackingAmount }} AEL)</small>
+                        </h2>
+                        Total Stacking
+                    </v-card-text>
+                </v-card>
+            </v-col>
+
+            <v-col md="3">
+                <v-card to="/console/deposit" class="elevation-0">
+                    <v-card-text>
+                        <h2>{{ aeltotaldeposit }} <small style="font-size: 14px;">( {{ aeltotaldepositAmount }} AEL)</small>
+                        </h2>
+                        Total Deposit
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -51,26 +74,25 @@
                 </v-card>
             </v-col>
             <v-col md="3">
-                <v-card to="/console/stakinglogs"  class="elevation-0">
-                    <v-card-text>
-                        <h2>{{ totalstacking }} <small style="font-size: 14px;">( {{ totalstackingAmount }} AEL)</small></h2> 
-                        Total Stacking
-                    </v-card-text>
-                </v-card>
-            </v-col>
-            <v-col md="3">
-                <v-card to="/console/deposit"  class="elevation-0">
-                    <v-card-text>
-                        <h2>{{ totalDeposit }} <small style="font-size: 14px;">( {{ totalDepositAmount }} AEL)</small></h2> 
-                        Total Deposit
-                    </v-card-text>
-                </v-card>
-            </v-col>
-            <v-col md="3">
                 <v-card to="/console/usernostacking"  class="elevation-0">
                     <v-card-text>
                         <h2>{{ usernostacking }}</h2> 
                         No Stack Users
+                    </v-card-text>
+                </v-card>
+            </v-col>
+
+
+            <v-col md="12">
+                Aelince ( BSC )
+            </v-col>
+
+            <v-col md="3">
+                <v-card to="/console/stakinglogs" class="elevation-0">
+                    <v-card-text>
+                        <h2>{{ aelincetotalstacking }} <small style="font-size: 14px;">( {{ aelincestackingAmount }} Aelince)</small>
+                        </h2>
+                        Total Stacking
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -82,67 +104,99 @@
                     </v-card-text>
                 </v-card>
             </v-col>
+
+            <v-col md="3">
+                <v-card to="/console/customtoken" class="elevation-0">
+                    <v-card-text>
+                        <h2>{{ aelincetotaldeposit }} <small style="font-size: 14px;">( {{ aelincedepositusdtAmount }})</small>
+                        </h2>
+                        Total USDT Deposit
+                    </v-card-text>
+                </v-card>
+            </v-col>
+
+            <v-col md="3">
+                <v-card to="/console/customtoken" class="elevation-0">
+                    <v-card-text>
+                        <h2>{{ aelincedepositholdAmount }}
+                        </h2>
+                        Aelince Hold Token
+                    </v-card-text>
+                </v-card>
+            </v-col>
+
+
+
+
         </v-row>
+
     </div>
 </template>
 <script>
 export default {
     data: () => ({
 
-        pending: 0,
-        missing: 0,
-        approve: 0,
-        totalstacking:0,
-        totalstackingAmount:0,
+        userAll: 0,
+        userPending: 0,
+        userMissing: 0,
+        userApprove: 0,
 
-        aeltokenTrx:0,
+        aeltotalstacking: 0,
+        aelstackingAmount: 0,
+        aeltotaldeposit: 0,
+        aeltotaldepositAmount: 0,
+
+        aelincetotalstacking:0,
+        aelincestackingAmount:0,
+        aelincetotaldeposit:0,
+        aelincetotaldepositAmount:0,
+
+
+        aeltokenTrx: 0,
         aelincebsctoken: 0,
 
-        totalDeposit: 0,
-        totalDepositAmount: 0,
+        aelincedepositusdtAmount: 0,
 
 
-        usernostacking : 0,
+        aelincedepositholdAmount: 0,
+
+        usernostacking:0,
 
         pagination: {
             current: 1,
             total: 0
         },
-
     }),
     methods: {
-        getAllUsers() {
+        getdahsbordoverview() {
+            axios.get('/api/getdahsbordoverview').then((response) => {
+                this.userAll = response.data.users.alluser;
+                this.userPending = response.data.users.pending;
+                this.userMissing = response.data.users.missing;
+                this.userApprove = response.data.users.approve;
 
-            let dataString = [];
 
-            axios.get('/api/getAllUsers?page=' + this.pagination.current + '&kycstatus=M').then((response) => {
-                
-                this.missing = response.data.total;
-            })
-            axios.get('/api/getAllUsers?page=' + this.pagination.current + '&kycstatus=P').then((response) => {
-                this.pending = response.data.total;
-            })
-            axios.get('/api/getAllUsers?page=' + this.pagination.current + '&kycstatus=A').then((response) => {
-                this.approve = response.data.total;
-            })
+                this.aeltotalstacking = response.data.ael.aeltotalstacking;
+                this.aelstackingAmount = response.data.ael.aelstackingAmount;
+                this.aeltotaldeposit = response.data.ael.aeltotaldeposit;
+                this.aeltotaldepositAmount = response.data.ael.aeltotaldepositAmount;
 
-            axios.get('/api/getStackingLog?page=' + this.pagination.current).then((response) => {
-                this.totalstacking = response.data.total;
-            })
-            axios.get('/api/getTotalStackAmount').then((response) => {
-                this.totalstackingAmount = response.data;
-            })
 
+                this.aelincetotalstacking = response.data.aelince.aelincetotalstacking;
+                this.aelincestackingAmount = response.data.aelince.aelincestackingAmount;
+                this.aelincetotaldeposit = response.data.aelince.aelincetotaldeposit;
+                this.aelincetotaldepositAmount = response.data.aelince.aelincetotaldepositAmount;
+
+
+                this.aelincedepositusdtAmount = response.data.selling.aelincedepositusdtAmount;
+                this.aelincedepositholdAmount = response.data.selling.aelincedepositholdAmount;
+
+                console.log(response.data);
+
+            })
             axios.get('/api/get_custom_tokens?page=' + this.pagination.current).then((response) => {
                 this.aeltokenTrx = response.data.data[0].master_wallet_balance
                 this.aelincebsctoken = response.data.data[2].master_wallet_balance
-            })
-            
-            axios.get('/api/getTotalWalletadddress?page=' + this.pagination.current+'&keyword=').then((response) => {
-                this.totalDeposit = response.data.total;
-            })
-            axios.get('/api/getTotalDepositAmount').then((response) => {
-                this.totalDepositAmount = response.data;
             })
 
             axios.get('/api/usernostacking?page=' + this.pagination.current).then((response) => {
@@ -150,10 +204,10 @@ export default {
                
             })
 
-        },
+        }
     },
     created() {
-        this.getAllUsers();
+        this.getdahsbordoverview();
     }
 
 }

@@ -4619,7 +4619,7 @@ margin-bottom:20px;
     background-repeat: no-repeat;
     background-position: center center;
 	background-size:cover;
-	padding:60px 0;	
+	padding:30px 0;	
 }
 .stakingBannerSec:before{
 	content:'';
@@ -4749,10 +4749,226 @@ margin-bottom:20px;
 
 
 
+.liquidSwapSec{
+	padding:60px 0 80px 0;
+    background: #fff;
+}
+.liquidSwapSecinner{
+	max-width:1000px;
+	margin:0 auto;		
+}
+.liquidSwapBgArea {
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: cover;	
+  border-radius: 10px;	
+	overflow:hidden;
+	padding:30px 30px;
+	color:#fff;  
+}
+.liquidSwapBgAreainner h4{}
+.liquidSwapBgAreainner h2{
+	color:#fec00f;
+}
+.liquidSwapBgAreainner .claimRewardVtn{
+    border: none;
+    outline: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    background: #fec00f;
+    font-weight: 700;   
+    color: #000;
+    text-decoration: none!important;	
+}
+
+.liquidSwapFormAreainner{
+    box-shadow: 0 6px 19px #27313a1a;
+    border: 1px solid #ebeff3;
+    border-radius: 6px;		
+}
+.liquidSwapFormAreainner{}
+.liquidSwapFormAreainner .rowBox{
+	display:flex;
+	flex-wrap:wrap;
+}
+.liquidSwapFormAreainner .rowBox .columnBox{
+	
+}
+.liquidSwapFormAreainner .rowBox .columnBox:nth-child(1){
+	width:55%;
+}
+.liquidSwapFormAreainner .rowBox .columnBox:nth-child(2){
+	width:45%;
+}
+.liquidSwapFormHeader {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+.liquidSwapFormBody {
+    padding: 20px 20px;
+}
+
+.liquidSwapFormBody .labelHead{
+	margin-bottom:10px;
+}
+.liquidSwapFormBody .labelHead .labelName{	
+    font-weight: 500;
+}
+
+.liquidSwapFormBody .labelHead .txt {  
+    color: #858383;    
+}
+.liquidSwapFormBody .formGroupinner {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0 15px;	
+}
+.liquidSwapFormBody .formGroupinner .form-control {
+    border: 0;
+    box-shadow: none !important;
+	height:50px;
+	padding-left:0px;
+}
+.liquidSwapFormBody .formGroupinner .txt {
+    padding: 0 10px;
+    border-right: 1px solid #ddd;
+    font-weight: 700;
+    color: #fec00f;
+}
+.liquidSwapFormBody .formGroupinner .selectArea {
+    padding: 0 10px;
+    width: 120px;	
+}
+.liquidSwapFormBody .formGroupinner .selectArea .icon{
+  
+}
+.liquidSwapFormBody .formGroupinner .selectArea .fontTxt{
+   font-weight: 600;
+}
+
+.liquidSwapFormBody .formGroupinner2 .form-control{
+    height: 50px;
+    margin-right: 5px;
+	padding-left:15px;	
+	box-shadow:none;
+}
+.liquidSwapFormBody .formGroupinner2 .form-control:focus{
+	outline:none;
+}
+.liquidSwapFormBody .formGroupinner2 .selectArea {
+    padding: 10px;
+    width: 175px;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+}
+.liquidSwapFormBody .formGroupinner2 .selectArea .icon{
+  
+}
+.liquidSwapFormBody .formGroupinner2 .selectArea .fontTxt{
+   font-weight: 600;
+}
+
+.downUpBtnArea{
+    text-align: center;
+    padding: 30px 0 10px;	
+}
+.downUpBtnArea .downUpBtn{
+    border: 0;
+    padding: 10px 15px;
+    font-size: 20px;
+    border-radius: 6px;	
+}
+.rightLiquidSwapDtlsArea {
+    padding: 20px 20px;
+    background-color: #fbfbfb;	
+    height: 100%;	
+}
+.liquidSwapDtlsHeader{
+    padding: 0px 0px 20px;	
+}
+.liquidSwapDtlsHeader .availableLink{
+    color: #fec00f;	
+	font-weight: 600;	
+	text-decoration:none;
+}
+.liquidSwapDtlsHeader .availableLink .icon{}
+.liquidSwapDtlsHeader .availableLink .txt{}
+.liquidSwapDtlsHeader .availableLink:hover{}
+
+.liquidSwapDtlsBody{}
+.liquidSwapDtlsBody .swapList{
+	margin:0px;
+	padding:0px;
+}
+.liquidSwapDtlsBody .swapList li{
+	margin-bottom:8px;
+	font-weight: 500;	
+}
+.liquidSwapDtlsBody .swapList li:last-child{
+	margin-bottom:0px;
+}
+.liquidSwapDtlsBody .swapList li .ttl{}
+.liquidSwapDtlsBody .swapList li .txt{}
+
+.liquidSwapDtlsBody .swapList li .viewBtn{
+	color: #fec00f;	
+	font-weight: 600;	
+	text-decoration:none;	
+}
+
+.liquidSwapDtlsBody .box2{
+    background-color: #f3f3f3;
+    padding: 15px 15px;
+}
+.liquidSwapBtnArea{}
+.liquidSwapBtnArea .liquidSwapBtn{
+    text-align: center;
+    padding: 10px 10px 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: #eaecef;
+    color: #000922;
+    border-radius: 4px;
+    font-weight: 700;
+    width: 100%;	
+}
+
+
+
+
 
 
 
 @media screen and (max-width:1370px) {
+
+    	
+.liquidSwapBgAreainner h4 {
+    font-size: 20px;
+}	
+.liquidSwapBgAreainner h2 {  
+    font-size: 30px;
+}	
+.liquidSwapFormArea{
+	font-size:14px;
+}	
+.liquidSwapFormHeader {
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+}	
+.liquidSwapFormHeader .title{
+	font-size:20px;
+}	
+.liquidSwapDtlsHeader{
+    padding: 0px 0px 10px;
+}	
+.liquidSwapDtlsHeader .title{
+	font-size:20px;
+}	
+
+
 
     .stakingSec{
         font-size:14px;
@@ -5265,6 +5481,19 @@ margin-bottom:20px;
 
 
 @media screen and (max-width:768px) {
+
+
+	
+    .liquidSwapFormAreainner .rowBox .columnBox:nth-child(1) {
+        width: 100%;
+    }	
+    .liquidSwapFormAreainner .rowBox .columnBox:nth-child(2) {
+        width: 100%;
+    }	
+        
+
+
+
 
     .stepProgressbar li {
         width: 50%;

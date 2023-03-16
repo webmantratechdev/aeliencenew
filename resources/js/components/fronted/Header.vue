@@ -26,7 +26,7 @@
                                                 Center</span></router-link></li>
                                 </ul>
                             </li>
-                            <li><router-link to="/markets">Buy Token</router-link></li>
+                            <li><router-link to="/overview/selltokens">Buy Token</router-link></li>
                             <li><router-link to="/markets">Markets</router-link></li>
                             <li><router-link to="/overview/stacking">Stacking</router-link></li>
                             <li><router-link to="/knowledgebase">Knowledgebase</router-link></li>

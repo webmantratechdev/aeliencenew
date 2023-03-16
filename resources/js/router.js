@@ -38,6 +38,7 @@ import staking from './components/fronted/stack.vue';
 import stackinglog from './components/fronted/stackinglog.vue';
 import withdrawal from './components/fronted/withdrawal.vue';
 import Myreferral from './components/fronted/Myreferral.vue';
+import selltokens from './components/fronted/selltokens.vue';
 
 
 // admin
@@ -75,6 +76,10 @@ import pendingstacking from './components/admin/page/pendingstacking.vue';
 
 import MLM from './components/admin/page/Mlm.vue';
 import MlmLevel from './components/admin/page/MlmLevel.vue';
+
+
+import buytoken from './components/admin/page/buytoken.vue';
+import buytokenhistory from './components/admin/page/buytokenhistory.vue';
 
 
 
@@ -117,6 +122,7 @@ const routes = [
   { path: '/overview/stackinglog', component: stackinglog },
   { path: '/overview/withdrawal/:currency', component: withdrawal },
   { path: '/overview/myreferral', component: Myreferral },
+  { path: '/overview/selltokens', component: selltokens },
 
   // admin
   {
@@ -159,7 +165,9 @@ const routes = [
       //
       { path: '/console/mlm', component: MLM, },
       { path: '/console/mlmLevel', component: MlmLevel, },
-
+      
+      { path: '/console/buytoken', component: buytoken, },
+      { path: '/console/buytokenhistory', component: buytokenhistory, },
 
     ]
   },

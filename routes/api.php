@@ -120,3 +120,17 @@ Route::get('/getAllWallet', 'App\Http\Controllers\Api\WalletController@getAllWal
 Route::get('/pendingstacking', 'App\Http\Controllers\Api\WalletController@pendingstacking');
 Route::get('/updatewalletamountAfterstack/{txtid}', 'App\Http\Controllers\Api\WalletController@updatewalletamountAfterstack');
 Route::get('/getTotalWalletadddress', 'App\Http\Controllers\Api\WalletController@getTotalWalletadddress');
+
+
+// getAllbuytoken
+Route::get('/getAllbuytoken', 'App\Http\Controllers\Api\TokenBuyController@getAllbuytoken');
+Route::get('/getsellingtoken', 'App\Http\Controllers\Api\TokenBuyController@getsellingtoken');
+Route::get('/getUsdtbalance/{userid}', 'App\Http\Controllers\Api\TokenBuyController@getUsdtbalance');
+Route::post('/buytokensellingtoken', 'App\Http\Controllers\Api\TokenBuyController@buytokensellingtoken');
+Route::get('/getAllbuytokenHistory', 'App\Http\Controllers\Api\TokenBuyController@getAllbuytokenHistory');
+
+
+
+// dashboard overview
+Route::get('/getdahsbordoverview', 'App\Http\Controllers\Api\DashboardController@getdahsbordoverview');
+

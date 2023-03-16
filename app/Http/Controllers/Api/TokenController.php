@@ -184,9 +184,23 @@ class TokenController extends Controller
                         'btn_equity_value' => 0,
                         'status' => $token->status,
                     ];
+                } elseif ($exitWallet->symbol == 'USDT') {
+
+                    $conarray = isset($balance->trc20[0]) ? $balance->trc20[0] : '';
+                    $object = (array)$conarray;
+                    
+                    $data[] = [
+                        'symbol' => $token->symbol,
+                        'all' => isset($object['TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t']) ? $object['TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'] / 1000000 : 0,
+                        'available' => isset($object['TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t']) ? $object['TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'] / 1000000 : 0,
+                        'inorder' => 0,
+                        'btn_equity_value' => 0,
+                        'status' => $token->status,
+                    ];
+
                 } else {
 
-                    if($token->chain == 'BSC'){
+                    if ($token->chain == 'BSC') {
                         $data[] = [
                             'symbol' => $token->symbol,
                             'all' => isset($balance->balance) ? $balance->balance  / 1000000000000000000 : 0,
@@ -195,7 +209,7 @@ class TokenController extends Controller
                             'btn_equity_value' => 0,
                             'status' => $token->status,
                         ];
-                    }else{
+                    } else {
                         $data[] = [
                             'symbol' => $token->symbol,
                             'all' => isset($balance->balance) ? $balance->balance  / 100000000 : 0,
@@ -205,7 +219,6 @@ class TokenController extends Controller
                             'status' => $token->status,
                         ];
                     }
-                   
                 }
             } else {
                 $data[] = [
@@ -312,9 +325,9 @@ class TokenController extends Controller
 
             if (isset($return->balance)) {
 
-                if ($token->chain == 'BSC') { 
+                if ($token->chain == 'BSC') {
                     $balance = $return->balance;
-                }else{
+                } else {
                     $balance = $return->balance / 1000000;
                 }
 

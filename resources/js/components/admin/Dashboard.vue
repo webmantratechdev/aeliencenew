@@ -85,6 +85,13 @@ export default {
         ]
       },
       {
+        text: 'Buy Token', icon: 'mdi-package-variant',
+        child: [
+          { text: 'Token', icon: 'mdi-clock', url: '/console/buytoken' },
+          { text: 'Transaction', icon: 'mdi-clock', url: '/console/buytokenhistory' },
+        ]
+      },
+      {
         text: 'Wallet', icon: 'mdi-wallet-outline', url: '/console/deposit',
         child: [
           { text: 'All Wallet', icon: 'mdi-clock', url: '/console/wallet' },
@@ -118,7 +125,7 @@ export default {
           { text: 'Ranks', icon: 'mdi-clock', url: '/console/mlm' },
         ]
       },
-      { text: 'Orders', icon: 'mdi-package-variant' },
+      
       {
         text: 'Settings', icon: 'mdi-cog-outline',
         child: [
@@ -173,6 +180,6 @@ export default {
 </script>
 <style>
 .v-navigation-drawer__content::-webkit-scrollbar {
-    width: 1px;
+  width: 1px;
 }
 </style>
