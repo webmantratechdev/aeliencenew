@@ -64,6 +64,7 @@ class depositController extends Controller
             curl_close($curl);
 
             if (isset(json_decode($response)->transactions)) {
+                
                 foreach (json_decode($response)->transactions as $walldf) {
 
                     if (isset($walldf->txID)) {

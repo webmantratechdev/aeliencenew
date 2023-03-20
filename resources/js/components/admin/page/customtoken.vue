@@ -43,10 +43,10 @@
                             <th scope="col">Token</th>
                             <th scope="col">Network</th>
                             <th scope="col">Account</th>
-                            <th scope="col">Wallet Address</th>
+                            <th scope="col">Contract Address</th>
+                            <th scope="col">Holder Address</th>
                             <th scope="col">Balance</th>
-                            <th scope="col">supply</th>
-                            <th scope="col">Date</th>
+                            <th scope="col">Deploy</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
@@ -54,15 +54,17 @@
 
                         <tr v-for="user in users.data">
                             <th scope="row"><input type="checkbox"></th>
-                            <th scope="row">{{ user.name }}</th>
+                            <th scope="row">{{ user.symbol }}</th>
                             <th scope="row">{{ user.chain }}</th>
                             <th scope="row">{{ user.account_id }}</th>
-                            <th scope="row">{{ user.master_wallet_address }}</th>
-                            <th scope="row">{{ user.master_wallet_balance }}</th>
-                            <th scope="row">{{ user.supply }}</th>
-                            <th scope="row">{{ user.created_at }}</th>
-
-
+                            <th scope="row">{{ user.address }}</th>
+                            <th scope="row">{{ user.holder_address }}</th>
+                            <th scope="row">{{ user.balance }}</th>
+                            <th scope="row">
+                                <v-switch color="orange" :model-value="true" v-if="user.actions == 1" label="on"
+                                    v-on:change="onChange(user.id)"></v-switch>
+                                <v-switch :model-value="false" v-else label="on" v-on:change="onChange(user.id)"></v-switch>
+                            </th>
                             <th scope="row">
                                 <button class="btn-sm btn btn-danger mr-2" @click="deletItme(user.id)"><i
                                         class="fa fa-trash-o" aria-hidden="true"></i></button>
@@ -134,8 +136,7 @@
                                 v-model="decimals"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6">
-                            <v-text-field variant="outlined" label="cap" hide-details
-                                v-model="cap"></v-text-field>
+                            <v-text-field variant="outlined" label="cap" hide-details v-model="cap"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="6">
                             <v-text-field variant="outlined" label="Contract address" hide-details
@@ -146,7 +147,7 @@
                                 v-model="receiving_wallet_address"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="3">
-                            <v-btn color="grey-darken-4"  size="large" @click="addcustomtoken">Submit</v-btn>
+                            <v-btn color="grey-darken-4" size="large" @click="addcustomtoken">Submit</v-btn>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -196,8 +197,7 @@ export default {
         withdraw_fee: 1,
         withdraw_min: 1.00000000,
         withdraw_max: 10000.00000000,
-        master_wallet_address: null,
-        master_wallet_balance: null,
+        balance: null,
         receiving_wallet_address: null,
         memonic: null,
         xpub: null,
@@ -205,7 +205,11 @@ export default {
 
     }),
     methods: {
-
+        onChange(tokenid) {
+            axios.get('/api/diploycustomtokenNetowrk/'+tokenid).then((response) => {
+                console.log(response.data);
+            })
+        },
         addcustomtoken() {
             var dataString = {
                 chain: this.chain,
@@ -225,8 +229,7 @@ export default {
                 withdraw_fee: this.withdraw_fee,
                 withdraw_min: this.withdraw_min,
                 withdraw_max: this.withdraw_max,
-                master_wallet_address: this.master_wallet_address,
-                master_wallet_balance: this.master_wallet_balance,
+                balance: this.balance,
                 receiving_wallet_address: this.receiving_wallet_address,
                 memonic: this.memonic,
                 xpub: this.xpub,
@@ -234,10 +237,10 @@ export default {
 
             axios.post('/api/addcustomtoken', dataString).then((response) => {
                 console.log(response.data);
-               if(response.data.status == 200){
-                   this.get_custom_tokens();
+                if (response.data.status == 200) {
+                    this.get_custom_tokens();
                     this.tokenbox = false;
-               }
+                }
             })
         },
 

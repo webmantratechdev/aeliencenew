@@ -41,6 +41,7 @@
                         <tr>
                             <th scope="col"><input type="checkbox"></th>
                             <th scope="col">Name</th>
+                            <th scope="col">Phone</th>
                             <th scope="col">symbol</th>
                             <th scope="col">Cost</th>
                             <th scope="col">Amount (USDT)</th>
@@ -55,6 +56,7 @@
                         <tr v-for="user in users.data">
                             <th scope="row"><input type="checkbox"></th>
                             <th scope="row">{{ user.name }}</th>
+                            <th scope="row">{{ user.phone }}</th>
                             <th scope="row">{{ user.symbol }}</th>
                             <th scope="row">{{ user.cost }}</th>
                             <th scope="row">{{ user.amount }}</th>

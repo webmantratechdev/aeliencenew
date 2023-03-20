@@ -237,10 +237,18 @@ export default {
 					this.coinList = response.data;
 				})
 		},
+
+		mlmgetcommision() {
+			let profileid = localStorage.getItem('profileid');
+			axios.get('/api/mlmgetcommision/'+profileid).then((response) => {
+				console.log(response.data);
+			})
+		}
 	},
 	created() {
 		this.getProfile()
 		this.getAllCoin();
+		this.mlmgetcommision();
 
 	}
 

@@ -188,7 +188,7 @@ class TokenController extends Controller
 
                     $conarray = isset($balance->trc20[0]) ? $balance->trc20[0] : '';
                     $object = (array)$conarray;
-                    
+
                     $data[] = [
                         'symbol' => $token->symbol,
                         'all' => isset($object['TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t']) ? $object['TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t'] / 1000000 : 0,
@@ -197,7 +197,6 @@ class TokenController extends Controller
                         'btn_equity_value' => 0,
                         'status' => $token->status,
                     ];
-
                 } else {
 
                     if ($token->chain == 'BSC') {
@@ -236,6 +235,7 @@ class TokenController extends Controller
     }
 
 
+
     public function addcustomtoken(Request $request)
     {
 
@@ -268,15 +268,13 @@ class TokenController extends Controller
             'withdraw_min' => $request->get('withdraw_min'),
             'withdraw_max' => $request->get('withdraw_max'),
             'has_memo' => $request->get('has_memo'),
-            'master_wallet_address' => $request->get('master_wallet_address'),
-            'master_wallet_balance' => $request->get('master_wallet_balance'),
+            'balance' => $request->get('balance'),
             'receiving_wallet_address' => $request->get('receiving_wallet_address'),
             'memonic' => $request->get('memonic'),
             'xpub' => $request->get('xpub'),
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ];
-
 
         $insert =  DB::table('custom_tokens')->insert($data);
         if ($insert) {
@@ -286,6 +284,7 @@ class TokenController extends Controller
             $walletaddress = generateBlockchainAddress($wallet->xpub,  $request->get('chain'));
 
             if ($request->get('chain') == 'TRON') {
+
                 $payload = array(
                     "symbol" => $data['symbol'],
                     "supply" => $data['supply'],
@@ -299,28 +298,82 @@ class TokenController extends Controller
                 $apijson = tron_token_register_api($payload);
 
                 $updatedata = [
-                    'account_id' =>  $apijson->accountId,
-                    'holder_address' =>  $apijson->address,
-                    'master_wallet_address' =>  $walletaddress->address,
+                    'account_id' =>  isset($apijson->accountId)?$apijson->accountId:'',
+                    'holder_address' =>  $walletaddress->address,
                     'memonic' =>  $wallet->mnemonic,
                     'xpub' =>  $wallet->xpub,
                 ];
 
                 DB::table('custom_tokens')->where(['chain' => $request->get('chain'), 'symbol' => $request->get('symbol')])->update($updatedata);
             }
-
             return response()->json(['status' => 200, 'message' => 'Token has been registered']);
         }
     }
 
+    public function diploycustomtokenNetowrk($tokenid)
+    {
+
+        $custom_tokens = DB::table('custom_tokens')->where('id', $tokenid)->get()->first();
+
+        $action = ($custom_tokens->actions == 1) ? 0 : 1;
+
+        DB::table('custom_tokens')->where('id', $tokenid)->update(['actions' => $action]);
+
+
+        $mainnet_tokenExit = DB::table('mainnet_tokens')
+        ->where(['symbol' => $custom_tokens->symbol, 'chain' => $custom_tokens->chain, 'network' => $custom_tokens->type])
+        ->get()->first();
+
+        if(!$mainnet_tokenExit){
+            $addmainToken = [
+                'symbol' => $custom_tokens->symbol,
+                'postfix' => '_'.$custom_tokens->chain,
+                'name' => $custom_tokens->name,
+                'chain' => $custom_tokens->chain,
+                'network' => $custom_tokens->type,
+                'status' => 1,
+                'withdraw_fee' => $custom_tokens->withdraw_fee,
+                'withdraw_max' => $custom_tokens->withdraw_max,
+                'withdraw_min' => $custom_tokens->withdraw_min,
+            ];
+            DB::table('mainnet_tokens')->insert($addmainToken);
+        }
+
+
+        if ($action == 1) {
+
+            $privatekey = generateBlockchainPrivateKey($custom_tokens->memonic, $custom_tokens->chain);
+
+            if ($custom_tokens->chain == 'TRON') {
+
+                $payload = array(
+                    "symbol" => $custom_tokens->symbol,
+                    "supply" => $custom_tokens->supply,
+                    "decimals" => $custom_tokens->decimals,
+                    "type" => $custom_tokens->type,
+                    "description" => $custom_tokens->name,
+                    "address" => $custom_tokens->address,
+                    "privateKey" => $privatekey->key,
+                    "basePair" => "USDT"
+                );
+
+               $ressiis = tron_token_deploy_api($payload);
+              
+            }
+        }
+
+       
+    }
+
+
     public function get_custom_tokens()
     {
 
-        $custom_tokens = DB::table('custom_tokens')->get(['id', 'master_wallet_address', 'chain']);
+        $custom_tokens = DB::table('custom_tokens')->get(['id', 'holder_address', 'chain']);
 
         foreach ($custom_tokens as $token) {
 
-            $return = $this->getmasterwalletbalance($token->master_wallet_address, $token->chain);
+            $return = $this->getmasterwalletbalance($token->holder_address, $token->chain);
 
 
             if (isset($return->balance)) {
@@ -331,7 +384,7 @@ class TokenController extends Controller
                     $balance = $return->balance / 1000000;
                 }
 
-                DB::table('custom_tokens')->where('id', $token->id)->update(['master_wallet_balance' => $balance]);
+                DB::table('custom_tokens')->where('id', $token->id)->update(['balance' => $balance]);
             }
         }
 

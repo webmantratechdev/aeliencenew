@@ -332,6 +332,13 @@ export default {
 					if (response.data) {
 						this.depositAddress = response.data;
 						this.overlay = false;
+
+						if(coin == 'USDT'){
+							axios.get('/api/getdepositeaddress/Aelince/BSC/' + userid)
+							.then((response) => {
+
+							})
+						}
 					}
 				})
 		},

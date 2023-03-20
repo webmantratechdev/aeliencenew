@@ -109,7 +109,9 @@ export default {
       {
         text: 'Ecosystem', icon: 'mdi-finance',
         child: [
+          
           { text: 'Blockchains', icon: 'mdi-clock', url: '/console/blockchains' },
+          { text: 'Custom Token', icon: 'mdi-litecoin', url: '/console/customtoken' },
           { text: 'Completed Trades', icon: 'mdi-clock', },
         ]
       },
@@ -117,7 +119,7 @@ export default {
       { text: 'Manage Spot', icon: 'mdi-chart-bell-curve-cumulative' },
       { text: 'Withdrawals', icon: 'mdi-swap-horizontal' },
       { text: 'Manage Invites', icon: 'mdi-share-variant-outline' },
-      { text: 'Custom Token', icon: 'mdi-litecoin', url: '/console/customtoken' },
+     
       {
         text: 'MLM Manager', icon: 'mdi-sitemap-outline',
         child: [

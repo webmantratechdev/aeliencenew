@@ -106,7 +106,7 @@
             </v-col>
 
             <v-col md="3">
-                <v-card to="/console/customtoken" class="elevation-0">
+                <v-card to="/console/buytokenhistory" class="elevation-0">
                     <v-card-text>
                         <h2>{{ aelincetotaldeposit }} <small style="font-size: 14px;">( {{ aelincedepositusdtAmount }})</small>
                         </h2>
@@ -195,8 +195,8 @@ export default {
 
             })
             axios.get('/api/get_custom_tokens?page=' + this.pagination.current).then((response) => {
-                this.aeltokenTrx = response.data.data[0].master_wallet_balance
-                this.aelincebsctoken = response.data.data[2].master_wallet_balance
+                this.aeltokenTrx = response.data.data[0].balance
+                this.aelincebsctoken = response.data.data[2].balance
             })
 
             axios.get('/api/usernostacking?page=' + this.pagination.current).then((response) => {

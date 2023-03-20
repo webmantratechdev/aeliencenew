@@ -73,7 +73,7 @@ class WithdrawalController extends Controller
 
         $walletAddress = DB::table('wallets')->where(['id' => $ledger_accounts->wallet_id])->get()->first();
 
-        $custom_tokens = DB::table('custom_tokens')->where(['chain' => $request->networks, 'symbol' => $request->conin])->get(['address', 'master_wallet_address', 'master_wallet_balance'])->first();
+        $custom_tokens = DB::table('custom_tokens')->where(['chain' => $request->networks, 'symbol' => $request->conin])->get(['address', 'holder_address', 'balance'])->first();
 
         $account = $this->getwalletbalance($walletAddress->address);
 

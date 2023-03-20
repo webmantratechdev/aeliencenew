@@ -257,7 +257,11 @@ class TokenBuyController extends Controller
     public function getAllbuytokenHistory() {
 
 
-        $history = DB::table('buy_token_transaction')->orderBy('id', 'DESC')->paginate(10);
+        $history = DB::table('buy_token_transaction')
+        ->join('users', 'buy_token_transaction.userid', '=', 'users.id')
+        ->select('buy_token_transaction.*', 'users.phone', 'users.name')
+        ->orderBy('id', 'DESC')->paginate(10);
+
         return response()->json($history);
 
     }

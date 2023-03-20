@@ -49,10 +49,10 @@ class TatumController extends Controller
         if ($getWalletaddress) {
 
             return $getWalletaddress->address;
+
         } else {
 
             $wallets = generateBlockchainWallet($network);
-
 
             $account = generateVirtualAccount($coin, $wallets->xpub);
 
@@ -61,7 +61,6 @@ class TatumController extends Controller
             }
 
             $deposignadres = generateBlockchainAddress($wallets->xpub, $network);
-
 
             $wallet = [
                 'user_id' => $userid,
@@ -97,14 +96,14 @@ class TatumController extends Controller
 
                 DB::table('ledger_accounts')->insert($data);
 
-                if ($coin == 'AEL') {
+                if ($network == 'TRON') {
 
-                    $customtoke = DB::table('custom_tokens')->where('symbol', $coin)->get()->first();
+                    $customtoke = DB::table('custom_tokens')->where('symbol', 'AEL')->get()->first();
                     $privatekey = generateBlockchainPrivateKey($customtoke->memonic, $network);
 
                     $payload = array(
                         "to" => $deposignadres->address,
-                        "amount" => "0.000001",
+                        "amount" => "1",
                         "fromPrivateKey" => $privatekey->key,
                     );
                     $returndata = $this->sendTRXtoaTRONaccount($payload);
@@ -114,7 +113,6 @@ class TatumController extends Controller
             }
         }
     }
-
 
 
     /**********************************************---------------------------------------------*********/

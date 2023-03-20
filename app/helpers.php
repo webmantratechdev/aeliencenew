@@ -169,15 +169,6 @@ function tron_token_register_api($payload)
 {
 
     $curl = curl_init();
-    // $payload = array(
-    //     "symbol" => "MY_TOKEN",
-    //     "supply" => "10000000",
-    //     "decimals" => 6,
-    //     "type" => "TRC10",
-    //     "description" => "My Public Token",
-    //     "address" => "TVAEYCmc15awaDRAjUZ1kvcHwQQaoPw2CW",
-    //     "basePair" => "AED"
-    // );
 
     curl_setopt_array($curl, [
         CURLOPT_HTTPHEADER => [
@@ -185,7 +176,7 @@ function tron_token_register_api($payload)
             "x-api-key: " . tatumauth('key')
         ],
         CURLOPT_POSTFIELDS => json_encode($payload),
-        CURLOPT_URL => tatumauth('url')."offchain/tron/trc",
+        CURLOPT_URL => tatumauth('url') . "offchain/tron/trc",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_CUSTOMREQUEST => "POST",
     ]);
@@ -194,8 +185,30 @@ function tron_token_register_api($payload)
     $error = curl_error($curl);
 
     return json_decode($response);
-
 }
+
+function tron_token_deploy_api($payload)
+{
+    $curl = curl_init();
+
+    curl_setopt_array($curl, [
+        CURLOPT_HTTPHEADER => [
+            "Content-Type: application/json",
+            "x-api-key: " . tatumauth('key')
+        ],
+        CURLOPT_POSTFIELDS => json_encode($payload),
+        CURLOPT_URL => tatumauth('url') . "offchain/tron/trc/deploy",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST => "POST",
+    ]);
+
+    $response = curl_exec($curl);
+    $error = curl_error($curl);
+    curl_close($curl);
+    
+    return json_decode($response);
+}
+
 
 
 function etherium_token_register_api($payload)
@@ -226,5 +239,4 @@ function etherium_token_register_api($payload)
     $error = curl_error($curl);
 
     curl_close($curl);
-
 }

@@ -7,83 +7,87 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
 
+use App\Models\User;
+
+use Illuminate\Support\Carbon;
+
 class MLMController extends Controller
 {
     //
 
 
-    public function getMLMLevel(){
+    public function getMLMLevel()
+    {
 
         $level = DB::table('mlm_level')->paginate(10);
         return response()->json($level);
-
     }
 
-    public function getaccountreferral($userid)
+    public function gemlmusers($userid)
     {
 
-        $activeuser = DB::table('users')->where('id', $userid)->get()->first();
+        $user = User::where('id', $userid)->whereNull('refferal_code')->with(['children'])->get();
 
-        $lavel = @$_GET['lavels'];
-
-        if ($lavel == 1) {
-
-            $findChild1 =  DB::table('users')->where('refferal_code', $activeuser->share_refferal_code)->paginate(10);
-            return response()->json($findChild1);
-        } elseif ($lavel == 2) {
+        return response()->json($user);
+    }
 
 
-            $fetchFrom2 = DB::table('users')->where('refferal_code', $activeuser->share_refferal_code)->get();
+    public function mlmgetcommision($userid)
+    {
 
-            $query = DB::table('users');
+        $totalStack = DB::table('staking_logs')->where(['user_id' => $userid, 'stacketype' => 'poststacke'])->get();
 
-            foreach ($fetchFrom2 as $kye => $child) {
+        foreach ($totalStack as $stack) {
 
-                if ($kye == 0) {
-                    $query->where('refferal_code', $child->share_refferal_code);
+            if ($stack->cost > 0) {
+
+                $commisn = 0;
+                if ($stack->cost >= 100 || $stack->cost <= 5000) {
+
+                    $commisn = ($stack->cost * 5) / 100;
+                } elseif ($stack->cost > 5000) {
+
+                    $commisn = ($stack->cost * 7) / 100;
                 } else {
-                    $query->orWhere('refferal_code', $child->share_refferal_code);
+                    $commisn = 0;
+                }
+
+
+                $totalEntry = DB::table('mlm_personal_commission')->where([
+                    'userid' => $stack->user_id,
+                    'stackingid' => $stack->id,
+                ])->count();
+
+                if ($totalEntry != 12) {
+
+                
+                    $commisExsitthismonth = DB::table('mlm_personal_commission')->where([
+                        'userid' => $stack->user_id,
+                        'stackingid' => $stack->id,
+                    ])
+                        ->whereMonth('created_at', Carbon::now()->month)
+                        ->get(['id'])->first();
+
+
+
+                    if (!$commisExsitthismonth) {
+
+
+                        if($totalEntry == 11){
+                            $commisn = $stack->cost + $commisn; 
+                        }
+            
+                        $data = [
+                            'userid' => $stack->user_id,
+                            'stackingid' => $stack->id,
+                            'stackamount' => $stack->cost,
+                            'commission' => $commisn,
+                        ];
+
+                        DB::table('mlm_personal_commission')->insert($data);
+                    }
                 }
             }
-
-            $return = $query->paginate(10);
-
-            return response()->json($return);
-        } elseif ($lavel == 3) {
-
-            $fetchFrom2 = DB::table('users')->where('refferal_code', $activeuser->share_refferal_code)->get();
-            $query = DB::table('users');
-
-            foreach ($fetchFrom2 as $kye => $child) {
-
-                if ($kye == 0) {
-                    $query->where('refferal_code', $child->share_refferal_code);
-                } else {
-                    $query->orWhere('refferal_code', $child->share_refferal_code);
-                }
-            }
-
-            $return1 = $query->get();
-
-            // -------------------------------------------------------------------------------// 
-
-            $query1 = DB::table('users');
-
-            foreach ($return1 as $kye => $child) {
-
-                if ($kye == 0) {
-                    $query1->where('refferal_code', $child->share_refferal_code);
-                } else {
-                    $query1->orWhere('refferal_code', $child->share_refferal_code);
-                }
-            }
-
-            $return2 = $query1->paginate(10);
-
-            return response()->json($return2);
-        } else {
-            $findChild1 =  DB::table('users')->where('refferal_code', 1)->paginate(10);
-            return response()->json($findChild1);
         }
     }
 }

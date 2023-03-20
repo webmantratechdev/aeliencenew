@@ -73,6 +73,7 @@ Route::get('/getAllToken', 'App\Http\Controllers\Api\TokenController@getAllToken
 Route::get('/get_custom_tokens', 'App\Http\Controllers\Api\TokenController@get_custom_tokens');
 Route::post('/addcustomtoken', 'App\Http\Controllers\Api\TokenController@addcustomtoken');
 Route::get('/getAllTokenspot', 'App\Http\Controllers\Api\TokenController@getAllTokenspot');
+Route::get('/diploycustomtokenNetowrk/{tokenid}', 'App\Http\Controllers\Api\TokenController@diploycustomtokenNetowrk');
 
 
 // stacking controller
@@ -112,8 +113,9 @@ Route::get('/stackingHistory', 'App\Http\Controllers\Api\depositController@stack
 
 
 // MLM Controller
+Route::get('/gemlmusers/{userid}', 'App\Http\Controllers\Api\MLMController@gemlmusers');
+Route::get('/mlmgetcommision/{userid}', 'App\Http\Controllers\Api\MLMController@mlmgetcommision');
 Route::get('/getMLMLevel', 'App\Http\Controllers\Api\MLMController@getMLMLevel');
-Route::get('/getaccountreferral/{userid}', 'App\Http\Controllers\Api\MLMController@getaccountreferral');
 
 // wallet
 Route::get('/getAllWallet', 'App\Http\Controllers\Api\WalletController@getAllWallet');
