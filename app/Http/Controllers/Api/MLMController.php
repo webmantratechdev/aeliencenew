@@ -8,27 +8,28 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
+use App\Models\Staking_log as Stacking;
+
 
 use Illuminate\Support\Carbon;
 
 class MLMController extends Controller
 {
     //
-
-
     public function getMLMLevel()
     {
-
         $level = DB::table('mlm_level')->paginate(10);
         return response()->json($level);
     }
 
+
     public function gemlmusers($userid)
     {
-
-        $user = User::where('id', $userid)->whereNull('refferal_code')->with(['children'])->get();
-
-        return response()->json($user);
+        $users = User::where('id', $userid)->with(['children'])->get();
+        $data =  childarray($users);
+        
+        // print_r($data ); exit;
+        return response()->json($data);
     }
 
 
@@ -52,7 +53,6 @@ class MLMController extends Controller
                     $commisn = 0;
                 }
 
-
                 $totalEntry = DB::table('mlm_personal_commission')->where([
                     'userid' => $stack->user_id,
                     'stackingid' => $stack->id,
@@ -60,7 +60,7 @@ class MLMController extends Controller
 
                 if ($totalEntry != 12) {
 
-                
+
                     $commisExsitthismonth = DB::table('mlm_personal_commission')->where([
                         'userid' => $stack->user_id,
                         'stackingid' => $stack->id,
@@ -73,10 +73,10 @@ class MLMController extends Controller
                     if (!$commisExsitthismonth) {
 
 
-                        if($totalEntry == 11){
-                            $commisn = $stack->cost + $commisn; 
+                        if ($totalEntry == 11) {
+                            $commisn = $stack->cost + $commisn;
                         }
-            
+
                         $data = [
                             'userid' => $stack->user_id,
                             'stackingid' => $stack->id,

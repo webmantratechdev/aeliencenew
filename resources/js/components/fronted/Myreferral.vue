@@ -76,15 +76,15 @@
                                 <div class="dashPanelHeader d-flex">
                                     <h2 class="title mb-2">My Referral</h2>
                                     <v-spacer></v-spacer>
-                                    
+
                                 </div>
                                 <div class="dashPanelBody">
-                                    <div class="responsive_table_area">
-                                        <TreeChart :json="treeData"></TreeChart>
-                                    </div>
+                                    
+                                        <organization-chart :datasource="ds" zoom pan></organization-chart>
+                                 
                                 </div>
 
-                              
+
                             </div>
                         </div>
                     </div>
@@ -100,26 +100,23 @@
 import Header from './Header.vue';
 import Footer from './Footer.vue';
 
-import TreeChart from "vue-tree-chart-3";
+import OrganizationChart from 'vue3-organization-chart'
+import 'vue3-organization-chart/dist/orgchart.css'
+
 export default {
     components: {
         Header,
         Footer,
-        TreeChart
+        OrganizationChart
     },
     data: () => ({
-        treeData:
-        {
-            name: 'root',
-            image_url: "/images/uploadImage.jpg",
-            children: []
-        }
+        ds: {}
     }),
     methods: {
         gemlmusers() {
             var userid = localStorage.getItem('profileid');
             axios.get('/api/gemlmusers/' + userid).then((response) => {
-                this.treeData.children = response.data;
+                this.ds= response.data[0];
                 console.log(response.data);
             })
         },
@@ -131,3 +128,8 @@ export default {
 
 }
 </script>
+<style>
+.chartOrgchartContainer {
+    max-width: 100%;
+}
+</style>

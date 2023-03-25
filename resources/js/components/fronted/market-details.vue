@@ -444,8 +444,6 @@
 
 <script>
 
-import Binance from 'binance-api-node'
-
 import Header from './Header.vue';
 import Footer from './Footer.vue';
 

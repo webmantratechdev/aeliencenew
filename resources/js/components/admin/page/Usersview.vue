@@ -174,13 +174,15 @@
             </v-col>
             <v-col cols="12">
                 <div class="h4 d-flex align-item-center mb-5">
-                    MLM 
+                    MLM
                 </div>
             </v-col>
             <div class="col-12">
                 <v-card class="elevation-0">
                     <v-card-text class="py-15">
-                        <TreeChart :json="treeData"></TreeChart>
+                       
+                            <organization-chart :datasource="ds" zoom pan></organization-chart>
+                       
                     </v-card-text>
                 </v-card>
             </div>
@@ -194,11 +196,12 @@
 </template>
 <script>
 
-import TreeChart from "vue-tree-chart-3";
+import OrganizationChart from 'vue3-organization-chart'
+import 'vue3-organization-chart/dist/orgchart.css'
 
 export default {
     components: {
-        TreeChart
+        OrganizationChart
     },
     data: () => ({
 
@@ -222,12 +225,7 @@ export default {
         snackbar: false,
         snackbartext: null,
 
-        treeData:
-        {
-            name: 'root',
-            image_url: "/images/uploadImage.jpg",
-            children: []
-        }
+        ds: {}
         ,
     }),
     methods: {
@@ -235,7 +233,7 @@ export default {
         gemlmusers() {
             var userid = this.$route.params.userid;
             axios.get('/api/gemlmusers/' + userid).then((response) => {
-                this.treeData.children = response.data;
+                this.ds= response.data[0];
                 console.log(response.data);
             })
         },
@@ -354,3 +352,13 @@ export default {
     }
 }
 </script>
+<style>
+.chartTitle:before {
+    content: '';
+    width: 100%;
+    height: 125px;
+    display: block;
+    background: url(/images/uploadImage.jpg);
+    background-size: cover;
+}
+</style>

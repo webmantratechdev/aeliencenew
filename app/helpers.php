@@ -1,5 +1,10 @@
 <?php
 
+use App\Models\Staking_log as Stacking;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+
+
 function tatumauth($key)
 {
 
@@ -205,7 +210,7 @@ function tron_token_deploy_api($payload)
     $response = curl_exec($curl);
     $error = curl_error($curl);
     curl_close($curl);
-    
+
     return json_decode($response);
 }
 
@@ -214,15 +219,6 @@ function tron_token_deploy_api($payload)
 function etherium_token_register_api($payload)
 {
     $curl = curl_init();
-
-    // $payload = array(
-    //     "symbol" => "MY_TOKEN",
-    //     "supply" => "10000000",
-    //     "description" => "My Public Token",
-    //     "address" => "0x687422eEA2cB73B5d3e242bA5456b782919AFc85",
-    //     "privateKey" => "0x05e150c73f1920ec14caa1e0b6aa09940899678051a78542840c2668ce5080c2",
-    //     "basePair" => "AED"
-    // );
 
     curl_setopt_array($curl, [
         CURLOPT_HTTPHEADER => [
@@ -239,4 +235,56 @@ function etherium_token_register_api($payload)
     $error = curl_error($curl);
 
     curl_close($curl);
+}
+
+
+function childarray($cdir)
+{
+    $result = [];
+    foreach ($cdir as $value) {
+
+        $childers = [];
+        if (isset($value->children)) {
+            $childers = childarray($value->children);
+
+            foreach ($value->children as $staks) {
+
+                $statking = Stacking::where(['user_id' => $staks->id, 'stacketype' => 'poststacke'])->get();
+                foreach ($statking as $stack) {
+
+                    $parentUser = DB::table('users')->where('share_refferal_code', $stack->refferal_code)->get(['id'])->first();
+                    $parentstatking = Stacking::where(['user_id' => $parentUser->id, 'stacketype' => 'poststacke'])->sum('cost');
+
+                    if ($parentstatking == 0) {
+
+                        $owncommistion = ($stack->staked * 5) / 100;
+
+                        // get today days in month
+                        $totaldayInmonth = 30; //Carbon::now()->daysInMonth();
+
+                        // calculate every day com
+                        $perdaycomm = $owncommistion / $totaldayInmonth;
+
+
+
+                        $data = [
+                            'userid' => $parentUser->id,
+                            'child' => $staks->id,
+                            'stackingid' => $stack->id,
+                            'commission' => $owncommistion,
+                        ];
+                    }
+                }
+            }
+        }
+
+        $result[] =
+            [
+                'id' =>  $value->id,
+                'name' =>  $value->name,
+                'title' => 'Amount - ' . Stacking::where(['user_id' => $value->id, 'stacketype' => 'poststacke'])->sum('staked'),
+                'children' =>  $childers
+            ];
+    }
+    return $result;
 }
